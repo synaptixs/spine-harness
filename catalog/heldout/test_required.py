@@ -1,8 +1,8 @@
 import copy
 import importlib
-import pytest
-from orchestrator.pkg.facts import FactBatch, Node, NodeKind, Edge, EdgeKind, Provenance
-from orchestrator.pkg.schema import DBColumn, DBTable, DBSchema, ForeignKey
+
+from orchestrator.pkg.facts import Edge, EdgeKind, FactBatch, Node, NodeKind, Provenance
+from orchestrator.pkg.schema import DBColumn, DBSchema, DBTable
 from orchestrator.pkg.stats import FunctionCallFrequency
 
 
@@ -32,21 +32,21 @@ def node(ident, file='a.py', line=1, end=None, repo='', **kwargs):
 def test_case_0():
     args = (DBSchema('db'),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.schema"), "required_columns")
+    function = importlib.import_module("orchestrator.pkg.schema").required_columns
     assert function(*args) == {}
     assert args == before
 
 def test_case_1():
     args = (DBSchema('db',(DBTable('a',(DBColumn('z',nullable=False),DBColumn('x',nullable=True),DBColumn('b',nullable=False))),DBTable('v',(DBColumn('id',nullable=False),),is_view=True),DBTable('empty'))),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.schema"), "required_columns")
+    function = importlib.import_module("orchestrator.pkg.schema").required_columns
     assert function(*args) == {'a':['b','z'],'empty':[]}
     assert args == before
 
 def test_case_2():
     args = (DBSchema('db',(DBTable('a',(DBColumn('id','NOT NULL',True),)),)),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.schema"), "required_columns")
+    function = importlib.import_module("orchestrator.pkg.schema").required_columns
     assert function(*args) == {'a':[]}
     assert args == before
 

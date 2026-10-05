@@ -19,8 +19,8 @@ import json
 import os
 import subprocess
 import sys
-from datetime import datetime, timezone
 from concurrent.futures import ThreadPoolExecutor
+from datetime import UTC, datetime
 from pathlib import Path
 
 import harness_config as C
@@ -119,7 +119,7 @@ def main() -> None:
         if (C.RESULTS_DIR/'EXPERIMENT.json').exists() or any(C.RESULTS_DIR.glob('*/logs/*.log')):
             sys.exit('Existing experiment output; select fresh WORK_DIR and RESULTS_DIR. No general resume is supported.')
         meta = {**catalogs[0], 'models':models, 'passes':a.passes,'arms':sorted(arms),
-                'created_utc':datetime.now(timezone.utc).isoformat(),
+                'created_utc':datetime.now(UTC).isoformat(),
                 'model_reasoning_effort':C.CODEX_REASONING_EFFORT,'codex_auth':C.CODEX_AUTH,
                 'target':C.TARGET_SHA,'spine_ref':C.SPINE_REF,'speckit':C.SPECKIT,
                 'checklist_approval':a.approve_checklist,'cap':a.cap,'job_cap':a.job_cap,

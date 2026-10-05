@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 """macOS / Windows-with-WSL2 Jira benchmark entry point. No model call until the explicit run command."""
 from __future__ import annotations
+
 import argparse
-from datetime import datetime, timezone
 import hashlib
 import json
 import os
-from pathlib import Path
 import re
 import shutil
 import subprocess
 import sys
 import tempfile
+from datetime import UTC, datetime
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 SPINE_COMMIT = '6c0454bac2dbb539665402d31e57e763db2d206a'
@@ -22,7 +23,7 @@ def write(path, data):
     path.write_text(json.dumps(data, indent=2) + '\n')
 
 def now():
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 def load_config(path):
     path = path.resolve()
@@ -112,9 +113,9 @@ def login(c, device_auth=False):
 
 def prepare(c):
     prerequisites()
-    from project_benchmark import prepare as prepare_project
-    from project_adapter import ProjectAdapter, git
     from jira_import import save_import, unwrap
+    from project_adapter import ProjectAdapter
+    from project_benchmark import prepare as prepare_project
     results, work = Path(c['results_dir']), Path(c['work_dir'])
     if results.exists() or work.exists():
         raise ValueError('Existing work/results preserved. Choose a NEW name (and fresh paths if overridden).')
@@ -203,7 +204,7 @@ def run(c, approved, checklist):
     if not approved:
         raise ValueError('Use --approved only after reviewing the prepared baseline and authorizing selected Jira text/code transfer to OpenAI')
     prerequisites()
-    from project_adapter import ProjectAdapter, source_fingerprint
+    from project_adapter import source_fingerprint
     results = Path(c['results_dir']); prepared = json.loads((results / 'PREPARED.json').read_text())
     if prepared['config_sha256'] != config_digest(c): raise ValueError('Config changed after preparation; prepare a fresh run')
     if not prepared['baseline_checks_pass']: raise ValueError('Baseline checks did not pass')

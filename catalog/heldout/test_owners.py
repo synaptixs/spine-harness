@@ -1,8 +1,7 @@
 import copy
 import importlib
-import pytest
-from orchestrator.pkg.facts import FactBatch, Node, NodeKind, Edge, EdgeKind, Provenance
-from orchestrator.pkg.schema import DBColumn, DBTable, DBSchema, ForeignKey
+
+from orchestrator.pkg.facts import Edge, EdgeKind, FactBatch, Node, NodeKind, Provenance
 from orchestrator.pkg.stats import FunctionCallFrequency
 
 
@@ -32,28 +31,28 @@ def node(ident, file='a.py', line=1, end=None, repo='', **kwargs):
 def test_case_0():
     args = (graph([]),'x')
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.module_owners"), "nearest_module_owners")
+    function = importlib.import_module("orchestrator.pkg.module_owners").nearest_module_owners
     assert function(*args) == []
     assert args == before
 
 def test_case_1():
     args = (graph(['m'],m={'kind':NodeKind.MODULE}),'m')
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.module_owners"), "nearest_module_owners")
+    function = importlib.import_module("orchestrator.pkg.module_owners").nearest_module_owners
     assert function(*args) == ['m']
     assert args == before
 
 def test_case_2():
     args = (graph(['a','b','outer','t','f'], [('a','t',EdgeKind.CONTAINS),('b','t',EdgeKind.CONTAINS),('t','f',EdgeKind.CONTAINS),('outer','a',EdgeKind.CONTAINS)],a={'kind':NodeKind.MODULE},b={'kind':NodeKind.MODULE},outer={'kind':NodeKind.MODULE},t={'kind':NodeKind.TYPE}),'f')
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.module_owners"), "nearest_module_owners")
+    function = importlib.import_module("orchestrator.pkg.module_owners").nearest_module_owners
     assert function(*args) == ['a','b']
     assert args == before
 
 def test_case_3():
     args = (graph(['a','b'], [('a','b',EdgeKind.CONTAINS),('b','a',EdgeKind.CONTAINS)]),'a')
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.module_owners"), "nearest_module_owners")
+    function = importlib.import_module("orchestrator.pkg.module_owners").nearest_module_owners
     assert function(*args) == []
     assert args == before
 

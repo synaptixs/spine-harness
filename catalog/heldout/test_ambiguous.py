@@ -1,8 +1,7 @@
 import copy
 import importlib
-import pytest
-from orchestrator.pkg.facts import FactBatch, Node, NodeKind, Edge, EdgeKind, Provenance
-from orchestrator.pkg.schema import DBColumn, DBTable, DBSchema, ForeignKey
+
+from orchestrator.pkg.facts import Edge, EdgeKind, FactBatch, Node, NodeKind, Provenance
 from orchestrator.pkg.stats import FunctionCallFrequency
 
 
@@ -32,21 +31,21 @@ def node(ident, file='a.py', line=1, end=None, repo='', **kwargs):
 def test_case_0():
     args = ([],)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.name_ambiguity"), "ambiguous_names")
+    function = importlib.import_module("orchestrator.pkg.name_ambiguity").ambiguous_names
     assert function(*args) == {}
     assert args == before
 
 def test_case_1():
     args = ([node('a',name='run'),node('b',name='run',file=None),node('a',name='run'),node('c',name='Run'),node('e',name='Run',external=True)],)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.name_ambiguity"), "ambiguous_names")
+    function = importlib.import_module("orchestrator.pkg.name_ambiguity").ambiguous_names
     assert function(*args) == {'run':['a','b']}
     assert args == before
 
 def test_case_2():
     args = ([node('a',name='x'),node('a',name='x')],)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.name_ambiguity"), "ambiguous_names")
+    function = importlib.import_module("orchestrator.pkg.name_ambiguity").ambiguous_names
     assert function(*args) == {}
     assert args == before
 

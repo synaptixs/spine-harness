@@ -1,8 +1,7 @@
 import copy
 import importlib
-import pytest
-from orchestrator.pkg.facts import FactBatch, Node, NodeKind, Edge, EdgeKind, Provenance
-from orchestrator.pkg.schema import DBColumn, DBTable, DBSchema, ForeignKey
+
+from orchestrator.pkg.facts import Edge, EdgeKind, FactBatch, Node, NodeKind, Provenance
 from orchestrator.pkg.stats import FunctionCallFrequency
 
 
@@ -32,21 +31,21 @@ def node(ident, file='a.py', line=1, end=None, repo='', **kwargs):
 def test_case_0():
     args = (freq(),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.stats"), "dense_call_ranks")
+    function = importlib.import_module("orchestrator.pkg.stats").dense_call_ranks
     assert function(*args) == []
     assert args == before
 
 def test_case_1():
     args = (freq(('z','Z',5),('a','A',5),('b','B',1),('c','C',0)),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.stats"), "dense_call_ranks")
+    function = importlib.import_module("orchestrator.pkg.stats").dense_call_ranks
     assert function(*args) == [('a',1),('z',1),('b',2),('c',3)]
     assert args == before
 
 def test_case_2():
     args = (freq(('a','A',0)),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.stats"), "dense_call_ranks")
+    function = importlib.import_module("orchestrator.pkg.stats").dense_call_ranks
     assert function(*args) == [('a',1)]
     assert args == before
 

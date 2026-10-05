@@ -1,21 +1,20 @@
 #!/usr/bin/env python3
 """Portable, closed-run reports, usage reconciliation, checksums and evidence archives."""
 from __future__ import annotations
+
 import argparse
 import csv
 import hashlib
 import html
-import io
 import json
-import os
-from pathlib import Path
 import re
 import shutil
 import subprocess
 import zipfile
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+from pathlib import Path
 
-from codex_usage import PRICES, PRICE_BASIS, cost, total
+from codex_usage import PRICE_BASIS, PRICES, cost, total
 
 PATTERNS = ('*/speckit/*/session-rollout-*.jsonl', '*/spine/pass*/codex-calls/*/rollout-*.jsonl')
 BLOCKED_NAMES = {'auth.json', 'mcp.json', '.mcp.json', 'config.toml', '.env', 'benchmark.env'}
@@ -121,7 +120,7 @@ def collect_rows(root, exp, records, origins):
     return rows
 
 def run_acceptance(root, rows):
-    from project_adapter import sandboxed_command, clean_test_env
+    from project_adapter import clean_test_env, sandboxed_command
     config = root / 'ACCEPTANCE_TESTS.json'
     suites = json.loads(config.read_text()) if config.exists() else {}
     project = json.loads((root / 'PROJECT.json').read_text())
@@ -219,7 +218,7 @@ def finalize(root, run_audits=False):
     fieldnames = ['ticket', 'pass', 'arm', 'model', 'status', 'known_tokens', 'api_list_price_equivalent_usd', 'usage_complete', 'own_tests_pass', 'project_checks_pass', 'acceptance']
     with (out / 'RESULTS.csv').open('w', newline='') as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction='ignore'); writer.writeheader(); writer.writerows(rows)
-    lines = ['# Jira benchmark final report', '', f'Generated: {datetime.now(timezone.utc).isoformat()}', '',
+    lines = ['# Jira benchmark final report', '', f'Generated: {datetime.now(UTC).isoformat()}', '',
         '**Scope:** matched frozen Jira issues and baseline, spec-kit versus Spine + PKG through the Codex subscription adapter.',
         'Workflow completion, generated tests, project regression checks and selected acceptance checks are separate outcomes. Full ticket correctness remains unverified.', '',
         '| Issue | Pass | Workflow | Status | Recorded tokens | API-equivalent USD | Own tests | Project checks | Acceptance |',

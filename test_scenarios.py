@@ -1,15 +1,22 @@
-import copy
-from dataclasses import dataclass,field
 import json
-from pathlib import Path
 import subprocess
 import sys
 import tempfile
-from types import SimpleNamespace
 import unittest
-from scenario_catalog import CatalogError, load_catalog, configure, fingerprint, changed_python_files, split_python_files
-from report_results import indexed, sign_p, completed
+from dataclasses import dataclass, field
+from pathlib import Path
+from types import SimpleNamespace
+
 from model_report import model_section
+from report_results import completed, indexed, sign_p
+from scenario_catalog import (
+    CatalogError,
+    changed_python_files,
+    configure,
+    fingerprint,
+    load_catalog,
+    split_python_files,
+)
 
 
 @dataclass

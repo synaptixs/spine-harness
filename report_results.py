@@ -3,10 +3,11 @@
 import argparse
 import json
 import math
-from pathlib import Path
 import statistics as st
-from report_usage import summarize_usage
+from pathlib import Path
+
 from model_report import model_section
+from report_usage import summarize_usage
 
 
 def completed(d):

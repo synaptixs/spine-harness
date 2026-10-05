@@ -1,8 +1,8 @@
 import copy
 import importlib
+
 import pytest
-from orchestrator.pkg.facts import FactBatch, Node, NodeKind, Edge, EdgeKind, Provenance
-from orchestrator.pkg.schema import DBColumn, DBTable, DBSchema, ForeignKey
+from orchestrator.pkg.facts import Edge, EdgeKind, FactBatch, Node, NodeKind, Provenance
 from orchestrator.pkg.stats import FunctionCallFrequency
 
 
@@ -32,42 +32,42 @@ def node(ident, file='a.py', line=1, end=None, repo='', **kwargs):
 def test_case_0():
     args = (freq(),3)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.stats"), "allocate_call_budget")
+    function = importlib.import_module("orchestrator.pkg.stats").allocate_call_budget
     assert function(*args) == {}
     assert args == before
 
 def test_case_1():
     args = (freq(('b','B',1),('a','A',1),('c','C',1)),2)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.stats"), "allocate_call_budget")
+    function = importlib.import_module("orchestrator.pkg.stats").allocate_call_budget
     assert function(*args) == {'a':1,'b':1,'c':0}
     assert args == before
 
 def test_case_2():
     args = (freq(('a','A',5),('b','B',3),('c','C',2)),7)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.stats"), "allocate_call_budget")
+    function = importlib.import_module("orchestrator.pkg.stats").allocate_call_budget
     assert function(*args) == {'a':4,'b':2,'c':1}
     assert args == before
 
 def test_case_3():
     args = (freq(('a','A',0),('b','B',0)),9)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.stats"), "allocate_call_budget")
+    function = importlib.import_module("orchestrator.pkg.stats").allocate_call_budget
     assert function(*args) == {'a':0,'b':0}
     assert args == before
 
 def test_case_4():
     args = (freq(('a','A',10**20),('b','B',10**20+1)),1)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.stats"), "allocate_call_budget")
+    function = importlib.import_module("orchestrator.pkg.stats").allocate_call_budget
     assert function(*args) == {'a':0,'b':1}
     assert args == before
 
 def test_case_5():
     args = (freq(),-1)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.stats"), "allocate_call_budget")
+    function = importlib.import_module("orchestrator.pkg.stats").allocate_call_budget
     with pytest.raises(ValueError):
         function(*args)
     assert args == before

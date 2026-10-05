@@ -1,8 +1,7 @@
 import copy
 import importlib
-import pytest
-from orchestrator.pkg.facts import FactBatch, Node, NodeKind, Edge, EdgeKind, Provenance
-from orchestrator.pkg.schema import DBColumn, DBTable, DBSchema, ForeignKey
+
+from orchestrator.pkg.facts import Edge, EdgeKind, FactBatch, Node, NodeKind, Provenance
 from orchestrator.pkg.stats import FunctionCallFrequency
 
 
@@ -32,21 +31,21 @@ def node(ident, file='a.py', line=1, end=None, repo='', **kwargs):
 def test_case_0():
     args = (graph([]),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.facts"), "weak_call_components")
+    function = importlib.import_module("orchestrator.pkg.facts").weak_call_components
     assert function(*args) == []
     assert args == before
 
 def test_case_1():
     args = (graph(['z','b','a','c'], [('b','a'),('b','ghost'),('c','z',EdgeKind.IMPORTS)]),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.facts"), "weak_call_components")
+    function = importlib.import_module("orchestrator.pkg.facts").weak_call_components
     assert function(*args) == [['a','b'],['c'],['z']]
     assert args == before
 
 def test_case_2():
     args = (graph(['a','b','c'], [('a','b'),('c','b'),('a','a')]),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.facts"), "weak_call_components")
+    function = importlib.import_module("orchestrator.pkg.facts").weak_call_components
     assert function(*args) == [['a','b','c']]
     assert args == before
 

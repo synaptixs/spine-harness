@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 """Prepare an external-repository benchmark without executing models."""
 from __future__ import annotations
+
 import argparse
-from datetime import datetime, timezone
 import json
-import os
-from pathlib import Path
 import shlex
-import shutil
-import subprocess
+from datetime import UTC, datetime
+from pathlib import Path
+
 from project_adapter import disposable_clone, source_fingerprint
 
 CONSTITUTION='''# Benchmark implementation principles
@@ -35,7 +34,7 @@ def prepare(profile, source, spine_code, work, results, python, catalog=None):
             'python':str(Path(python).resolve()),'baseline_reviewed':False}
     (results/'PROJECT.json').write_text(json.dumps(config,indent=2)+'\n')
     (results/'constitution.md').write_text(CONSTITUTION)
-    state={'created_utc':datetime.now(timezone.utc).isoformat(),'source_before':before,
+    state={'created_utc':datetime.now(UTC).isoformat(),'source_before':before,
            'source_after':source_fingerprint(source),'model_execution':'disabled',
            'baseline_note':'Candidate committed baseline; review against actual Jira issue before execution.'}
     (results/'PREPARATION.json').write_text(json.dumps(state,indent=2)+'\n')

@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """Render the completed study in the supplied decision-report structure, without new model calls."""
-from pathlib import Path
 import argparse
 import itertools
 import json
@@ -8,7 +7,9 @@ import math
 import statistics as st
 import subprocess
 import sys
-from build_comparison_report import completed, sign_p, percentile
+from pathlib import Path
+
+from build_comparison_report import completed, percentile, sign_p
 from model_report import model_section
 from report_usage import summarize_usage
 

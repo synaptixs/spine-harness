@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Lint (ruff)
+        run: ruff check .
+
+      # test_codex_backend.py is excluded: it needs a real on-disk SPINE_REPO checkout
+      # (harness_config.use_tree() switches sys.path to a source tree, not the installed
+      # package), which this minimal gate deliberately doesn't set up (SSPN-117 chose
+      # `pip install synaptixs-spine` over checking out ai/spine as a sibling repo in CI).
+      # Tracked as follow-up, not silently dropped.
+      - name: Tests
+        run: python -m pytest -q test_scenarios.py test_report_usage.py test_wsl_support.py test_jira_benchmark.py

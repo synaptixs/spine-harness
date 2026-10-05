@@ -5,13 +5,13 @@ calculator itself is not modified. Run after all benchmark children have exited.
 """
 from __future__ import annotations
 
-import importlib.util
 import argparse
+import importlib.util
 import json
 import shutil
+import sys
 import tempfile
 from pathlib import Path
-import sys
 
 import harness_config as C
 from codex_usage import PRICES

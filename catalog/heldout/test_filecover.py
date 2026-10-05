@@ -1,8 +1,7 @@
 import copy
 import importlib
-import pytest
-from orchestrator.pkg.facts import FactBatch, Node, NodeKind, Edge, EdgeKind, Provenance
-from orchestrator.pkg.schema import DBColumn, DBTable, DBSchema, ForeignKey
+
+from orchestrator.pkg.facts import Edge, EdgeKind, FactBatch, Node, NodeKind, Provenance
 from orchestrator.pkg.stats import FunctionCallFrequency
 
 
@@ -32,21 +31,21 @@ def node(ident, file='a.py', line=1, end=None, repo='', **kwargs):
 def test_case_0():
     args = ([],)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.file_coverage"), "grounded_file_counts")
+    function = importlib.import_module("orchestrator.pkg.file_coverage").grounded_file_counts
     assert function(*args) == {}
     assert args == before
 
 def test_case_1():
     args = ([node('a'),node('a'),node('b'),node('x',external=True),node('y',file=None),node('a',repo='r')],)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.file_coverage"), "grounded_file_counts")
+    function = importlib.import_module("orchestrator.pkg.file_coverage").grounded_file_counts
     assert function(*args) == {('','a.py'):2,('r','a.py'):1}
     assert args == before
 
 def test_case_2():
     args = ([node('a',file='b.py'),node('a')],)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.file_coverage"), "grounded_file_counts")
+    function = importlib.import_module("orchestrator.pkg.file_coverage").grounded_file_counts
     assert function(*args) == {('','a.py'):1,('','b.py'):1}
     assert args == before
 

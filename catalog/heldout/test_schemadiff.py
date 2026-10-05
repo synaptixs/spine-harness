@@ -1,8 +1,8 @@
 import copy
 import importlib
-import pytest
-from orchestrator.pkg.facts import FactBatch, Node, NodeKind, Edge, EdgeKind, Provenance
-from orchestrator.pkg.schema import DBColumn, DBTable, DBSchema, ForeignKey
+
+from orchestrator.pkg.facts import Edge, EdgeKind, FactBatch, Node, NodeKind, Provenance
+from orchestrator.pkg.schema import DBColumn, DBSchema, DBTable
 from orchestrator.pkg.stats import FunctionCallFrequency
 
 
@@ -32,21 +32,21 @@ def node(ident, file='a.py', line=1, end=None, repo='', **kwargs):
 def test_case_0():
     args = (DBSchema('old'),DBSchema('new'))
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.schema"), "column_changes")
+    function = importlib.import_module("orchestrator.pkg.schema").column_changes
     assert function(*args) == {'added':[],'removed':[],'changed':[]}
     assert args == before
 
 def test_case_1():
     args = (DBSchema('db',(DBTable('a',(DBColumn('id','int',False),DBColumn('gone'))),)),DBSchema('db',(DBTable('a',(DBColumn('id','int',True),DBColumn('new'))),DBTable('z',(DBColumn('x'),)))))
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.schema"), "column_changes")
+    function = importlib.import_module("orchestrator.pkg.schema").column_changes
     assert function(*args) == {'added':[('a','new'),('z','x')],'removed':[('a','gone')],'changed':[('a','id')]}
     assert args == before
 
 def test_case_2():
     args = (DBSchema('a',(DBTable('t',(DBColumn('x','int'),)),)),DBSchema('b',(DBTable('t',(DBColumn('x','text'),),is_view=True),)))
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.schema"), "column_changes")
+    function = importlib.import_module("orchestrator.pkg.schema").column_changes
     assert function(*args) == {'added':[],'removed':[],'changed':[('t','x')]}
     assert args == before
 

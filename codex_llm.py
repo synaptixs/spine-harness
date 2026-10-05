@@ -15,10 +15,10 @@ import uuid
 from pathlib import Path
 
 import jsonschema
+from orchestrator.core.llm.client import CompletionResult, LLMError, ToolCall
 
 import harness_config as C
 from codex_usage import PRICE_BASIS, cost, records, run_sessions, total
-from orchestrator.core.llm.client import CompletionResult, LLMError, ToolCall
 
 
 def strict_schema(schema):

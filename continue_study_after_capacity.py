@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """One recorded capacity recovery, then only the unstarted jobs in their original order."""
-from pathlib import Path
 import json
 import os
 import subprocess
 import sys
+from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE / 'results/study-20260929'
