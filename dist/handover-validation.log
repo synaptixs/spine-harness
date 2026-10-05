@@ -1,0 +1,45 @@
+$ bash -n setup.sh
+
+$ uv run --frozen --project /private/tmp/spineharness-20260929/work/spine-code python -m unittest -v test_codex_backend test_report_usage
+test_checklist_confirmation_wording (test_codex_backend.BackendTests.test_checklist_confirmation_wording) ... ok
+test_cost_separates_cache_and_fails_unknown_model (test_codex_backend.BackendTests.test_cost_separates_cache_and_fails_unknown_model) ... ok
+test_deduplicate_and_ignore_inherited_totals (test_codex_backend.BackendTests.test_deduplicate_and_ignore_inherited_totals) ... ok
+test_existing_file_edits_round_trip (test_codex_backend.BackendTests.test_existing_file_edits_round_trip) ... ok
+test_optional_file_fields_round_trip (test_codex_backend.BackendTests.test_optional_file_fields_round_trip) ... ok
+test_subscription_environment_excludes_api_credentials (test_codex_backend.BackendTests.test_subscription_environment_excludes_api_credentials) ... ok
+test_unsupported_tool_contract_fails (test_codex_backend.BackendTests.test_unsupported_tool_contract_fails) ... ok
+test_completion_maps_tool_payload_and_usage (test_codex_backend.CompletionTests.test_completion_maps_tool_payload_and_usage) ... ok
+test_envelope_preserves_tool_arguments (test_codex_backend.CompletionTests.test_envelope_preserves_tool_arguments) ... ok
+test_failed_process_is_not_a_completion (test_codex_backend.CompletionTests.test_failed_process_is_not_a_completion) ... ok
+test_malformed_json_is_a_protocol_error (test_codex_backend.CompletionTests.test_malformed_json_is_a_protocol_error) ... ok
+test_missing_ledger_invalidates_measurement (test_codex_backend.CompletionTests.test_missing_ledger_invalidates_measurement) ... ok
+test_tool_use_invalidates_measurement (test_codex_backend.CompletionTests.test_tool_use_invalidates_measurement) ... ok
+test_successful_steps_without_code_are_not_complete (test_codex_backend.SummaryTests.test_successful_steps_without_code_are_not_complete) ... ok
+test_exported_records_deduplicate_and_exclude_diagnostics (test_report_usage.UsageReportTests.test_exported_records_deduplicate_and_exclude_diagnostics) ... ok
+test_missing_exports_do_not_invent_usage (test_report_usage.UsageReportTests.test_missing_exports_do_not_invent_usage) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.046s
+
+OK
+
+$ python3 run_comparison.py --dry-run --models gpt-6-sol --passes 1 --parallel 1
+[dry-run] worktree /private/tmp/spineharness-20260929/work/speckit-codex-gpt-6-sol-new-sevsummary-1-p1 @ bd16dbb7; CODEX_HOME /private/tmp/spineharness-20260929/codex-login (sign-in: app); results /var/folders/2c/q2v76xf106gb1bbhlghqt2_h0000gn/T/spine-handover-check-rvbgzsm5/results/gpt-6-sol/speckit/new-sevsummary-1-p1
+[dry-run] uvx --from git+https://github.com/github/spec-kit.git@v1.0.11 specify init --here --force --non-interactive --integration codex --script sh --ignore-agent-tools
+[dry-run] 01-specify: codex exec --json -m gpt-6-sol … '$speckit-specify Summarise code-review findings for a PR comment\n\nAdd '
+[dry-run] 02-clarify: codex exec --json -m gpt-6-sol … '$speckit-clarify'
+[dry-run] 02b-clarify-answer: codex exec --json -m gpt-6-sol … 'No further detail is available. Use reasonable defaults for every open'
+[dry-run] 03-plan: codex exec --json -m gpt-6-sol … '$speckit-plan'
+[dry-run] 04-checklist: codex exec --json -m gpt-6-sol … '$speckit-checklist code quality and requirements completeness'
+[dry-run] 05-tasks: codex exec --json -m gpt-6-sol … '$speckit-tasks'
+[dry-run] 06-analyze: codex exec --json -m gpt-6-sol … '$speckit-analyze'
+[dry-run] 07-implement: codex exec --json -m gpt-6-sol … '$speckit-implement'
+[dry-run] 08-converge: codex exec --json -m gpt-6-sol … '$speckit-converge'
+[dry-run] Spine code /private/tmp/spineharness-20260929/work/spine-code (v3.52.0); target /private/tmp/spineharness-20260929/work/target @ bd16dbb7
+[dry-run] model gpt-6-sol; tickets ['NEW-SEVSUMMARY-1']; design deterministic; results /var/folders/2c/q2v76xf106gb1bbhlghqt2_h0000gn/T/spine-handover-check-rvbgzsm5/results/gpt-6-sol/spine/pass1
+[dry-run] backend: codex; gpt6 API shim: False
+[dry-run] intake on gpt-6-sol for ['NEW-SEVSUMMARY-1'] → /var/folders/2c/q2v76xf106gb1bbhlghqt2_h0000gn/T/spine-handover-check-rvbgzsm5/results/gpt-6-sol/intake/pass1.json
+pass 1 done — spent so far $0.00
+dry run only — nothing was spent
+
+Checklist recovery without explicit approval: correctly rejected before execution.

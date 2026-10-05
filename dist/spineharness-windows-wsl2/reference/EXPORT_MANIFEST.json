@@ -1,0 +1,794 @@
+[
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/ARTIFACT_COMPARISON.md",
+    "original_sha256": "d6988032080a1fc12b409c9be13d850306fa781696ca21d4c107eef47e3f50ca",
+    "exported_sha256": "d6988032080a1fc12b409c9be13d850306fa781696ca21d4c107eef47e3f50ca",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/BASELINE_CHECKS.json",
+    "original_sha256": "18766190e6e208494c26164a180d73d1e43c118ebc9d8e03a245705f50561f8e",
+    "exported_sha256": "7b0348cac0ea7d1d84d0638d6e40ba59008c7bd3da7aaed072e4d47b3e2eff39",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/BASELINE_CHECKS.log",
+    "original_sha256": "568b8cecd516f65c87bad1b17bdfbcbb37996e3c39e982f07de4bcae32bbcf4e",
+    "exported_sha256": "5d1c49a33f2c679edc0680537d30a37d33824a9afa58d60d51e876a9f6af24ce",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/BASELINE_MANIFEST.json",
+    "original_sha256": "86ac2da7a1bc24165969c4ed53143324837f29007d41bd9c8f48db4ccdb30559",
+    "exported_sha256": "86ac2da7a1bc24165969c4ed53143324837f29007d41bd9c8f48db4ccdb30559",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/COMPARISON_REPORT.md",
+    "original_sha256": "602748fcc91ca4e1962e5f3ddac635ab0cd520accd7eb5a66f43798b4a5177ad",
+    "exported_sha256": "602748fcc91ca4e1962e5f3ddac635ab0cd520accd7eb5a66f43798b4a5177ad",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/CONTINUATION_REPORT.md",
+    "original_sha256": "e54b0c4019516114895c5f0bf9452951f29584ba41fc4df242cc7b21eed0e1b1",
+    "exported_sha256": "e54b0c4019516114895c5f0bf9452951f29584ba41fc4df242cc7b21eed0e1b1",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/CONTINUATION_VALIDATION.md",
+    "original_sha256": "e3d8f37cdf5872a900cd1369f4d7cd72ac12fefe4028121baf5b24dd558bcad5",
+    "exported_sha256": "e3d8f37cdf5872a900cd1369f4d7cd72ac12fefe4028121baf5b24dd558bcad5",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/CONTINUATION_VERIFICATION.json",
+    "original_sha256": "ba42f12155a32fac1f31d0fab0f63d9f1fd91b40cc00f5d6940b192c52534c8d",
+    "exported_sha256": "cd23372d8867726336b39e2b41cd7ec024ddca8b4cc34d09be1c79a8f1138365",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/EVIDENCE_VERIFICATION.json",
+    "original_sha256": "a9f7e75431f4f672bec1c67d8cee9bd011b55f23e8b375fa8d940eb8ac9e3aef",
+    "exported_sha256": "86bcf38c64f29a9c2f656a7045b95f825ec86d38fb332fe331d07757b98d310a",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/EXIT_CODE",
+    "original_sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "exported_sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/EXPERIMENT.json",
+    "original_sha256": "c191e1c22cd49eb9c73b90595bd523215bfc2b1ca2268a9ae623d16b1cf7c653",
+    "exported_sha256": "0f9b0a31fe0be525d0cc10bb32e1f44ee3ffa739d5b4aa78e0eec25ef8aac5a4",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/FINALIZATION.json",
+    "original_sha256": "4b9c0a7109f5aae1085ec58a377812a7458aeb9cae90bf37038716723c237339",
+    "exported_sha256": "6749e4c072c7ad5f6079dde8aa32eac527a7a12d2f1a377c28867810afec1eac",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/FINISHED",
+    "original_sha256": "b8ce535280a2be77433b87cf83e05fa8a1e73aa68bee9070bfea3fc35eab47a1",
+    "exported_sha256": "b8ce535280a2be77433b87cf83e05fa8a1e73aa68bee9070bfea3fc35eab47a1",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/INDEPENDENT_REVIEW.md",
+    "original_sha256": "b295735bdaafb5a77ecc1cc2cb461bf40efb47a97aa05ade989d36ab871059b3",
+    "exported_sha256": "3d0aeebfdae209a87807d7dee653c9975c07e4321d87f921a310d383a10c9154",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/PREPARATION.json",
+    "original_sha256": "aafaf614bf48cf9c0dacf5e635b167f5f2baba0ed4c76c66e9c2e7ece2d8e89f",
+    "exported_sha256": "aafaf614bf48cf9c0dacf5e635b167f5f2baba0ed4c76c66e9c2e7ece2d8e89f",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/PREPARATION.md",
+    "original_sha256": "1cefe51a5aff57607bff98935a8817cbdb92dd3082ccadfc4e81c0b4f8e4615b",
+    "exported_sha256": "1cefe51a5aff57607bff98935a8817cbdb92dd3082ccadfc4e81c0b4f8e4615b",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/PREREQUISITE.patch",
+    "original_sha256": "a2ee26ad0f9cd9dfe6fb14a5aca3e9dffdf9c37ee488e6c8899c5db49c5ecd60",
+    "exported_sha256": "a2ee26ad0f9cd9dfe6fb14a5aca3e9dffdf9c37ee488e6c8899c5db49c5ecd60",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/PRICING_VERIFICATION.json",
+    "original_sha256": "94565a94c780c259a0ce3437573fa40f268b42f0880c759ae74fc44063638cf8",
+    "exported_sha256": "94565a94c780c259a0ce3437573fa40f268b42f0880c759ae74fc44063638cf8",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/PROJECT.json",
+    "original_sha256": "201a862ef089bf7beb7e7ddb38f43ce2e270dfea4eef4ca6f64ebdf36bb25400",
+    "exported_sha256": "151711926c94029002dde16a90ceb8c0b0c719bb5c995d7a1a0f70383849afcf",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/PROTOCOL_AMENDMENT.json",
+    "original_sha256": "5943da12d5f9a8df30cab100998b1c4a6cc31237c72a5c7d4d6a537c36911dfb",
+    "exported_sha256": "5943da12d5f9a8df30cab100998b1c4a6cc31237c72a5c7d4d6a537c36911dfb",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/READING_THE_RESULTS.md",
+    "original_sha256": "9c03bcd9e3e51d18649914cca6e742a8a703578b1010b119876d11414fb9d88f",
+    "exported_sha256": "9c03bcd9e3e51d18649914cca6e742a8a703578b1010b119876d11414fb9d88f",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/RESULTS.md",
+    "original_sha256": "62cef42e2ef9131f784e04999ee7c0b6a5f05e21b368f94db3c65bedbea78bec",
+    "exported_sha256": "e052503b741bfd3232b6eaf23b11fcc8e69e09597d9df01c3276b0852e46db24",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/STAGE_TOKEN_BREAKDOWN.json",
+    "original_sha256": "59e096a51f315c0ff922d773d3b77fc1a513e8bc6470e35abdb5626f85554010",
+    "exported_sha256": "59e096a51f315c0ff922d773d3b77fc1a513e8bc6470e35abdb5626f85554010",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/STARTED",
+    "original_sha256": "6995b526b4fc7c35ead98aae6eb85b175e3551447ca47d01e7a96a451f1d78a0",
+    "exported_sha256": "6995b526b4fc7c35ead98aae6eb85b175e3551447ca47d01e7a96a451f1d78a0",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/SUPPLEMENTAL_VALIDATION.json",
+    "original_sha256": "8d20ad27f800b62729a4363f3e898bbc22ec791238aca97f200a2611d579b823",
+    "exported_sha256": "8d20ad27f800b62729a4363f3e898bbc22ec791238aca97f200a2611d579b823",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/SUPPLEMENTAL_VALIDATION.md",
+    "original_sha256": "6e6bae30fb7d0e5c090f8e4d27b6118ab75af51e7e92b18949fe717cabb28681",
+    "exported_sha256": "6e6bae30fb7d0e5c090f8e4d27b6118ab75af51e7e92b18949fe717cabb28681",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/acceptance_audit/PROTOCOL.json",
+    "original_sha256": "d29a7c8d9c308c01d38ef1bdf3607c7108a2f4dfe0a74b14dc79e084c7660549",
+    "exported_sha256": "d29a7c8d9c308c01d38ef1bdf3607c7108a2f4dfe0a74b14dc79e084c7660549",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/acceptance_audit/baseline.json",
+    "original_sha256": "f7f38a4029afa18d8e05e0b67324661e4e3de4ce879b50d45ec9e5b9b8c59d5c",
+    "exported_sha256": "05e289298ba3ff8b8f049c6201b9b3aed7d73ea41dbaa644a51e3a2ddd938294",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/acceptance_audit/baseline.log",
+    "original_sha256": "763068d7de7ebc190d281ea0e6cd2539e9e0b83f3ae43714dafc96532235387d",
+    "exported_sha256": "4b8a5980bba0b298c022df89e6efee4ed64cc9278827ec3c61e49acc1eb764e9",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/acceptance_audit/baseline.xml",
+    "original_sha256": "d37b2c9431ac33dc0811eef0b1df9d3c7b827e408005ff66af5f7a88ffa31271",
+    "exported_sha256": "16e22afbe517717a848abc8d899e68f0170fe5683392f770fc49cbb1e641c4e4",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/acceptance_audit/speckit.json",
+    "original_sha256": "7999adfb743601cbdc6a9a2b559317add956a6c49dd98c576d3be66bf4bdac29",
+    "exported_sha256": "ad0f112c785d0c04c7486dbe1b9250ac60a2c8d7ef42bd73b85e8c0091755da1",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/acceptance_audit/speckit.log",
+    "original_sha256": "fa236a11950382697e773170dfb0b03c60690a8eace11a04d53aad567cdd8dc3",
+    "exported_sha256": "0a6b2a27eaed0aa9acf1a8daad3789517663df389fc389d89044c7bfc813deb6",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/acceptance_audit/speckit.xml",
+    "original_sha256": "42997ae0da6bcc003ac2ba624a73fd73e4e377369ea04b3c7f4441bf63e3596b",
+    "exported_sha256": "42997ae0da6bcc003ac2ba624a73fd73e4e377369ea04b3c7f4441bf63e3596b",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/acceptance_audit/spine-continuation.json",
+    "original_sha256": "11118e28bc111f8864478432026413be5bc6d4b9b1b3344f77967b806310cefd",
+    "exported_sha256": "9a0da718b14a9d89769799c4d268619165c5ef27ca588f994835f6cc5d178982",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/acceptance_audit/spine-continuation.log",
+    "original_sha256": "abf08352fa6ba07ba41a142249aba89f15f5e1f92a17556084b9db711b277b13",
+    "exported_sha256": "ba3a21a13f7cbc636c6ad27e52c015b12401fadc237d4421c081b753a86116b2",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/acceptance_audit/spine-continuation.xml",
+    "original_sha256": "5eb71f2a7fa4d330c3034bbcf7bff278803cac0fb43f5a9a2afc74fb7d483d63",
+    "exported_sha256": "5eb71f2a7fa4d330c3034bbcf7bff278803cac0fb43f5a9a2afc74fb7d483d63",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/acceptance_audit/spine.json",
+    "original_sha256": "0e023a7bc69928a051cecdc017f102e3b77a86ab7182742b8e093f07e3cf8187",
+    "exported_sha256": "0c245b1ccfd83c1dc71e5a7fbffa9dd0b851bca2eb19f787fe1364eb642c4df1",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/acceptance_audit/spine.log",
+    "original_sha256": "409f1b3ad3f570bccf706c23a703b53e3dc775e5555e93075492f4323517410a",
+    "exported_sha256": "bfe77062ba0ee1561fac2d29d6f1138bc653552e2cdf254d586ebf1d593400fb",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/acceptance_audit/spine.xml",
+    "original_sha256": "2ff288466f80066b8dc075cb014913f56ca205c9a3d46f1a936cf3efdc2e3e1f",
+    "exported_sha256": "5bd9b41ffd2d2eb70c03d204628965a94a117cabe62e4e9c111a7d7eec627215",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/acceptance_audit/test_ontm4_surfaces.py",
+    "original_sha256": "2c0fa95531f422dfab2d6d6c565a124de1db344e800e59660ad6ce3ee25cc783",
+    "exported_sha256": "2c0fa95531f422dfab2d6d6c565a124de1db344e800e59660ad6ce3ee25cc783",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/application-requirements.lock",
+    "original_sha256": "a8998d14fe41eb2ff69877083cbe57d9029f3fa1a831d68fd9e586a6ec9b248b",
+    "exported_sha256": "a8998d14fe41eb2ff69877083cbe57d9029f3fa1a831d68fd9e586a6ec9b248b",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/calculator-usage.json",
+    "original_sha256": "08893a49e3723cb2eaffce0cae1d8513b1d0040231a8d6f14c5486caf0a54d77",
+    "exported_sha256": "1ab5b601062a01214125e672bc0f3422a96b5dc6a477338e36d14845a5257d1f",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/logs/speckit-ontm-4-p1.log",
+    "original_sha256": "ebeab12a444770e9497fc251028dbb8ce058206b706ad86ce8dead8eef313e6f",
+    "exported_sha256": "ebeab12a444770e9497fc251028dbb8ce058206b706ad86ce8dead8eef313e6f",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/logs/spine-p1.log",
+    "original_sha256": "48e088f3cd3c5d3a7097e3868b9cd140d050e9708e5d2f09c7cdc06245d5361f",
+    "exported_sha256": "41f82657d5ddad5de6f15b70f75fa95072b27b7b9b58d6436b667bc65cd9da7b",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/logs/spine-parallel-p1.log",
+    "original_sha256": "d0c3bab4e8c95333279ac5c53b657c15ea3ded4daf8ad911999425e4657bade6",
+    "exported_sha256": "a68b3d715f0692e5074562214695c412963ed3e76c04cbfb84d49b1d5c818da5",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/speckit/ontm-4-p1/CHANGES.md",
+    "original_sha256": "a31313fb940222532d6e093025c6303c894119adf459e55a8d2216553afdeacc",
+    "exported_sha256": "a31313fb940222532d6e093025c6303c894119adf459e55a8d2216553afdeacc",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/speckit/ontm-4-p1/changes.patch",
+    "original_sha256": "7f2cf63029b6dc1e689b53f8751c58eda9c14904407666da99983c9f21f6e671",
+    "exported_sha256": "7f2cf63029b6dc1e689b53f8751c58eda9c14904407666da99983c9f21f6e671",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/speckit/ontm-4-p1/code/runtime/reasoning_search/cli.py",
+    "original_sha256": "159fff1adbd942a33147731f5a892df5fc125998390f0d2393cc44fe83f20258",
+    "exported_sha256": "159fff1adbd942a33147731f5a892df5fc125998390f0d2393cc44fe83f20258",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/speckit/ontm-4-p1/code/runtime/reasoning_search/engine.py",
+    "original_sha256": "a94ff4293b9b583475220abc59ff43e56b56a20aa43b072fa67c0dce0aec8bb0",
+    "exported_sha256": "a94ff4293b9b583475220abc59ff43e56b56a20aa43b072fa67c0dce0aec8bb0",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/speckit/ontm-4-p1/code/runtime/reasoning_search/rule_sources.py",
+    "original_sha256": "20c8c34195a4c41596db0af0bc110a963da2fa93f8d4e75b48031116b02b6584",
+    "exported_sha256": "20c8c34195a4c41596db0af0bc110a963da2fa93f8d4e75b48031116b02b6584",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/speckit/ontm-4-p1/code/tests/test_reasoning_search_phase2.py",
+    "original_sha256": "5e0cf4fd867651eacb29f9acc59478719fe2cf26cb8691a35732625834fba52f",
+    "exported_sha256": "5e0cf4fd867651eacb29f9acc59478719fe2cf26cb8691a35732625834fba52f",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/speckit/ontm-4-p1/code/tests/test_reasoning_search_phase4.py",
+    "original_sha256": "7e87978537913876d34c1172546251845e0b66a834f498973e4e325101abbbe5",
+    "exported_sha256": "7e87978537913876d34c1172546251845e0b66a834f498973e4e325101abbbe5",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/speckit/ontm-4-p1/code/tests/test_search_rule_sources.py",
+    "original_sha256": "8c812eb671903fa904af55a93f3709ece6f4cc5a1ffb93e2c7f9fda28806ece4",
+    "exported_sha256": "8c812eb671903fa904af55a93f3709ece6f4cc5a1ffb93e2c7f9fda28806ece4",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/speckit/ontm-4-p1/code/tests/test_search_rule_wiring.py",
+    "original_sha256": "f0aab99cbe2dc63fb180127cf654bc3cb35982f34d39ce37431a1c2cee55a059",
+    "exported_sha256": "f0aab99cbe2dc63fb180127cf654bc3cb35982f34d39ce37431a1c2cee55a059",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/speckit/ontm-4-p1/code/wizard/app.py",
+    "original_sha256": "67369934d9fe09bc9b895f36dfa4143bcb0e04c051e3b6a70e94f074b0a0cce9",
+    "exported_sha256": "67369934d9fe09bc9b895f36dfa4143bcb0e04c051e3b6a70e94f074b0a0cce9",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/speckit/ontm-4-p1/git-status.txt",
+    "original_sha256": "f792f416f7b2e24c7ecca25417c9e9e43883938bb60c7c9bdd57ef241c3de345",
+    "exported_sha256": "f792f416f7b2e24c7ecca25417c9e9e43883938bb60c7c9bdd57ef241c3de345",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/speckit/ontm-4-p1/planning/checklists/code-quality.md",
+    "original_sha256": "db43276aadbb602454c98b51f9e06864c25e2eb1431bce7a828daaca178c89ea",
+    "exported_sha256": "db43276aadbb602454c98b51f9e06864c25e2eb1431bce7a828daaca178c89ea",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/speckit/ontm-4-p1/planning/checklists/requirements.md",
+    "original_sha256": "80432ddcb7b338783fe0cfad8d5ad8385decf76e7fd1361c4b9381e08afce44b",
+    "exported_sha256": "80432ddcb7b338783fe0cfad8d5ad8385decf76e7fd1361c4b9381e08afce44b",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/speckit/ontm-4-p1/planning/contracts/search-surfaces.md",
+    "original_sha256": "f0f83cab2ad889b5785ecb81507dd6419a8d63fc9297f54ed5401c253015b8ae",
+    "exported_sha256": "f0f83cab2ad889b5785ecb81507dd6419a8d63fc9297f54ed5401c253015b8ae",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/speckit/ontm-4-p1/planning/data-model.md",
+    "original_sha256": "b7b153b7dc627e799a99efdc0ef1a65dd2c8d1a32d53dd78a9e4125a259aad1b",
+    "exported_sha256": "b7b153b7dc627e799a99efdc0ef1a65dd2c8d1a32d53dd78a9e4125a259aad1b",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/speckit/ontm-4-p1/planning/plan.md",
+    "original_sha256": "f3745043f187e12ac4a6bc26d4b0b8e37359146a6aed107a6ca989c000d56086",
+    "exported_sha256": "f3745043f187e12ac4a6bc26d4b0b8e37359146a6aed107a6ca989c000d56086",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/speckit/ontm-4-p1/planning/quickstart.md",
+    "original_sha256": "d9518de54bc3e95a9245a78fcb696759e106d82b93d61eae423854bb0e563be8",
+    "exported_sha256": "d9518de54bc3e95a9245a78fcb696759e106d82b93d61eae423854bb0e563be8",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/speckit/ontm-4-p1/planning/research.md",
+    "original_sha256": "111322c407c80a1437c81a7248b565d17d8cbab9ccb7319c66a826a189deb1d0",
+    "exported_sha256": "111322c407c80a1437c81a7248b565d17d8cbab9ccb7319c66a826a189deb1d0",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/speckit/ontm-4-p1/planning/spec.md",
+    "original_sha256": "8873a7ba9d7bcc845cdc3dcffaf67950543c535ee7c294b97a345620c27746cc",
+    "exported_sha256": "8873a7ba9d7bcc845cdc3dcffaf67950543c535ee7c294b97a345620c27746cc",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/speckit/ontm-4-p1/planning/tasks.md",
+    "original_sha256": "7abdf3d598d0d72461f1c39cd9fe7527a9ff27911ac972483b4d1e2c448ecdae",
+    "exported_sha256": "7abdf3d598d0d72461f1c39cd9fe7527a9ff27911ac972483b4d1e2c448ecdae",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/speckit/ontm-4-p1/summary.json",
+    "original_sha256": "33533ebaee473c75d87f73e1ee742defa8d4fd966302e8d331c9e9f4309c1d9f",
+    "exported_sha256": "36acb62e7047cd6c4b2cdb8d0bb380dd3e1bdc5cb77b43feee386fd38b90c3dd",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/spine/pass1/EXECUTION.json",
+    "original_sha256": "c2aeaef260b8ff17c7a609add0f59338e0230e29d169625e653e330869b366f5",
+    "exported_sha256": "c2aeaef260b8ff17c7a609add0f59338e0230e29d169625e653e330869b366f5",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/spine/pass1/ONTM-4/CHANGES.md",
+    "original_sha256": "f211c26fe7739fc9cc69b0bc7b3f8ed3d20789b75666117f8506b1eb7f29d2a0",
+    "exported_sha256": "f211c26fe7739fc9cc69b0bc7b3f8ed3d20789b75666117f8506b1eb7f29d2a0",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/spine/pass1/ONTM-4/changes.patch",
+    "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "exported_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/spine/pass1/ONTM-4/summary.json",
+    "original_sha256": "a8b980ec54e08aafe4b709ee433d9712ad8e52a13d14e525998399d6cd352c9b",
+    "exported_sha256": "9d5ba2e5ef459093dc894b473c18d3ce0d7233603402b267bdcd7985a85fa287",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/spine/pass1/codex-calls/20601e25981942888eca5b75a717c974/usage.json",
+    "original_sha256": "ab5d43c51ae8061cbf8a82f1c908be3bb84d3922e2feb5bc2c3d48a48789bb97",
+    "exported_sha256": "ab5d43c51ae8061cbf8a82f1c908be3bb84d3922e2feb5bc2c3d48a48789bb97",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/spine/pass1/codex-calls/a242ccd96d69452f8aa3ecf38b8bfbe4/usage.json",
+    "original_sha256": "ded5a9ee583dd22301d4a2b9deca71269446c742f3b460b21e900d429106923a",
+    "exported_sha256": "ded5a9ee583dd22301d4a2b9deca71269446c742f3b460b21e900d429106923a",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/spine/pass1/codex-calls/f4ebc637f52e498e862b16cc0eafc7bb/usage.json",
+    "original_sha256": "9014d79ba86e990e318f6469b741e20916b08124740383554dd449a660a6a0dd",
+    "exported_sha256": "9014d79ba86e990e318f6469b741e20916b08124740383554dd449a660a6a0dd",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/spine/pass1/pending-changes/jira-bench-ontm-4-2cflaaly/CHANGES.md",
+    "original_sha256": "f211c26fe7739fc9cc69b0bc7b3f8ed3d20789b75666117f8506b1eb7f29d2a0",
+    "exported_sha256": "f211c26fe7739fc9cc69b0bc7b3f8ed3d20789b75666117f8506b1eb7f29d2a0",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/gpt-6-sol/spine/pass1/pending-changes/jira-bench-ontm-4-2cflaaly/changes.patch",
+    "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "exported_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/jira/IMPORT.json",
+    "original_sha256": "89c6b90a32b0c76206ad7eca6e1a32130081e221aef31b7adcec1c8e0c4b1902",
+    "exported_sha256": "89c6b90a32b0c76206ad7eca6e1a32130081e221aef31b7adcec1c8e0c4b1902",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/jira/ONTM-4.json",
+    "original_sha256": "0b8da0807c47224097b8db64ff86fef805c2c98f9bc09c45bdb8d81be1b66c5f",
+    "exported_sha256": "0b8da0807c47224097b8db64ff86fef805c2c98f9bc09c45bdb8d81be1b66c5f",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/jira/REVIEW.json",
+    "original_sha256": "19f1ee38020881a561e71abe075110d168a97d4c5b291d8113b2ca951e7b40d6",
+    "exported_sha256": "19f1ee38020881a561e71abe075110d168a97d4c5b291d8113b2ca951e7b40d6",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/jira/scenarios.json",
+    "original_sha256": "7abf61f1088b3de59c23dcb5e9bd94a41bedb1b715ce469cdec4635abf7f37c8",
+    "exported_sha256": "7abf61f1088b3de59c23dcb5e9bd94a41bedb1b715ce469cdec4635abf7f37c8",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/recorded-usage.json",
+    "original_sha256": "ca4d1978fb8b8a479fc6580817c4a233cceff94221d22d54b5ae6a41c514cb36",
+    "exported_sha256": "ca4d1978fb8b8a479fc6580817c4a233cceff94221d22d54b5ae6a41c514cb36",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/response-ledger.json",
+    "original_sha256": "cf8c8f4cc7068093ccba91b86fe0e90ab977762a09410837d2a727a3443d763d",
+    "exported_sha256": "cf8c8f4cc7068093ccba91b86fe0e90ab977762a09410837d2a727a3443d763d",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-benchmark-20260930/tokens-and-cost.txt",
+    "original_sha256": "4873d64207290ade119c56c1c0e43e77011e68102dd02c686267d72f759f1a21",
+    "exported_sha256": "4873d64207290ade119c56c1c0e43e77011e68102dd02c686267d72f759f1a21",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-recovery-20260930/EXIT_CODE",
+    "original_sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "exported_sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-recovery-20260930/EXPERIMENT.json",
+    "original_sha256": "ee91743c9a694ac1f7e1bfe306bb94fd71ddd8144376b05e826e49c91e3dd1c9",
+    "exported_sha256": "8b6b7553fa2ae873da64b96e1387b80bcff7626ada8ab2cd1908505010923ad9",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-spine-recovery-20260930/FINISHED",
+    "original_sha256": "e5aeb48bc6a776f599c2704d7fe8b7ba33839292fa314fce80a6244836c06e96",
+    "exported_sha256": "e5aeb48bc6a776f599c2704d7fe8b7ba33839292fa314fce80a6244836c06e96",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-recovery-20260930/RECOVERY_PLAN.json",
+    "original_sha256": "b44dafd1466aa3c669e6af133c52f53247d6440ee9d18970b8e2f5e3a1aa4b1b",
+    "exported_sha256": "0a16c515448ac99d40748fcd6acbc304b93249dd606ee69393755bca161cfd8c",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-spine-recovery-20260930/STARTED",
+    "original_sha256": "045d45a7ca4bffd071fa141754a104866ea88b2bab827c04030aa30c52681be6",
+    "exported_sha256": "045d45a7ca4bffd071fa141754a104866ea88b2bab827c04030aa30c52681be6",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-recovery-20260930/gpt-6-sol/logs/spine-p1.log",
+    "original_sha256": "c6415e1161168e49dcc86385dcf3a966de79139682505a35e266097f3759dbd9",
+    "exported_sha256": "591e6673974a6817c6a14c67f4b14ba045d446c672021a527b3fda8bc5f7eb99",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-spine-recovery-20260930/gpt-6-sol/spine/pass1/EXECUTION.json",
+    "original_sha256": "5be7a854e49d1c882f47bf90904afe1d60f1a4edc91230ac69dc7cf6fb19cc7a",
+    "exported_sha256": "5be7a854e49d1c882f47bf90904afe1d60f1a4edc91230ac69dc7cf6fb19cc7a",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-recovery-20260930/gpt-6-sol/spine/pass1/codex-calls/5c97515dc9604dbfb52c6e6e148d88e5/usage.json",
+    "original_sha256": "e08c58fc81c31d7603665cbd3989485dac13c6200ee905eaee9831892d0fb9c2",
+    "exported_sha256": "e08c58fc81c31d7603665cbd3989485dac13c6200ee905eaee9831892d0fb9c2",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-recovery-20260930/gpt-6-sol/spine/pass1/pending-changes/jira-bench-ontm-4-tw774r65/CHANGES.md",
+    "original_sha256": "d382d536f1daf9fbf4c1f412ea4f6f2e3da9dc3ede2456738c4d791695bb5927",
+    "exported_sha256": "d382d536f1daf9fbf4c1f412ea4f6f2e3da9dc3ede2456738c4d791695bb5927",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-recovery-20260930/gpt-6-sol/spine/pass1/pending-changes/jira-bench-ontm-4-tw774r65/changes.patch",
+    "original_sha256": "652d3552fdb0a0070cbef84fcfc63afbf1e86be0b7bc60518075405dbdacf870",
+    "exported_sha256": "652d3552fdb0a0070cbef84fcfc63afbf1e86be0b7bc60518075405dbdacf870",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-resumed-20261004/EXIT_CODE",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "exported_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-resumed-20261004/EXPERIMENT.json",
+    "original_sha256": "76f7e48840c791ad0ef0836d52d839945d8e9e8e14f4327b9959489f5b52f8d1",
+    "exported_sha256": "f79ca6ee526c644477663c264b1b4fe5085acdd68cca8bf9799afbd1fa2519b7",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-spine-resumed-20261004/FINISHED",
+    "original_sha256": "14a4b88c2999973fbc9f50f33b171403ac3baeccd55da4f54b82d5cf338e1202",
+    "exported_sha256": "14a4b88c2999973fbc9f50f33b171403ac3baeccd55da4f54b82d5cf338e1202",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-resumed-20261004/RESULTS.md",
+    "original_sha256": "1bfed6607d2b9cff5bb8aade15b694c339eb3831a43b208a1495056e071a38e2",
+    "exported_sha256": "9a96ea9d0f8ed3613ad1b7c5da7ea70ff6849d62d9d44af30df40ac98aa4e14a",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-spine-resumed-20261004/RESUMPTION.json",
+    "original_sha256": "6c84d08b9eb5e8ab6977c3f2bf4f32894c6d83a0edd67dbef82e67e213249ca9",
+    "exported_sha256": "e13784e96b9fd58c0a0527dcb6b555828cea72033591c26e0b9d3776e2657916",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-spine-resumed-20261004/STARTED",
+    "original_sha256": "77131e82c21c9d2aec0af4c1596da82b0edd0485c46315508c1a98b2b3ad48b1",
+    "exported_sha256": "77131e82c21c9d2aec0af4c1596da82b0edd0485c46315508c1a98b2b3ad48b1",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-resumed-20261004/gpt-6-sol/logs/spine-p1.log",
+    "original_sha256": "2003360350abb33bcabe5916af254c19d8e7a7af36c13cdf32da75b2fc0c5633",
+    "exported_sha256": "8cc57c27fdfe46ae85af665b73f76621efef153120b23594903ba5a1f8a74b76",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-spine-resumed-20261004/gpt-6-sol/spine/pass1/EXECUTION.json",
+    "original_sha256": "3cf63eb86f0cc93a14edbb6a6b6789b07f95555b0a0213b0770d3e0977766efa",
+    "exported_sha256": "3cf63eb86f0cc93a14edbb6a6b6789b07f95555b0a0213b0770d3e0977766efa",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-resumed-20261004/gpt-6-sol/spine/pass1/ONTM-4/CHANGES.md",
+    "original_sha256": "278e876a433256d01f3c2f173cfbc2202bd7a062c1cff1f77a98cd8b03ecd8fd",
+    "exported_sha256": "278e876a433256d01f3c2f173cfbc2202bd7a062c1cff1f77a98cd8b03ecd8fd",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-resumed-20261004/gpt-6-sol/spine/pass1/ONTM-4/changes.patch",
+    "original_sha256": "ace6d5e73e76048ef8fdff081c434261efad51884f71e2adce71b5af3cfb84d6",
+    "exported_sha256": "ace6d5e73e76048ef8fdff081c434261efad51884f71e2adce71b5af3cfb84d6",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-resumed-20261004/gpt-6-sol/spine/pass1/ONTM-4/summary.json",
+    "original_sha256": "240f23b5b258a8d67ca8fd4a119a14bd20140b14c4f63e00c6869afb1b14ea06",
+    "exported_sha256": "463d336887a91994dce093929d9a33d30c392eaaa01406339ad72678fb3f1c88",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-spine-resumed-20261004/gpt-6-sol/spine/pass1/codex-calls/0e7c876bd85d46e1b42751d1834065b0/usage.json",
+    "original_sha256": "562e7531b8da135b555b6cb2f18b11329d6a50ebada91e827570258de02bcfc4",
+    "exported_sha256": "562e7531b8da135b555b6cb2f18b11329d6a50ebada91e827570258de02bcfc4",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-resumed-20261004/gpt-6-sol/spine/pass1/codex-calls/2d69eedb35454a6ea865b1ca05b16122/usage.json",
+    "original_sha256": "3bf9333b6c8db8ae958d6e2b970f545089921e96343193398ebb700512340811",
+    "exported_sha256": "3bf9333b6c8db8ae958d6e2b970f545089921e96343193398ebb700512340811",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-resumed-20261004/gpt-6-sol/spine/pass1/codex-calls/95cb892d75ab4acca8d66366877a5da9/usage.json",
+    "original_sha256": "7b88eec5bffefb74bd470545459bebea4442481d51ac58c8595aa3ab8d8aab06",
+    "exported_sha256": "7b88eec5bffefb74bd470545459bebea4442481d51ac58c8595aa3ab8d8aab06",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-resumed-20261004/gpt-6-sol/spine/pass1/pending-changes/jira-bench-ontm-4-dh738kdj/CHANGES.md",
+    "original_sha256": "278e876a433256d01f3c2f173cfbc2202bd7a062c1cff1f77a98cd8b03ecd8fd",
+    "exported_sha256": "278e876a433256d01f3c2f173cfbc2202bd7a062c1cff1f77a98cd8b03ecd8fd",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-resumed-20261004/gpt-6-sol/spine/pass1/pending-changes/jira-bench-ontm-4-dh738kdj/changes.patch",
+    "original_sha256": "ace6d5e73e76048ef8fdff081c434261efad51884f71e2adce71b5af3cfb84d6",
+    "exported_sha256": "ace6d5e73e76048ef8fdff081c434261efad51884f71e2adce71b5af3cfb84d6",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-resumed-20261004/recorded-usage.json",
+    "original_sha256": "193dbf0a9f5c092379fc0af8ddd6ea50a8b8ab328eb75a9e1e5be93d6845a7d6",
+    "exported_sha256": "193dbf0a9f5c092379fc0af8ddd6ea50a8b8ab328eb75a9e1e5be93d6845a7d6",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-continuation-20261004/CALCULATOR_PROVENANCE.json",
+    "original_sha256": "d6e9e39738549b299b953c5dd258709eb0fbbefb21106fb1682df34a73a35f20",
+    "exported_sha256": "8f4fb462bb5c1d32e8b68be1d64cefe129a54805a54feca53496fc3b290a7ade",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-spine-continuation-20261004/CALL_BOUND.json",
+    "original_sha256": "c4c24d7c8ebc4d49d8430943ce5d335ec715cad97c4b8590dec9ccaf24683ec9",
+    "exported_sha256": "c4c24d7c8ebc4d49d8430943ce5d335ec715cad97c4b8590dec9ccaf24683ec9",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-continuation-20261004/DESIGN_SETUP.json",
+    "original_sha256": "791e1036b83fab46b06d49ffe23a5fdf8de62a9b13c7546f35629a1c2264566f",
+    "exported_sha256": "305c19aba4c230f50d6356a197617115eba49ce80da5303209863442c6de1356",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-spine-continuation-20261004/EXIT_CODE",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "exported_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-continuation-20261004/FEEDBACK.txt",
+    "original_sha256": "bfdee215d2868b65d85025c4b67fb00c63f013652b4efba1252b16620939183a",
+    "exported_sha256": "bfdee215d2868b65d85025c4b67fb00c63f013652b4efba1252b16620939183a",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-continuation-20261004/FINISHED",
+    "original_sha256": "52072f358670c6816e58f8fe6232e449077ffdd5360dc44b3124db6f695cb90f",
+    "exported_sha256": "52072f358670c6816e58f8fe6232e449077ffdd5360dc44b3124db6f695cb90f",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-continuation-20261004/MODEL_OUTPUT_HASHES.json",
+    "original_sha256": "f3e5aec43d3cc49d83a213d8cae965d3ebe884923a2cd23b1bf2e349c0f05b67",
+    "exported_sha256": "f3e5aec43d3cc49d83a213d8cae965d3ebe884923a2cd23b1bf2e349c0f05b67",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-continuation-20261004/PROJECT.json",
+    "original_sha256": "8ebf7ca4c4b489e30aeb200857474d409d9ef7ec2defab3de1370866c165c6d2",
+    "exported_sha256": "d45da777a5da5fa14d6cda856bec57bce47faf612ff9f4658809bd6c8708f643",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-spine-continuation-20261004/PROTOCOL_AMENDMENT.json",
+    "original_sha256": "e09b94273ac65b076e4de2e26ed55e36466d6ef515801777931b3489ebd7bde2",
+    "exported_sha256": "c05f355cd7af0a65381580a0cc881f6c0a5f1b44419a6c1546d197b5aebb4871",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-spine-continuation-20261004/SHARED_CALCULATOR.json",
+    "original_sha256": "af96e6bf857bade9259b1a88a3359942bcc8d607702d66ee9a7902b9ac8367ce",
+    "exported_sha256": "50a656a10eea20b930f17e5e6e6dca304eeb6030b0179451afca8dfa34eac2c8",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-spine-continuation-20261004/STARTED",
+    "original_sha256": "554086adc4b5e271ef1ec2180b5f01f11a12e982581750c076952fdc21944105",
+    "exported_sha256": "554086adc4b5e271ef1ec2180b5f01f11a12e982581750c076952fdc21944105",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-continuation-20261004/USAGE.json",
+    "original_sha256": "7452171993697d9b1a70cc33dff3c6597ca3e420179506d9cb59f003999d59b1",
+    "exported_sha256": "478884cdf3a6e5c006344bd3b9fc1e5298970c02b3655ffd2cb2f37360fe6307",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-spine-continuation-20261004/codex-calls/5a96927988004495ab1094cd90482a49/usage.json",
+    "original_sha256": "9019c96b1b4e89c865f07da4a953b826377bff13af648db98cc4d216478da8b0",
+    "exported_sha256": "9019c96b1b4e89c865f07da4a953b826377bff13af648db98cc4d216478da8b0",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-continuation-20261004/continuation.log",
+    "original_sha256": "0e64008f8d534ec59552bb4412944106e58aa044937e86f0951350fc5dbeaac8",
+    "exported_sha256": "fcd37aabb29fac6f8021b72086911c6bfa7b2da4f3c83495bf2af92d64b06b4c",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-spine-continuation-20261004/cumulative-changes/CHANGES.md",
+    "original_sha256": "98122386892acda2fd62c838662a68ee80fce92e45c22d9994f47537fef3c50a",
+    "exported_sha256": "98122386892acda2fd62c838662a68ee80fce92e45c22d9994f47537fef3c50a",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-continuation-20261004/cumulative-changes/changes.patch",
+    "original_sha256": "40accc32862d434a1b3bd9f1b9f232459eee1ae7fb3cbcf06105cac183c02f2b",
+    "exported_sha256": "40accc32862d434a1b3bd9f1b9f232459eee1ae7fb3cbcf06105cac183c02f2b",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-continuation-20261004/incremental-changes/CHANGES.md",
+    "original_sha256": "14157c0e7c7ca832158ddd9ebfe63c9fd84fb9bc9b0580d64757a8fe1292a909",
+    "exported_sha256": "14157c0e7c7ca832158ddd9ebfe63c9fd84fb9bc9b0580d64757a8fe1292a909",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-continuation-20261004/incremental-changes/changes.patch",
+    "original_sha256": "469f3aa379f9f522ba89b0e1af11d26510f264341318c20c67f177bd9b91909c",
+    "exported_sha256": "469f3aa379f9f522ba89b0e1af11d26510f264341318c20c67f177bd9b91909c",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-continuation-20261004/refine-1/validation.json",
+    "original_sha256": "671929735c82410d65e55f1e0a410fde455feb52273c2bdebe0e315b7fb1bfca",
+    "exported_sha256": "f271a34a12599181a0b13fb1a014e88f51e7bf6004ebd9577f82a3ac1fc5a6eb",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-spine-continuation-20261004/spine-continuation.json",
+    "original_sha256": "11118e28bc111f8864478432026413be5bc6d4b9b1b3344f77967b806310cefd",
+    "exported_sha256": "9a0da718b14a9d89769799c4d268619165c5ef27ca588f994835f6cc5d178982",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-spine-continuation-20261004/spine-continuation.log",
+    "original_sha256": "abf08352fa6ba07ba41a142249aba89f15f5e1f92a17556084b9db711b277b13",
+    "exported_sha256": "ba3a21a13f7cbc636c6ad27e52c015b12401fadc237d4421c081b753a86116b2",
+    "historical_path_redaction": true
+  },
+  {
+    "file": "reference/results/ontm4-spine-continuation-20261004/spine-continuation.xml",
+    "original_sha256": "5eb71f2a7fa4d330c3034bbcf7bff278803cac0fb43f5a9a2afc74fb7d483d63",
+    "exported_sha256": "5eb71f2a7fa4d330c3034bbcf7bff278803cac0fb43f5a9a2afc74fb7d483d63",
+    "historical_path_redaction": false
+  },
+  {
+    "file": "reference/results/ontm4-spine-continuation-20261004/summary.json",
+    "original_sha256": "e2dd4dcedff48313de38e281f7f91d748401a44dc002532c7fd902505ba1d036",
+    "exported_sha256": "2265521b17d7945ff206f4eae08c293346272848ef0f9756d5c86cf9a0232a52",
+    "historical_path_redaction": true
+  }
+]

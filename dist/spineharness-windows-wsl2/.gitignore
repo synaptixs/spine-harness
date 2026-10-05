@@ -1,0 +1,9 @@
+.local/
+.env*
+benchmark.json
+inputs/
+results/
+__pycache__/
+*.pyc
+.venv/
+dist/

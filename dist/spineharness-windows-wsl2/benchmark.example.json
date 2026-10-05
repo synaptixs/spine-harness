@@ -1,0 +1,41 @@
+{
+  "name": "windows-pilot-001",
+  "source_repo": "~/code/my-application",
+  "repository_url": "https://github.com/my-team/my-application",
+  "baseline": "HEAD",
+  "jira_url": "https://my-team.atlassian.net",
+  "issues": [
+    "TEAM-123"
+  ],
+  "snapshots": [
+    "inputs/TEAM-123.json"
+  ],
+  "model": "gpt-6-sol",
+  "reasoning_effort": "high",
+  "passes": 1,
+  "completion_timeout_seconds": 2700,
+  "requirements_files": [
+    "requirements.txt"
+  ],
+  "extra_test_packages": [],
+  "install_project": false,
+  "source_paths": [
+    ".",
+    "src"
+  ],
+  "checks": [
+    [
+      "{python}",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests"
+    ]
+  ],
+  "acceptance_tests": {},
+  "cap": 150,
+  "job_cap": 150,
+  "tools_dir": "~/.local/share/spineharness/spine-tools-6c0454bac2dbb"
+}

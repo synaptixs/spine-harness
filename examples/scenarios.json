@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "scenarios": [
+    {
+      "key": "CUSTOM-EDIT-RANGE-1",
+      "kind": "edit",
+      "must_edit": ["src/orchestrator/pkg/stats.py"],
+      "spec": {
+        "title": "Call-count range for graph statistics",
+        "summary": "Add call_count_range(frequencies: list[FunctionCallFrequency]) -> int to the existing orchestrator.pkg.stats module. Return the maximum call_count minus the minimum, or zero for empty input. Do not mutate or reorder the input.",
+        "technical_notes": "Modify src/orchestrator/pkg/stats.py, reuse its FunctionCallFrequency dataclass, and add focused tests. Counts are nonnegative integers. Use full type annotations and follow repository conventions.",
+        "acceptance_criteria": ["Empty and singleton inputs return zero", "The result is max(call_count) - min(call_count)", "Input objects and ordering are unchanged", "The helper is in the existing stats module"]
+      },
+      "held_out_tests": ["heldout/test_call_count_range.py"]
+    },
+    {
+      "key": "CUSTOM-NEW-HISTOGRAM-1",
+      "kind": "create",
+      "spec": {
+        "title": "Histogram of graph function call counts",
+        "summary": "Create a module in orchestrator.pkg with call_count_histogram(frequencies: list[FunctionCallFrequency]) -> dict[int, int]. Map each observed call_count to the number of input records with that count. Return an empty dictionary for empty input and preserve all input objects and their order.",
+        "technical_notes": "Reuse the real FunctionCallFrequency from orchestrator.pkg.stats. The counts are nonnegative integers. Choose a suitable new module; do not change existing source modules. Add focused tests and full type annotations.",
+        "acceptance_criteria": ["Empty input returns an empty dictionary", "Repeated call_count values are counted, including zero", "Input records are not modified or reordered", "Implementation is a new module within orchestrator.pkg using the existing dataclass"]
+      },
+      "held_out_tests": ["heldout/test_call_count_histogram.py"]
+    }
+  ]
+}

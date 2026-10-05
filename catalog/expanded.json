@@ -1,0 +1,560 @@
+{
+  "schema_version": 1,
+  "scenarios": [
+    {
+      "key": "EXT-REACH-1",
+      "kind": "edit",
+      "spec": {
+        "title": "Reachable call targets",
+        "summary": "reachable_calls(batch: FactBatch, start: str) -> list[str]. Follow directed CALLS edges between existing nodes. Return sorted reachable node IDs excluding start even when a cycle reaches it. Missing start and empty graph return []; ignore dangling edges and other edge kinds. Do not mutate any input object, collection, or ordering. Results must be deterministic.",
+        "technical_notes": "Implement reachable_calls in src/orchestrator/pkg/facts.py. Reuse the existing orchestrator.pkg.facts, schema, or stats types named in the contract; do not define replacement models. Add the function to this existing module; do not create a parallel source module. Use full type annotations and focused tests. Inputs satisfy the stated types; validation beyond explicitly listed errors is not required.",
+        "acceptance_criteria": [
+          "Follow directed CALLS edges between existing nodes. Return sorted reachable node IDs excluding start even when a cycle reaches it. Missing start and empty graph return []; ignore dangling edges and other edge kinds.",
+          "Empty and boundary inputs follow the stated rules; unrelated edge kinds do not influence kind-specific queries.",
+          "Inputs remain unchanged and output ordering follows the contract."
+        ]
+      },
+      "held_out_tests": [
+        "heldout/test_reach.py"
+      ],
+      "must_edit": [
+        "src/orchestrator/pkg/facts.py"
+      ]
+    },
+    {
+      "key": "EXT-PATH-1",
+      "kind": "edit",
+      "spec": {
+        "title": "Lexicographic shortest call path",
+        "summary": "shortest_call_path(batch: FactBatch, start: str, end: str) -> list[str]. Return the shortest directed CALLS path including both endpoints; choose the lexicographically smallest full ID sequence among equal-length paths. Only existing nodes participate. Return [] if missing or unreachable; an existing start equal to end returns [start]. Ignore other kinds. Do not mutate any input object, collection, or ordering. Results must be deterministic.",
+        "technical_notes": "Implement shortest_call_path in src/orchestrator/pkg/facts.py. Reuse the existing orchestrator.pkg.facts, schema, or stats types named in the contract; do not define replacement models. Add the function to this existing module; do not create a parallel source module. Use full type annotations and focused tests. Inputs satisfy the stated types; validation beyond explicitly listed errors is not required.",
+        "acceptance_criteria": [
+          "Return the shortest directed CALLS path including both endpoints; choose the lexicographically smallest full ID sequence among equal-length paths. Only existing nodes participate. Return [] if missing or unreachable; an existing start equal to end returns [start]. Ignore other kinds.",
+          "Empty and boundary inputs follow the stated rules; unrelated edge kinds do not influence kind-specific queries.",
+          "Inputs remain unchanged and output ordering follows the contract."
+        ]
+      },
+      "held_out_tests": [
+        "heldout/test_path.py"
+      ],
+      "must_edit": [
+        "src/orchestrator/pkg/facts.py"
+      ]
+    },
+    {
+      "key": "EXT-IMPACT-1",
+      "kind": "edit",
+      "spec": {
+        "title": "Bounded reverse call impact",
+        "summary": "call_impact(batch: FactBatch, changed: str, max_depth: int) -> list[str]. Return sorted IDs that can reach changed via 1 through max_depth CALLS edges, excluding changed itself. Only existing nodes participate. max_depth zero or missing changed returns []; negative max_depth raises ValueError even on empty input. Do not mutate any input object, collection, or ordering. Results must be deterministic.",
+        "technical_notes": "Implement call_impact in src/orchestrator/pkg/facts.py. Reuse the existing orchestrator.pkg.facts, schema, or stats types named in the contract; do not define replacement models. Add the function to this existing module; do not create a parallel source module. Use full type annotations and focused tests. Inputs satisfy the stated types; validation beyond explicitly listed errors is not required.",
+        "acceptance_criteria": [
+          "Return sorted IDs that can reach changed via 1 through max_depth CALLS edges, excluding changed itself. Only existing nodes participate. max_depth zero or missing changed returns []; negative max_depth raises ValueError even on empty input.",
+          "Empty and boundary inputs follow the stated rules; unrelated edge kinds do not influence kind-specific queries.",
+          "Inputs remain unchanged and output ordering follows the contract."
+        ]
+      },
+      "held_out_tests": [
+        "heldout/test_impact.py"
+      ],
+      "must_edit": [
+        "src/orchestrator/pkg/facts.py"
+      ]
+    },
+    {
+      "key": "EXT-COMPONENTS-1",
+      "kind": "edit",
+      "spec": {
+        "title": "Weak call components with isolates",
+        "summary": "weak_call_components(batch: FactBatch) -> list[list[str]]. Treat CALLS edges as undirected between existing nodes. Return every connected component including isolated nodes; sort IDs inside components and sort the component lists lexicographically. Ignore dangling edges and other kinds. Empty input returns []. Do not mutate any input object, collection, or ordering. Results must be deterministic.",
+        "technical_notes": "Implement weak_call_components in src/orchestrator/pkg/facts.py. Reuse the existing orchestrator.pkg.facts, schema, or stats types named in the contract; do not define replacement models. Add the function to this existing module; do not create a parallel source module. Use full type annotations and focused tests. Inputs satisfy the stated types; validation beyond explicitly listed errors is not required.",
+        "acceptance_criteria": [
+          "Treat CALLS edges as undirected between existing nodes. Return every connected component including isolated nodes; sort IDs inside components and sort the component lists lexicographically. Ignore dangling edges and other kinds. Empty input returns [].",
+          "Empty and boundary inputs follow the stated rules; unrelated edge kinds do not influence kind-specific queries.",
+          "Inputs remain unchanged and output ordering follows the contract."
+        ]
+      },
+      "held_out_tests": [
+        "heldout/test_components.py"
+      ],
+      "must_edit": [
+        "src/orchestrator/pkg/facts.py"
+      ]
+    },
+    {
+      "key": "EXT-LAYERS-1",
+      "kind": "edit",
+      "spec": {
+        "title": "Topological import layers",
+        "summary": "import_layers(batch: FactBatch) -> list[list[str]]. For IMPORTS edges src->dst between existing nodes, return dependency-first layers: nodes with no remaining imported dependencies first. Sort each layer. Include isolated nodes. Deduplicate relations. Ignore other kinds and dangling edges. Empty returns []; any cycle, including self-import, raises ValueError. Do not mutate any input object, collection, or ordering. Results must be deterministic.",
+        "technical_notes": "Implement import_layers in src/orchestrator/pkg/facts.py. Reuse the existing orchestrator.pkg.facts, schema, or stats types named in the contract; do not define replacement models. Add the function to this existing module; do not create a parallel source module. Use full type annotations and focused tests. Inputs satisfy the stated types; validation beyond explicitly listed errors is not required.",
+        "acceptance_criteria": [
+          "For IMPORTS edges src->dst between existing nodes, return dependency-first layers: nodes with no remaining imported dependencies first. Sort each layer. Include isolated nodes. Deduplicate relations. Ignore other kinds and dangling edges. Empty returns []; any cycle, including self-import, raises ValueError.",
+          "Empty and boundary inputs follow the stated rules; unrelated edge kinds do not influence kind-specific queries.",
+          "Inputs remain unchanged and output ordering follows the contract."
+        ]
+      },
+      "held_out_tests": [
+        "heldout/test_layers.py"
+      ],
+      "must_edit": [
+        "src/orchestrator/pkg/facts.py"
+      ]
+    },
+    {
+      "key": "EXT-SCC-1",
+      "kind": "create",
+      "spec": {
+        "title": "Strongly connected call groups",
+        "summary": "strong_call_components(batch: FactBatch) -> list[list[str]]. Return strongly connected components of directed CALLS among existing nodes, including singleton nodes. Sort members and component lists lexicographically. Ignore dangling edges and other kinds; empty returns []. Do not mutate any input object, collection, or ordering. Results must be deterministic.",
+        "technical_notes": "Implement strong_call_components in src/orchestrator/pkg/call_components.py. Reuse the existing orchestrator.pkg.facts, schema, or stats types named in the contract; do not define replacement models. Create this new module inside orchestrator.pkg and import the real repository types; leave existing tracked source files unchanged. Use full type annotations and focused tests. Inputs satisfy the stated types; validation beyond explicitly listed errors is not required.",
+        "acceptance_criteria": [
+          "Return strongly connected components of directed CALLS among existing nodes, including singleton nodes. Sort members and component lists lexicographically. Ignore dangling edges and other kinds; empty returns [].",
+          "Empty and boundary inputs follow the stated rules; unrelated edge kinds do not influence kind-specific queries.",
+          "Inputs remain unchanged and output ordering follows the contract."
+        ]
+      },
+      "held_out_tests": [
+        "heldout/test_scc.py"
+      ]
+    },
+    {
+      "key": "EXT-DANGLING-1",
+      "kind": "create",
+      "spec": {
+        "title": "Dangling relation diagnostics",
+        "summary": "dangling_relations(batch: FactBatch) -> list[tuple[str, str, str]]. Return sorted unique (src, dst, kind.value) tuples for edges of any kind where either endpoint is absent from batch.nodes. External nodes present in the batch count as present. Ignore provenance when deduplicating. Empty returns []. Do not mutate any input object, collection, or ordering. Results must be deterministic.",
+        "technical_notes": "Implement dangling_relations in src/orchestrator/pkg/edge_diagnostics.py. Reuse the existing orchestrator.pkg.facts, schema, or stats types named in the contract; do not define replacement models. Create this new module inside orchestrator.pkg and import the real repository types; leave existing tracked source files unchanged. Use full type annotations and focused tests. Inputs satisfy the stated types; validation beyond explicitly listed errors is not required.",
+        "acceptance_criteria": [
+          "Return sorted unique (src, dst, kind.value) tuples for edges of any kind where either endpoint is absent from batch.nodes. External nodes present in the batch count as present. Ignore provenance when deduplicating. Empty returns [].",
+          "Empty and boundary inputs follow the stated rules; unrelated edge kinds do not influence kind-specific queries.",
+          "Inputs remain unchanged and output ordering follows the contract."
+        ]
+      },
+      "held_out_tests": [
+        "heldout/test_dangling.py"
+      ]
+    },
+    {
+      "key": "EXT-BALANCE-1",
+      "kind": "create",
+      "spec": {
+        "title": "Unique call degree balance",
+        "summary": "call_degree_balance(batch: FactBatch) -> dict[str, int]. For every existing node return distinct outgoing CALLS neighbor count minus distinct incoming CALLS neighbor count. Ignore dangling edges and other kinds. Self-calls add one to both and cancel. Include zero values; empty returns {}. Do not mutate any input object, collection, or ordering. Results must be deterministic.",
+        "technical_notes": "Implement call_degree_balance in src/orchestrator/pkg/call_balance.py. Reuse the existing orchestrator.pkg.facts, schema, or stats types named in the contract; do not define replacement models. Create this new module inside orchestrator.pkg and import the real repository types; leave existing tracked source files unchanged. Use full type annotations and focused tests. Inputs satisfy the stated types; validation beyond explicitly listed errors is not required.",
+        "acceptance_criteria": [
+          "For every existing node return distinct outgoing CALLS neighbor count minus distinct incoming CALLS neighbor count. Ignore dangling edges and other kinds. Self-calls add one to both and cancel. Include zero values; empty returns {}.",
+          "Empty and boundary inputs follow the stated rules; unrelated edge kinds do not influence kind-specific queries.",
+          "Inputs remain unchanged and output ordering follows the contract."
+        ]
+      },
+      "held_out_tests": [
+        "heldout/test_balance.py"
+      ]
+    },
+    {
+      "key": "EXT-LANGUAGE-1",
+      "kind": "create",
+      "spec": {
+        "title": "Cross-language call boundaries",
+        "summary": "cross_language_calls(batch: FactBatch) -> list[tuple[str, str]]. Return sorted unique CALLS (src,dst) pairs whose existing endpoint nodes have nonempty, different language strings (case-sensitive). Include external nodes if their language is known. Ignore other kinds and dangling endpoints. Empty returns []. Do not mutate any input object, collection, or ordering. Results must be deterministic.",
+        "technical_notes": "Implement cross_language_calls in src/orchestrator/pkg/language_boundaries.py. Reuse the existing orchestrator.pkg.facts, schema, or stats types named in the contract; do not define replacement models. Create this new module inside orchestrator.pkg and import the real repository types; leave existing tracked source files unchanged. Use full type annotations and focused tests. Inputs satisfy the stated types; validation beyond explicitly listed errors is not required.",
+        "acceptance_criteria": [
+          "Return sorted unique CALLS (src,dst) pairs whose existing endpoint nodes have nonempty, different language strings (case-sensitive). Include external nodes if their language is known. Ignore other kinds and dangling endpoints. Empty returns [].",
+          "Empty and boundary inputs follow the stated rules; unrelated edge kinds do not influence kind-specific queries.",
+          "Inputs remain unchanged and output ordering follows the contract."
+        ]
+      },
+      "held_out_tests": [
+        "heldout/test_language.py"
+      ]
+    },
+    {
+      "key": "EXT-LEAVES-1",
+      "kind": "create",
+      "spec": {
+        "title": "Containment leaves under a root",
+        "summary": "containment_leaves(batch: FactBatch, root: str) -> list[str]. Follow CONTAINS edges among existing nodes from root. Return sorted reachable IDs with no valid outgoing CONTAINS edges, including root when it is a leaf. Missing root returns []. Cycles terminate and contribute no leaves unless they lead to a leaf. Ignore other kinds and dangling targets. Do not mutate any input object, collection, or ordering. Results must be deterministic.",
+        "technical_notes": "Implement containment_leaves in src/orchestrator/pkg/containment_leaves.py. Reuse the existing orchestrator.pkg.facts, schema, or stats types named in the contract; do not define replacement models. Create this new module inside orchestrator.pkg and import the real repository types; leave existing tracked source files unchanged. Use full type annotations and focused tests. Inputs satisfy the stated types; validation beyond explicitly listed errors is not required.",
+        "acceptance_criteria": [
+          "Follow CONTAINS edges among existing nodes from root. Return sorted reachable IDs with no valid outgoing CONTAINS edges, including root when it is a leaf. Missing root returns []. Cycles terminate and contribute no leaves unless they lead to a leaf. Ignore other kinds and dangling targets.",
+          "Empty and boundary inputs follow the stated rules; unrelated edge kinds do not influence kind-specific queries.",
+          "Inputs remain unchanged and output ordering follows the contract."
+        ]
+      },
+      "held_out_tests": [
+        "heldout/test_leaves.py"
+      ]
+    },
+    {
+      "key": "EXT-DUPCOL-1",
+      "kind": "edit",
+      "spec": {
+        "title": "Duplicate database column diagnostics",
+        "summary": "duplicate_columns(schema: DBSchema) -> list[tuple[str, str]]. Return sorted unique (table.name,column.name) pairs for column names appearing more than once within a table. Names are case-sensitive; repeats across different tables alone do not count. Table names are unique. Empty returns []. Do not mutate any input object, collection, or ordering. Results must be deterministic.",
+        "technical_notes": "Implement duplicate_columns in src/orchestrator/pkg/schema.py. Reuse the existing orchestrator.pkg.facts, schema, or stats types named in the contract; do not define replacement models. Add the function to this existing module; do not create a parallel source module. Use full type annotations and focused tests. Inputs satisfy the stated types; validation beyond explicitly listed errors is not required.",
+        "acceptance_criteria": [
+          "Return sorted unique (table.name,column.name) pairs for column names appearing more than once within a table. Names are case-sensitive; repeats across different tables alone do not count. Table names are unique. Empty returns [].",
+          "Empty and boundary inputs follow the stated rules; unrelated edge kinds do not influence kind-specific queries.",
+          "Inputs remain unchanged and output ordering follows the contract."
+        ]
+      },
+      "held_out_tests": [
+        "heldout/test_dupcol.py"
+      ],
+      "must_edit": [
+        "src/orchestrator/pkg/schema.py"
+      ]
+    },
+    {
+      "key": "EXT-FKCHECK-1",
+      "kind": "edit",
+      "spec": {
+        "title": "Foreign-key integrity diagnostics",
+        "summary": "foreign_key_errors(schema: DBSchema) -> list[tuple[str, str, str]]. Return sorted unique (table.name, fk.column, reason) diagnostics. Reasons: missing-local-column if fk.column absent locally; missing-table if ref_table absent; missing-ref-column if ref_table exists and nonempty ref_column absent there. Emit all applicable reasons for each FK. Empty ref_column skips referenced-column validation. Table/column names are case-sensitive; table names unique. Empty returns []. Do not mutate any input object, collection, or ordering. Results must be deterministic.",
+        "technical_notes": "Implement foreign_key_errors in src/orchestrator/pkg/schema.py. Reuse the existing orchestrator.pkg.facts, schema, or stats types named in the contract; do not define replacement models. Add the function to this existing module; do not create a parallel source module. Use full type annotations and focused tests. Inputs satisfy the stated types; validation beyond explicitly listed errors is not required.",
+        "acceptance_criteria": [
+          "Return sorted unique (table.name, fk.column, reason) diagnostics. Reasons: missing-local-column if fk.column absent locally; missing-table if ref_table absent; missing-ref-column if ref_table exists and nonempty ref_column absent there. Emit all applicable reasons for each FK. Empty ref_column skips referenced-column validation. Table/column names are case-sensitive; table names unique. Empty returns [].",
+          "Empty and boundary inputs follow the stated rules; unrelated edge kinds do not influence kind-specific queries.",
+          "Inputs remain unchanged and output ordering follows the contract."
+        ]
+      },
+      "held_out_tests": [
+        "heldout/test_fkcheck.py"
+      ],
+      "must_edit": [
+        "src/orchestrator/pkg/schema.py"
+      ]
+    },
+    {
+      "key": "EXT-DBORDER-1",
+      "kind": "edit",
+      "spec": {
+        "title": "Database insertion layers",
+        "summary": "table_insert_layers(schema: DBSchema) -> list[list[str]]. Return dependency-first layers of table names based on foreign keys to other existing tables. Ignore self-references and references to absent tables. Sort each layer; table names unique; views participate like tables. Empty returns []; cycles between different tables raise ValueError. Do not mutate any input object, collection, or ordering. Results must be deterministic.",
+        "technical_notes": "Implement table_insert_layers in src/orchestrator/pkg/schema.py. Reuse the existing orchestrator.pkg.facts, schema, or stats types named in the contract; do not define replacement models. Add the function to this existing module; do not create a parallel source module. Use full type annotations and focused tests. Inputs satisfy the stated types; validation beyond explicitly listed errors is not required.",
+        "acceptance_criteria": [
+          "Return dependency-first layers of table names based on foreign keys to other existing tables. Ignore self-references and references to absent tables. Sort each layer; table names unique; views participate like tables. Empty returns []; cycles between different tables raise ValueError.",
+          "Empty and boundary inputs follow the stated rules; unrelated edge kinds do not influence kind-specific queries.",
+          "Inputs remain unchanged and output ordering follows the contract."
+        ]
+      },
+      "held_out_tests": [
+        "heldout/test_dborder.py"
+      ],
+      "must_edit": [
+        "src/orchestrator/pkg/schema.py"
+      ]
+    },
+    {
+      "key": "EXT-SCHEMADIFF-1",
+      "kind": "edit",
+      "spec": {
+        "title": "Column-level schema drift",
+        "summary": "column_changes(before: DBSchema, after: DBSchema) -> dict[str, list[tuple[str, str]]]. Return keys added, removed, changed, each a sorted list of (table,column). Compare columns by table/name; changed means type or nullable differs for a column present in both. Ignore database name, provenance, foreign keys, and is_view. Added/removed tables contribute all their columns. Assume unique table and column names. Empty snapshots return all three empty lists. Do not mutate any input object, collection, or ordering. Results must be deterministic.",
+        "technical_notes": "Implement column_changes in src/orchestrator/pkg/schema.py. Reuse the existing orchestrator.pkg.facts, schema, or stats types named in the contract; do not define replacement models. Add the function to this existing module; do not create a parallel source module. Use full type annotations and focused tests. Inputs satisfy the stated types; validation beyond explicitly listed errors is not required.",
+        "acceptance_criteria": [
+          "Return keys added, removed, changed, each a sorted list of (table,column). Compare columns by table/name; changed means type or nullable differs for a column present in both. Ignore database name, provenance, foreign keys, and is_view. Added/removed tables contribute all their columns. Assume unique table and column names. Empty snapshots return all three empty lists.",
+          "Empty and boundary inputs follow the stated rules; unrelated edge kinds do not influence kind-specific queries.",
+          "Inputs remain unchanged and output ordering follows the contract."
+        ]
+      },
+      "held_out_tests": [
+        "heldout/test_schemadiff.py"
+      ],
+      "must_edit": [
+        "src/orchestrator/pkg/schema.py"
+      ]
+    },
+    {
+      "key": "EXT-REQUIRED-1",
+      "kind": "edit",
+      "spec": {
+        "title": "Required database fields",
+        "summary": "required_columns(schema: DBSchema) -> dict[str, list[str]]. For each non-view table map its name to sorted distinct non-nullable column names, retaining empty lists. Exclude views. Do not infer requiredness from column type or foreign keys. Table names are unique; empty returns {}. Do not mutate any input object, collection, or ordering. Results must be deterministic.",
+        "technical_notes": "Implement required_columns in src/orchestrator/pkg/schema.py. Reuse the existing orchestrator.pkg.facts, schema, or stats types named in the contract; do not define replacement models. Add the function to this existing module; do not create a parallel source module. Use full type annotations and focused tests. Inputs satisfy the stated types; validation beyond explicitly listed errors is not required.",
+        "acceptance_criteria": [
+          "For each non-view table map its name to sorted distinct non-nullable column names, retaining empty lists. Exclude views. Do not infer requiredness from column type or foreign keys. Table names are unique; empty returns {}.",
+          "Empty and boundary inputs follow the stated rules; unrelated edge kinds do not influence kind-specific queries.",
+          "Inputs remain unchanged and output ordering follows the contract."
+        ]
+      },
+      "held_out_tests": [
+        "heldout/test_required.py"
+      ],
+      "must_edit": [
+        "src/orchestrator/pkg/schema.py"
+      ]
+    },
+    {
+      "key": "EXT-RANGES-1",
+      "kind": "create",
+      "spec": {
+        "title": "Merge adjacent provenance ranges",
+        "summary": "merge_source_ranges(items: list[Provenance]) -> list[tuple[str, str, int, int]]. Group by exact (repo,file). Treat end_line=None as line, with inclusive bounds. Merge overlapping or adjacent ranges. Return (repo,file,start,end) tuples sorted lexicographically. Any line < 1 or end < line raises ValueError. Empty returns []. Do not mutate any input object, collection, or ordering. Results must be deterministic.",
+        "technical_notes": "Implement merge_source_ranges in src/orchestrator/pkg/provenance_ranges.py. Reuse the existing orchestrator.pkg.facts, schema, or stats types named in the contract; do not define replacement models. Create this new module inside orchestrator.pkg and import the real repository types; leave existing tracked source files unchanged. Use full type annotations and focused tests. Inputs satisfy the stated types; validation beyond explicitly listed errors is not required.",
+        "acceptance_criteria": [
+          "Group by exact (repo,file). Treat end_line=None as line, with inclusive bounds. Merge overlapping or adjacent ranges. Return (repo,file,start,end) tuples sorted lexicographically. Any line < 1 or end < line raises ValueError. Empty returns [].",
+          "Empty and boundary inputs follow the stated rules; unrelated edge kinds do not influence kind-specific queries.",
+          "Inputs remain unchanged and output ordering follows the contract."
+        ]
+      },
+      "held_out_tests": [
+        "heldout/test_ranges.py"
+      ]
+    },
+    {
+      "key": "EXT-FILECOVER-1",
+      "kind": "create",
+      "spec": {
+        "title": "Grounded symbol counts by repository/file",
+        "summary": "grounded_file_counts(nodes: list[Node]) -> dict[tuple[str, str], int]. Count distinct grounded node IDs per exact (provenance.repo, provenance.file), using Node.grounded. External or missing-provenance records do not count. Repeated IDs count once per file group; the same ID in different groups counts in each. Empty returns {}. Do not mutate any input object, collection, or ordering. Results must be deterministic.",
+        "technical_notes": "Implement grounded_file_counts in src/orchestrator/pkg/file_coverage.py. Reuse the existing orchestrator.pkg.facts, schema, or stats types named in the contract; do not define replacement models. Create this new module inside orchestrator.pkg and import the real repository types; leave existing tracked source files unchanged. Use full type annotations and focused tests. Inputs satisfy the stated types; validation beyond explicitly listed errors is not required.",
+        "acceptance_criteria": [
+          "Count distinct grounded node IDs per exact (provenance.repo, provenance.file), using Node.grounded. External or missing-provenance records do not count. Repeated IDs count once per file group; the same ID in different groups counts in each. Empty returns {}.",
+          "Empty and boundary inputs follow the stated rules; unrelated edge kinds do not influence kind-specific queries.",
+          "Inputs remain unchanged and output ordering follows the contract."
+        ]
+      },
+      "held_out_tests": [
+        "heldout/test_filecover.py"
+      ]
+    },
+    {
+      "key": "EXT-LOCATE-1",
+      "kind": "create",
+      "spec": {
+        "title": "Find symbols at a source line",
+        "summary": "symbols_at_line(nodes: list[Node], repo: str, file: str, line: int) -> list[str]. Return sorted distinct grounded IDs whose provenance matches repo and file exactly and contains line inclusively. Missing end_line is a single line. Query line < 1 raises ValueError, even for empty input. Input provenance ranges are valid. Empty returns []. Do not mutate any input object, collection, or ordering. Results must be deterministic.",
+        "technical_notes": "Implement symbols_at_line in src/orchestrator/pkg/source_lookup.py. Reuse the existing orchestrator.pkg.facts, schema, or stats types named in the contract; do not define replacement models. Create this new module inside orchestrator.pkg and import the real repository types; leave existing tracked source files unchanged. Use full type annotations and focused tests. Inputs satisfy the stated types; validation beyond explicitly listed errors is not required.",
+        "acceptance_criteria": [
+          "Return sorted distinct grounded IDs whose provenance matches repo and file exactly and contains line inclusively. Missing end_line is a single line. Query line < 1 raises ValueError, even for empty input. Input provenance ranges are valid. Empty returns [].",
+          "Empty and boundary inputs follow the stated rules; unrelated edge kinds do not influence kind-specific queries.",
+          "Inputs remain unchanged and output ordering follows the contract."
+        ]
+      },
+      "held_out_tests": [
+        "heldout/test_locate.py"
+      ]
+    },
+    {
+      "key": "EXT-AMBIGUOUS-1",
+      "kind": "create",
+      "spec": {
+        "title": "Ambiguous internal symbol names",
+        "summary": "ambiguous_names(nodes: list[Node]) -> dict[str, list[str]]. Group non-external nodes by exact name and return only names with two or more distinct IDs, with sorted ID lists. Missing provenance does not exclude an internal node. Duplicate records of one ID alone are not ambiguity. Empty returns {}. Do not mutate any input object, collection, or ordering. Results must be deterministic.",
+        "technical_notes": "Implement ambiguous_names in src/orchestrator/pkg/name_ambiguity.py. Reuse the existing orchestrator.pkg.facts, schema, or stats types named in the contract; do not define replacement models. Create this new module inside orchestrator.pkg and import the real repository types; leave existing tracked source files unchanged. Use full type annotations and focused tests. Inputs satisfy the stated types; validation beyond explicitly listed errors is not required.",
+        "acceptance_criteria": [
+          "Group non-external nodes by exact name and return only names with two or more distinct IDs, with sorted ID lists. Missing provenance does not exclude an internal node. Duplicate records of one ID alone are not ambiguity. Empty returns {}.",
+          "Empty and boundary inputs follow the stated rules; unrelated edge kinds do not influence kind-specific queries.",
+          "Inputs remain unchanged and output ordering follows the contract."
+        ]
+      },
+      "held_out_tests": [
+        "heldout/test_ambiguous.py"
+      ]
+    },
+    {
+      "key": "EXT-TOUCHED-1",
+      "kind": "create",
+      "spec": {
+        "title": "Map changed lines to grounded symbols",
+        "summary": "touched_symbols(nodes: list[Node], repo: str, changed: dict[str, list[int]]) -> list[str]. Return sorted distinct grounded IDs in the exact repo whose inclusive provenance range intersects at least one changed line for the exact file. Missing end_line is a single line. Ignore nonpositive changed line numbers, unknown files, external and ungrounded records. Provenance ranges are valid. Empty returns []. Do not mutate any input object, collection, or ordering. Results must be deterministic.",
+        "technical_notes": "Implement touched_symbols in src/orchestrator/pkg/changed_symbols.py. Reuse the existing orchestrator.pkg.facts, schema, or stats types named in the contract; do not define replacement models. Create this new module inside orchestrator.pkg and import the real repository types; leave existing tracked source files unchanged. Use full type annotations and focused tests. Inputs satisfy the stated types; validation beyond explicitly listed errors is not required.",
+        "acceptance_criteria": [
+          "Return sorted distinct grounded IDs in the exact repo whose inclusive provenance range intersects at least one changed line for the exact file. Missing end_line is a single line. Ignore nonpositive changed line numbers, unknown files, external and ungrounded records. Provenance ranges are valid. Empty returns [].",
+          "Empty and boundary inputs follow the stated rules; unrelated edge kinds do not influence kind-specific queries.",
+          "Inputs remain unchanged and output ordering follows the contract."
+        ]
+      },
+      "held_out_tests": [
+        "heldout/test_touched.py"
+      ]
+    },
+    {
+      "key": "EXT-MEDIAN-1",
+      "kind": "edit",
+      "spec": {
+        "title": "Lower median call count",
+        "summary": "median_call_count(frequencies: list[FunctionCallFrequency]) -> int. Return the lower median of call_count values: index (n-1)//2 in ascending sorted counts. Each record has equal weight, including repeated IDs. Empty returns zero. Counts are nonnegative integers. Do not mutate any input object, collection, or ordering. Results must be deterministic.",
+        "technical_notes": "Implement median_call_count in src/orchestrator/pkg/stats.py. Reuse the existing orchestrator.pkg.facts, schema, or stats types named in the contract; do not define replacement models. Add the function to this existing module; do not create a parallel source module. Use full type annotations and focused tests. Inputs satisfy the stated types; validation beyond explicitly listed errors is not required.",
+        "acceptance_criteria": [
+          "Return the lower median of call_count values: index (n-1)//2 in ascending sorted counts. Each record has equal weight, including repeated IDs. Empty returns zero. Counts are nonnegative integers.",
+          "Empty and boundary inputs follow the stated rules; unrelated edge kinds do not influence kind-specific queries.",
+          "Inputs remain unchanged and output ordering follows the contract."
+        ]
+      },
+      "held_out_tests": [
+        "heldout/test_median.py"
+      ],
+      "must_edit": [
+        "src/orchestrator/pkg/stats.py"
+      ]
+    },
+    {
+      "key": "EXT-SHARE-1",
+      "kind": "edit",
+      "spec": {
+        "title": "Top-k call concentration",
+        "summary": "top_call_share(frequencies: list[FunctionCallFrequency], k: int) -> float. Return sum of the k largest call_count values divided by total count; clamp k above record count. Return 0.0 for k=0, empty input, or zero total. Negative k raises ValueError even for empty input. Counts are nonnegative integers; duplicate IDs are separate records. Do not mutate any input object, collection, or ordering. Results must be deterministic.",
+        "technical_notes": "Implement top_call_share in src/orchestrator/pkg/stats.py. Reuse the existing orchestrator.pkg.facts, schema, or stats types named in the contract; do not define replacement models. Add the function to this existing module; do not create a parallel source module. Use full type annotations and focused tests. Inputs satisfy the stated types; validation beyond explicitly listed errors is not required.",
+        "acceptance_criteria": [
+          "Return sum of the k largest call_count values divided by total count; clamp k above record count. Return 0.0 for k=0, empty input, or zero total. Negative k raises ValueError even for empty input. Counts are nonnegative integers; duplicate IDs are separate records.",
+          "Empty and boundary inputs follow the stated rules; unrelated edge kinds do not influence kind-specific queries.",
+          "Inputs remain unchanged and output ordering follows the contract."
+        ]
+      },
+      "held_out_tests": [
+        "heldout/test_share.py"
+      ],
+      "must_edit": [
+        "src/orchestrator/pkg/stats.py"
+      ]
+    },
+    {
+      "key": "EXT-MERGEFREQ-1",
+      "kind": "edit",
+      "spec": {
+        "title": "Merge frequency snapshots by identity",
+        "summary": "merge_call_frequencies(groups: list[list[FunctionCallFrequency]]) -> list[FunctionCallFrequency]. Merge all records by node_id, summing counts, and return new FunctionCallFrequency records sorted by ID. Repeated IDs must have identical name; conflicting names raise ValueError. Counts are nonnegative. Empty input/groups return []. Do not reuse input record objects. Do not mutate any input object, collection, or ordering. Results must be deterministic.",
+        "technical_notes": "Implement merge_call_frequencies in src/orchestrator/pkg/stats.py. Reuse the existing orchestrator.pkg.facts, schema, or stats types named in the contract; do not define replacement models. Add the function to this existing module; do not create a parallel source module. Use full type annotations and focused tests. Inputs satisfy the stated types; validation beyond explicitly listed errors is not required.",
+        "acceptance_criteria": [
+          "Merge all records by node_id, summing counts, and return new FunctionCallFrequency records sorted by ID. Repeated IDs must have identical name; conflicting names raise ValueError. Counts are nonnegative. Empty input/groups return []. Do not reuse input record objects.",
+          "Empty and boundary inputs follow the stated rules; unrelated edge kinds do not influence kind-specific queries.",
+          "Inputs remain unchanged and output ordering follows the contract."
+        ]
+      },
+      "held_out_tests": [
+        "heldout/test_mergefreq.py"
+      ],
+      "must_edit": [
+        "src/orchestrator/pkg/stats.py"
+      ]
+    },
+    {
+      "key": "EXT-RANK-1",
+      "kind": "edit",
+      "spec": {
+        "title": "Dense ranks for called functions",
+        "summary": "dense_call_ranks(frequencies: list[FunctionCallFrequency]) -> list[tuple[str, int]]. Return (node_id,rank) sorted by decreasing call_count then ascending node_id. Dense ranks start at 1 and ties share rank without gaps. Node IDs are unique; counts are nonnegative; empty returns []. Do not mutate any input object, collection, or ordering. Results must be deterministic.",
+        "technical_notes": "Implement dense_call_ranks in src/orchestrator/pkg/stats.py. Reuse the existing orchestrator.pkg.facts, schema, or stats types named in the contract; do not define replacement models. Add the function to this existing module; do not create a parallel source module. Use full type annotations and focused tests. Inputs satisfy the stated types; validation beyond explicitly listed errors is not required.",
+        "acceptance_criteria": [
+          "Return (node_id,rank) sorted by decreasing call_count then ascending node_id. Dense ranks start at 1 and ties share rank without gaps. Node IDs are unique; counts are nonnegative; empty returns [].",
+          "Empty and boundary inputs follow the stated rules; unrelated edge kinds do not influence kind-specific queries.",
+          "Inputs remain unchanged and output ordering follows the contract."
+        ]
+      },
+      "held_out_tests": [
+        "heldout/test_rank.py"
+      ],
+      "must_edit": [
+        "src/orchestrator/pkg/stats.py"
+      ]
+    },
+    {
+      "key": "EXT-ALLOCATE-1",
+      "kind": "edit",
+      "spec": {
+        "title": "Proportional integer call-budget allocation",
+        "summary": "allocate_call_budget(frequencies: list[FunctionCallFrequency], budget: int) -> dict[str, int]. For unique node IDs and nonnegative integer counts, apportion a nonnegative integer budget proportionally: floor each exact quota, then award remaining units by largest fractional remainder, ties by ascending ID. Use integer arithmetic to avoid large-count rounding errors. Include every ID. If total count is zero return zero for every ID (budget unallocated). Negative budget raises ValueError even for empty input; empty returns {}. Do not mutate any input object, collection, or ordering. Results must be deterministic.",
+        "technical_notes": "Implement allocate_call_budget in src/orchestrator/pkg/stats.py. Reuse the existing orchestrator.pkg.facts, schema, or stats types named in the contract; do not define replacement models. Add the function to this existing module; do not create a parallel source module. Use full type annotations and focused tests. Inputs satisfy the stated types; validation beyond explicitly listed errors is not required.",
+        "acceptance_criteria": [
+          "For unique node IDs and nonnegative integer counts, apportion a nonnegative integer budget proportionally: floor each exact quota, then award remaining units by largest fractional remainder, ties by ascending ID. Use integer arithmetic to avoid large-count rounding errors. Include every ID. If total count is zero return zero for every ID (budget unallocated). Negative budget raises ValueError even for empty input; empty returns {}.",
+          "Empty and boundary inputs follow the stated rules; unrelated edge kinds do not influence kind-specific queries.",
+          "Inputs remain unchanged and output ordering follows the contract."
+        ]
+      },
+      "held_out_tests": [
+        "heldout/test_allocate.py"
+      ],
+      "must_edit": [
+        "src/orchestrator/pkg/stats.py"
+      ]
+    },
+    {
+      "key": "EXT-HANDLERS-1",
+      "kind": "create",
+      "spec": {
+        "title": "Endpoint-to-handler coverage",
+        "summary": "endpoint_handlers(batch: FactBatch) -> dict[str, list[str]]. For every non-external ENDPOINT node return sorted distinct non-external FUNCTION targets of its EXPOSES edges. Retain endpoints with empty handler lists. Ignore wrong source/target kinds, external nodes, other edges, and missing endpoints. Empty returns {}. Do not mutate any input object, collection, or ordering. Results must be deterministic.",
+        "technical_notes": "Implement endpoint_handlers in src/orchestrator/pkg/endpoint_handlers.py. Reuse the existing orchestrator.pkg.facts, schema, or stats types named in the contract; do not define replacement models. Create this new module inside orchestrator.pkg and import the real repository types; leave existing tracked source files unchanged. Use full type annotations and focused tests. Inputs satisfy the stated types; validation beyond explicitly listed errors is not required.",
+        "acceptance_criteria": [
+          "For every non-external ENDPOINT node return sorted distinct non-external FUNCTION targets of its EXPOSES edges. Retain endpoints with empty handler lists. Ignore wrong source/target kinds, external nodes, other edges, and missing endpoints. Empty returns {}.",
+          "Empty and boundary inputs follow the stated rules; unrelated edge kinds do not influence kind-specific queries.",
+          "Inputs remain unchanged and output ordering follows the contract."
+        ]
+      },
+      "held_out_tests": [
+        "heldout/test_handlers.py"
+      ]
+    },
+    {
+      "key": "EXT-ORPHANDOC-1",
+      "kind": "create",
+      "spec": {
+        "title": "Unbound documentation pages",
+        "summary": "orphan_documents(batch: FactBatch) -> list[str]. Return sorted IDs of non-external DOC nodes with no outgoing MENTIONS edge to an existing non-external node whose kind is in the repository SYMBOL_KINDS constant. Links to documents, modules, intents, external or missing nodes do not establish coverage. Empty returns []. Do not mutate any input object, collection, or ordering. Results must be deterministic.",
+        "technical_notes": "Implement orphan_documents in src/orchestrator/pkg/documentation_gaps.py. Reuse the existing orchestrator.pkg.facts, schema, or stats types named in the contract; do not define replacement models. Create this new module inside orchestrator.pkg and import the real repository types; leave existing tracked source files unchanged. Use full type annotations and focused tests. Inputs satisfy the stated types; validation beyond explicitly listed errors is not required.",
+        "acceptance_criteria": [
+          "Return sorted IDs of non-external DOC nodes with no outgoing MENTIONS edge to an existing non-external node whose kind is in the repository SYMBOL_KINDS constant. Links to documents, modules, intents, external or missing nodes do not establish coverage. Empty returns [].",
+          "Empty and boundary inputs follow the stated rules; unrelated edge kinds do not influence kind-specific queries.",
+          "Inputs remain unchanged and output ordering follows the contract."
+        ]
+      },
+      "held_out_tests": [
+        "heldout/test_orphandoc.py"
+      ]
+    },
+    {
+      "key": "EXT-INTENTS-1",
+      "kind": "create",
+      "spec": {
+        "title": "Untraced internal symbols",
+        "summary": "untraced_symbols(batch: FactBatch) -> list[str]. Return sorted IDs of non-external nodes in SYMBOL_KINDS lacking a SERVES edge to an existing non-external INTENT node. Reverse SERVES edges, other edge kinds, missing/external intent targets do not count. Provenance is not required. Empty returns []. Do not mutate any input object, collection, or ordering. Results must be deterministic.",
+        "technical_notes": "Implement untraced_symbols in src/orchestrator/pkg/intent_gaps.py. Reuse the existing orchestrator.pkg.facts, schema, or stats types named in the contract; do not define replacement models. Create this new module inside orchestrator.pkg and import the real repository types; leave existing tracked source files unchanged. Use full type annotations and focused tests. Inputs satisfy the stated types; validation beyond explicitly listed errors is not required.",
+        "acceptance_criteria": [
+          "Return sorted IDs of non-external nodes in SYMBOL_KINDS lacking a SERVES edge to an existing non-external INTENT node. Reverse SERVES edges, other edge kinds, missing/external intent targets do not count. Provenance is not required. Empty returns [].",
+          "Empty and boundary inputs follow the stated rules; unrelated edge kinds do not influence kind-specific queries.",
+          "Inputs remain unchanged and output ordering follows the contract."
+        ]
+      },
+      "held_out_tests": [
+        "heldout/test_intents.py"
+      ]
+    },
+    {
+      "key": "EXT-CUT-1",
+      "kind": "create",
+      "spec": {
+        "title": "Outgoing dependency boundary",
+        "summary": "outgoing_boundary(batch: FactBatch, selected: set[str]) -> list[tuple[str, str, str]]. Return sorted unique (src,dst,kind.value) tuples of any edge kind from a selected existing node to an unselected existing node. Ignore missing endpoints and selected IDs absent from the graph; preserve edge direction. External nodes present in the graph participate. Empty returns []. Do not mutate any input object, collection, or ordering. Results must be deterministic.",
+        "technical_notes": "Implement outgoing_boundary in src/orchestrator/pkg/dependency_cut.py. Reuse the existing orchestrator.pkg.facts, schema, or stats types named in the contract; do not define replacement models. Create this new module inside orchestrator.pkg and import the real repository types; leave existing tracked source files unchanged. Use full type annotations and focused tests. Inputs satisfy the stated types; validation beyond explicitly listed errors is not required.",
+        "acceptance_criteria": [
+          "Return sorted unique (src,dst,kind.value) tuples of any edge kind from a selected existing node to an unselected existing node. Ignore missing endpoints and selected IDs absent from the graph; preserve edge direction. External nodes present in the graph participate. Empty returns [].",
+          "Empty and boundary inputs follow the stated rules; unrelated edge kinds do not influence kind-specific queries.",
+          "Inputs remain unchanged and output ordering follows the contract."
+        ]
+      },
+      "held_out_tests": [
+        "heldout/test_cut.py"
+      ]
+    },
+    {
+      "key": "EXT-OWNERS-1",
+      "kind": "create",
+      "spec": {
+        "title": "Nearest containing modules",
+        "summary": "nearest_module_owners(batch: FactBatch, symbol: str) -> list[str]. Traverse CONTAINS edges in reverse among existing nodes. Return sorted MODULE IDs at the minimum distance from symbol. If symbol itself is a MODULE return [symbol]. Stop at the first distance containing any modules; missing or unowned symbols return []. Cycles terminate; ignore other edge kinds and dangling endpoints. External nodes participate. Do not mutate any input object, collection, or ordering. Results must be deterministic.",
+        "technical_notes": "Implement nearest_module_owners in src/orchestrator/pkg/module_owners.py. Reuse the existing orchestrator.pkg.facts, schema, or stats types named in the contract; do not define replacement models. Create this new module inside orchestrator.pkg and import the real repository types; leave existing tracked source files unchanged. Use full type annotations and focused tests. Inputs satisfy the stated types; validation beyond explicitly listed errors is not required.",
+        "acceptance_criteria": [
+          "Traverse CONTAINS edges in reverse among existing nodes. Return sorted MODULE IDs at the minimum distance from symbol. If symbol itself is a MODULE return [symbol]. Stop at the first distance containing any modules; missing or unowned symbols return []. Cycles terminate; ignore other edge kinds and dangling endpoints. External nodes participate.",
+          "Empty and boundary inputs follow the stated rules; unrelated edge kinds do not influence kind-specific queries.",
+          "Inputs remain unchanged and output ordering follows the contract."
+        ]
+      },
+      "held_out_tests": [
+        "heldout/test_owners.py"
+      ]
+    }
+  ]
+}

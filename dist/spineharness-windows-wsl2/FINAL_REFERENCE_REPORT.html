@@ -1,0 +1,220 @@
+<!doctype html><meta charset="utf-8"><title>ONTM-4 final reference report</title><style>body{max-width:1100px;margin:3em auto;padding:0 2em;font:16px system-ui;color:#172033}pre{white-space:pre-wrap;font:15px/1.6 system-ui}</style><h1>Completed ONTM-4 reference study</h1><p>Original failures and the post-audit continuation are preserved. See the Markdown report and reference/results for linked artifacts.</p><pre># spec-kit versus Spine + PKG — ONTM-4
+
+## Updated result after completing Spine’s default-rule integration
+
+**The demonstrated default-rule gap is now closed on the shared seven-check suite.** Spine’s native refinement process was continued from its saved implementation after the user requested completion. Both resulting implementations now pass all seven selected behaviors. The original Spine result of three passed and four failed is retained below; it was not overwritten.
+
+**Additional information given to Spine:** the failed default CLI/HTTP/SSE/SPARQL checks and the diagnosis that its loader never invoked the supplied compiler. The frozen test source was unchanged, but its results were used for refinement. This follow-up is therefore a **post-audit continuation**, not a fresh blind benchmark or an additional statistical sample.
+
+| Saved output | Selected checks passed | Tokens | API list-price equivalent |
+|---|---|---:|---:|
+| spec-kit completed output | 7 of 7 | 11,741,696 | $4.146632 |
+| Spine completed output **including post-audit work** | 7 of 7, after diagnostic feedback | 297,267 | $0.789800 |
+ 
+Spine’s added continuation consumed **97,270 tokens**, **$0.280420 API list-price equivalent**, across 1 recorded model response. Those amounts are included in the cumulative Spine row. The completed-output ratio is now **39.50× tokens** and **5.25× API-equivalent cost** for spec-kit relative to Spine including this continuation.
+
+Cumulative completed Spine components: 264,078 uncached input + 7,168 cached input + 26,021 output; cache write 0. Reasoning tokens are part of output. These figures exclude the separate suspended attempt’s 54,112 known tokens and four older calls with unknown consumption; the all-recorded ledger includes all known overhead. Full all-attempt cost remains unknown. Dollars are API list-price equivalents, not subscription charges.
+
+### Additional model consumption
+
+| Continuation call | Uncached input | Cached input | Output | Total tokens | API equivalent |
+|---|---:|---:|---:|---:|---:|
+| Post-audit model call 1 | 86,535 | 0 | 10,735 | 97,270 | $0.280420 |
+
+### Validation and revised artifacts
+
+The continuation passed the reused seven-check suite, its generated-test selection and the configured project checks. The named FK-neighbor tests and shared compiler file remain unchanged. Source changes were applied by Spine’s native model-driven refinement; the supervisor did not hand-edit the application.
+
+- [Final cumulative Spine patch](../ontm4-spine-continuation-20261004/cumulative-changes/CHANGES.md): the complete proposed change relative to the common prepared target.
+- [Incremental continuation patch](../ontm4-spine-continuation-20261004/incremental-changes/CHANGES.md): only the additional work after the original October 4 output.
+- [Exact feedback and protocol](../ontm4-spine-continuation-20261004/PROTOCOL_AMENDMENT.json), [continuation summary](../ontm4-spine-continuation-20261004/summary.json), [usage verification](CONTINUATION_VERIFICATION.json).
+
+**What is now comparable:** the observed outcomes of these seven selected behaviors and the recorded consumption needed to reach these saved outputs, with the extra feedback and repair cost disclosed. **What is still not established:** equal overall quality, complete Jira acceptance, production readiness, an unbiased same-protocol efficiency estimate, statistical significance, or PKG causality. Matching a previously revealed suite is not equivalent to passing a new unseen holdout. The original spec-kit review findings and four unknown-consumption calls remain relevant.
+
+The following sections preserve the original attempts, their first validation results, and their stage accounting. Use the cumulative figures above when referring to the repaired Spine output.
+
+## Original attempts — preserved first-run results
+
+**Status:** completed workflow attempts with retained infrastructure failure and user-suspended earlier attempt; bounded feature validation, not full acceptance certification.
+**Subject:** wire rules into the CLI and HTTP search surfaces of Ontomesh.
+**How assessed:** one frozen Jira issue, one common prepared baseline, gpt-6-sol/high through ChatGPT subscription authentication, spec-kit v1.0.11 versus Spine v3.52.0 with PKG.
+**Quality finding:** spec-kit passed all seven frozen supplemental checks. Spine passed three and failed default inference through CLI, HTTP, SSE and fresh SPARQL. The lower Spine consumption does not establish equivalent task completion.
+**Accounting limit:** the first Spine attempt hit three 300-second completion timeouts and exported no token records. Its consumption is **unknown, not zero**. A second attempt used a 2,700-second deadline, completed one response, and was suspended by the user during test generation. A fresh October 4 attempt used unchanged task/model/baseline/settings. The restarted attempts are not additional statistical samples.
+
+## How to read the run names and test counts
+
+**The comparison preserves two finished original workflow runs and a measured Spine follow-up:** spec-kit finished on September 30; Spine + PKG finished a fresh attempt on October 4. A finished workflow means its generation/test/refinement process ended and its output was saved. It does not mean every required behavior works.
+
+Earlier versions of this report called the October 4 run “recovery.” That meant **restarting the benchmark after an earlier interruption**, not a recovery feature in the generated application. This report now calls it **Spine + PKG — completed October 4 attempt**. The older directory names are retained so evidence links remain valid.
+
+| Run | What happened | Used for the main comparison? |
+|---|---|---|
+| spec-kit, September 30 | Workflow completed; implementation and planning documents saved. | Yes |
+| Spine, first September 30 attempt | Three implementation calls timed out before producing a usable implementation. | No; unknown consumption retained as overhead. |
+| Spine, second September 30 attempt | Implementation response completed; user suspended the run during test generation. | No; 54,112 known tokens plus unknown interrupted-call usage retained as overhead. |
+| Spine, October 4 original attempt | Fresh run from the same prepared baseline; implementation, test generation and one refinement completed. | Included in cumulative Spine cost. |
+| Spine, October 4 post-audit continuation | Continued from its saved code with diagnostic feedback; one more refinement closed the default-rule gap. | Included in cumulative Spine cost; validation marked as reused after feedback. |
+
+**“7/7” means seven tests passed out of seven selected independent tests. “3/7” means three passed and four failed.** Neither fraction describes stages completed, successful retries, the percentage of the project implemented, or a statistical confidence level. All seven tests were run against each completed implementation.
+
+The independent checks use a fixed offline language-model substitute for planning/answer wording, while executing the real SQL query, rule parser and inference engine. They were frozen before either original implementation. Their failure results and diagnosis were subsequently given to Spine for the explicitly authorized continuation; the follow-up checks are therefore reused validation, not untouched independent tests.
+
+| Selected behavior checked | spec-kit original | Spine original | Spine after continuation |
+|---|---|---|---|
+| Real inference when compiled rules are supplied explicitly to the engine | Passed | Passed | Passed |
+| CLI loads rules and derives facts by default | Passed | Failed: no derived facts | Passed |
+| CLI `--no-rules` disables derivation | Passed | Passed | Passed |
+| Enabled HTTP search returns derived facts | Passed | Failed: no derived facts | Passed |
+| Enabled SSE search stream returns derived facts | Passed | Failed: no derived facts | Passed |
+| Fresh SPARQL search receives rules and derives facts | Passed | Failed: no derived facts | Passed |
+| HTTP search routes remain disabled behind the feature flag | Passed | Passed | Passed |
+| **Selected checks passed** | **7 of 7** | **3 of 7; 4 failed** | **7 of 7 after feedback** |
+
+These are separate from the configured project regression checks, which passed for both implementations, and from tests generated by the workflows themselves. Spine’s original six generated tests use a supplied rule-file fixture and stub parsing/inference; the continuation adds a seventh generated test with real compilation and inference. The original default-path failures are preserved separately from the passing follow-up. Passing the seven independent checks also does not certify every Jira requirement or production readiness.
+
+## Original result before the additional refinement
+
+For the **original completed attempts, before the additional refinement**, spec-kit used **58.71×** the recorded tokens and **8.14×** the API list-price equivalent of the completed October 4 Spine attempt. These historical ratios exclude the 97,270-token follow-up refinement, known consumption from the suspended Spine attempt and unknown consumption from three timed-out calls and one user-interrupted call. A complete all-attempt ratio cannot be calculated.
+
+| Workflow | Model | Tokens | Uncached input | Cached input | Output | Responses | API list-price equivalent | Recorded time |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| spec-kit | gpt-6-sol | 11,741,696 | 452,119 | 11,189,120 | 100,457 | 141 | $4.146632 | 83.9 min |
+| Spine + PKG — completed October 4 attempt | gpt-6-sol | 199,997 | 177,543 | 7,168 | 15,286 | 3 | $0.509380 | 6.9 min |
+| Original Spine attempt | gpt-6-sol requested | Unknown | Unknown | Unknown | Unknown | 3 interrupted calls; 0 recorded responses | Unknown | 15.1 min |
+
+The suspended September 30 attempt has **54,112 known tokens** and **$0.153898 API list-price equivalent**, plus unknown consumption from its interrupted test-generation call. These known tokens are included in the all-recorded totals and shared calculator, separately from the completed-attempt comparison.
+Total tokens are input plus output. Cached input is already part of input; reasoning tokens are already part of output. Dollars are **API list-price equivalents, not subscription charges**. All recorded benchmark responses used gpt-6-sol. Both workflows requested high reasoning effort.
+[Official pricing](https://developers.openai.com/api/docs/models/gpt-6-sol) was rechecked on 2026-10-04: $2/M uncached input, $0.20/M cached input, $2.50/M cache write and $10/M output. Maximum recorded input was 205,480 tokens per response, below the 272,000-token long-context boundary. No cache-write tokens were recorded.
+Spec-kit time covers its model-stage loop, excluding initialization and final harness tests. Spine time covers its ticket routine, including tests but excluding initial PKG construction. The approval wait and supervision are excluded. These different timing boundaries do not establish a controlled speed ratio.
+
+## Token consumption by stage
+
+All stages below used **gpt-6-sol / high**. Total tokens are uncached input + cached input + output. Cache writes were zero throughout. Reasoning tokens are included in output, not added again. Dollar figures are **API list-price equivalents, not subscription charges**.
+
+### spec-kit — completed workflow
+
+| Stage | Responses | Uncached input | Cached input | Output | Total tokens | Share | API equivalent |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Specify | 13 | 43,677 | 472,704 | 9,232 | 525,613 | 4.5% | $0.274215 |
+| Clarify | 8 | 12,583 | 479,232 | 2,445 | 494,260 | 4.2% | $0.145462 |
+| Clarification answer | 4 | 6,172 | 260,096 | 5,008 | 271,276 | 2.3% | $0.114443 |
+| Plan (including delegated research) | 52 | 189,896 | 3,571,328 | 24,913 | 3,786,137 | 32.2% | $1.343188 |
+| Checklist | 5 | 14,666 | 690,304 | 4,752 | 709,722 | 6.0% | $0.214913 |
+| Task breakdown | 6 | 29,904 | 941,568 | 14,648 | 986,120 | 8.4% | $0.394602 |
+| Analyze | 6 | 27,293 | 1,104,768 | 10,869 | 1,142,930 | 9.7% | $0.384230 |
+| Implementation entry / checklist gate | 4 | 12,527 | 429,568 | 2,320 | 444,415 | 3.8% | $0.134168 |
+| Implementation after approval | 34 | 77,269 | 2,271,872 | 18,590 | 2,367,731 | 20.2% | $0.794812 |
+| Convergence review | 9 | 38,132 | 967,680 | 7,680 | 1,013,492 | 8.6% | $0.346600 |
+| **Total** | **141** | **452,119** | **11,189,120** | **100,457** | **11,741,696** | **100%** | **$4.146632** |
+
+**Where spec-kit consumed tokens in this run:** 8,360,473 (71.2%) occurred before application implementation, including specification, clarification, planning, checklists, task analysis and the implementation approval gate. The implementation stage consumed 2,367,731 (20.2%); convergence review consumed 1,013,492 (8.6%).
+
+The first implementation entry stopped at a checklist approval gate; application changes happened in the subsequent implementation stage. The plan stage includes delegated research, counted once through deduplicated response records. Stage boundaries come from the harness’s recorded execution windows; these totals include repeated context reads, not just newly written text.
+
+### Spine + PKG — completed October 4 workflow
+
+| Stage | Responses | Uncached input | Cached input | Output | Total tokens | Share | API equivalent |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Implementation | 1 | 46,784 | 0 | 6,114 | 52,898 | 26.4% | $0.154708 |
+| Test generation | 1 | 52,301 | 0 | 7,471 | 59,772 | 29.9% | $0.179312 |
+| Refinement 1 | 1 | 78,458 | 7,168 | 1,701 | 87,327 | 43.7% | $0.175360 |
+| **Total** | **3** | **177,543** | **7,168** | **15,286** | **199,997** | **100%** | **$0.509380** |
+
+Shared Jira normalization, PKG construction and deterministic design made **zero model calls** in this configuration. Local pytest/preflight execution also adds no model tokens by itself; source context and test failure output sent back to the model are included in the relevant call above. PKG context sent to the model is included in input tokens. These zero-model-token steps still require local computation.
+
+Spine’s native summary groups its calls under the ticket name. The finer stages above are reconstructed from each saved request’s system prompt and its paired usage record, and match the implementation → test generation → one refinement sequence in the workflow log. The stages are not one-to-one equivalents of spec-kit’s phases.
+
+### Earlier Spine attempts — retained overhead
+
+| Attempt / stage | Status | Known tokens | API equivalent |
+|---|---|---:|---:|
+| Original failed attempt / Implementation (`20601e25`) | Timed out; usage unknown | Unknown | Unknown |
+| Original failed attempt / Implementation (`a242ccd9`) | Timed out; usage unknown | Unknown | Unknown |
+| Original failed attempt / Implementation (`f4ebc637`) | Timed out; usage unknown | Unknown | Unknown |
+| Suspended September 30 attempt / Test generation (`0fc08af5`) | User-interrupted; usage unknown | Unknown | Unknown |
+| Suspended September 30 attempt / Implementation (`5c97515d`) | Completed response | 54,112 | $0.153898 |
+
+These attempts are excluded from the completed-attempt stage tables. Their 54,112 known tokens are included in the all-recorded ledger; four interrupted calls remain unknown rather than zero. No model calls were rerun to produce this breakdown.
+
+Every component in the stage tables reconciles to the verified workflow totals. Costs were recomputed from component counts; six-decimal display rounding can differ by a microdollar from the saved rounded stage costs. [Machine-readable stages and source paths](STAGE_TOKEN_BREAKDOWN.json).
+
+This decomposition identifies where the observed consumption occurred. It does not establish that the same magnitude will recur on every issue, or remove the differing validation outcomes reported below.
+
+## What the original implementations established
+
+| Evidence | spec-kit | Spine + PKG — completed October 4 attempt |
+|---|---:|---:|
+| Configured project checks | Pass | Pass |
+| Frozen supplemental tests | 7 of 7 passed; 0 failed | 3 of 7 passed; 4 failed |
+
+**At the first independent validation, the solutions did not both pass the same supplemental checks. Lower recorded token usage therefore cannot be interpreted as equal-quality efficiency.**
+
+The supplemental suite exercises real SQL/rule inference with an offline scripted LLM: default CLI/HTTP/SSE/fresh-SPARQL inference, CLI opt-out, explicit-rule positive control and disabled HTTP gates. Baseline control: 2 passed, 5 failed. It was frozen before either implementation and was not fed back into either original measured workflow. The later Spine continuation received diagnostic feedback, as recorded above.
+Spine supplies a new loader for hypothetical precompiled files under `output/rules/`, an explicit path/environment override, and stored session rules. It does not call the shared prepared `rule_compiler.compile_rules()`; the default artifact directory is absent from this baseline. Thus the four default surface paths receive no rules. The explicit-rule positive control passes, and all failed HTTP paths return 200 before failing nonempty-inference assertions. These are default integration failures on the prepared baseline, not failed internal monkeypatch hooks. Spine’s own six generated tests supply an artifact override and replace both the parser and inference engine with stubs; their success establishes bounded wiring, not real default derivation.
+It does not certify every trace, mapping, malformed-rule, browser-rendering or auto-relations contract. Some tests use internal injection points. See [supplemental validation](SUPPLEMENTAL_VALIDATION.md) for exact results and adjudication.
+Spec-kit completed its staged workflow and passed the seven selected checks, but convergence left four open tasks. Independent source review supports an inherited empty-projection `SELECT *` fallback; malformed rule validation in the new resolver; loss of the loaded-rule count in the completed Ask rendering; and inherited neighbor-key deduplication carried into alias support. The fallback and neighbor defect were not introduced by spec-kit. The malformed stored-rule probe uses an injected source, not a demonstrated public input path. The derived-fact count remains visible in the Ask view.
+Additional static concerns and qualifications are recorded in [INDEPENDENT_REVIEW.md](INDEPENDENT_REVIEW.md). No measured implementation was repaired by the supervising chat. Full ONTM-4 correctness remains unverified.
+
+## Generated artifacts: what exists and what works
+
+Both workflows produced **proposed source-code patches and tests in disposable copies of Ontomesh**. Neither delivered a deployed service, an installed release, a merged change, or a modified Jira ticket. The ZIP is an evidence package containing the proposed changes, documentation, measurements and validation results; it is not a ready-to-deploy application distribution.
+
+| Output | spec-kit | Spine + PKG — after measured continuation |
+|---|---|---|
+| Application implementation | Five application files added/modified: CLI, engine, new `rule_sources.py`, HTTP handlers, and Ask HTML template. | Four application files modified: `_loaders.py`, CLI, engine, and HTTP handlers. |
+| Tests in the patch | Two new test files (`test_search_rule_sources.py`, `test_search_rule_wiring.py`) and additions to two existing phase test files. | Two new test files: the original six surface tests plus `test_search_rule_default_inference.py`, a real compilation/inference test. Seven generated tests pass in total. |
+| Planning and explanatory documents | Nine saved planning files: specification, plan, research, data model, tasks, quickstart, surface contract, and two checklists. | No equivalent standalone planning-document set was exported. The continuation now includes a rendered deterministic `design.md`, design metadata, exact diagnostic feedback, model requests and patches. |
+| Tool scaffolding | Thirty `.agents` / `.specify` setup files also appear in the captured patch. These are workflow setup, not thirty application features. | PKG construction and deterministic design were used during execution. The export does not include a standalone reusable PKG database. |
+| Reviewable code evidence | [spec-kit proposed changes](gpt-6-sol/speckit/ontm-4-p1/CHANGES.md), patch, saved source files and summary. | [Final cumulative Spine changes](../ontm4-spine-continuation-20261004/cumulative-changes/CHANGES.md), [incremental repair](../ontm4-spine-continuation-20261004/incremental-changes/CHANGES.md), and continuation summary. The original patch is also retained. |
+| Behavioral result | The selected CLI, HTTP, SSE and fresh-SPARQL default-inference checks work on the test fixture. All seven independent checks pass. | All seven reused checks now pass, including default CLI/HTTP/SSE/fresh-SPARQL inference. This follows one measured refinement with diagnostic feedback. The original first result was three passed and four failed. |
+
+### How far apart are the implementations?
+
+**The previously demonstrated default-rule gap is closed. Both saved outputs now pass the seven selected behaviors.** Spine’s continuation invokes the supplied compiler for default ontology sources and adds logical property aliases to the primary-row facts consumed by the reasoner. It retains explicit rule-file support and CLI opt-out. The four earlier surface failures shared a rule-source gap; the follow-up is now a measured repair, not an estimated future task.
+
+The repair changed two application files and added one real-inference test file. One additional gpt-6-sol/high response used **97,270 tokens** and **$0.280420 API list-price equivalent**. Combined with the completed October 4 attempt, Spine used **297,267 tokens** and **$0.789800 API list-price equivalent**. These are not subscription charges; earlier suspended/unknown consumption is still separately disclosed.
+
+The new test compiles a temporary OWL ontology, maps physical `event_type` values to the logical `hasEventType` predicate, checks IncidentEvent/MaintenanceEvent derivations and supporting facts using the real parser/reasoner, and exercises CLI default and opt-out behavior. Its LLM response and data locations are controlled; inference is not stubbed. The original six stubbed tests remain, and the frozen seven-check suite exercises the real HTTP/SSE/SPARQL paths. All 55 configured regression checks also pass.
+
+This closes the observed functional difference on the selected suite, but does not prove the implementations interchangeable in all conditions. Spec-kit generated a separate rule-source resolver and Ask-template changes; Spine uses its loader and leaves the Ask template unchanged. Broader rule-source validation, completed browser rendering, mappings, entity identity and production behavior remain outside full acceptance. See [continuation validation](CONTINUATION_VALIDATION.md).
+
+**Spec-kit also remains short of full production acceptance.** Its convergence review left four open remediation tasks: an inherited empty-column-projection fallback, permissive malformed-rule validation in its new resolver, a loaded-rule count lost in the completed Ask rendering, and inherited neighbor-key deduplication limitations. The independent review qualifies their attribution and reachability: these are not four newly introduced defects or four failed frozen tests. Additional rendering and broader mapping concerns are documented in [the independent review](INDEPENDENT_REVIEW.md). They still require investigation, appropriate fixes and validation before a production-readiness claim.
+
+The current comparison is **matching results on seven selected behaviors, more planning/documentation from spec-kit, and lower recorded consumption for Spine even after its measured repair**. The feedback conditions differ: Spine was given the failed-check diagnosis before the additional refinement. This supports a transparent case comparison with cumulative costs, not an unbiased estimate of how often either tool will succeed or of equal overall code quality.
+
+### Files to hand to a reviewer
+
+| Artifact | Purpose |
+|---|---|
+| [COMPARISON_REPORT.md](COMPARISON_REPORT.md) | The readable comparison, stage costs, test explanations, implementation gaps and limitations. |
+| [RESULTS.md](RESULTS.md) and [Spine completed-attempt results](../ontm4-spine-resumed-20261004/RESULTS.md) | Detailed per-attempt checks and proposed code changes. The original results file also preserves the failed first Spine attempt. |
+| [Continuation report](CONTINUATION_REPORT.md) and [continuation verification](CONTINUATION_VERIFICATION.json) | Added repair work, cumulative Spine consumption and evidence after diagnostic feedback. |
+| Each workflow’s `changes.patch` / `CHANGES.md` | Exact proposed changes relative to the prepared baseline; requires review before use in another checkout. |
+| [spec-kit planning documents](gpt-6-sol/speckit/ontm-4-p1/planning/spec.md) | Specification and accompanying plan, tasks, contracts and quickstart in the same planning directory. The quickstart describes this generated proposal; it is not proof of acceptance. |
+| [SUPPLEMENTAL_VALIDATION.md](SUPPLEMENTAL_VALIDATION.md) and `acceptance_audit/` | The independent seven-check results, logs, frozen tests and failure explanations. |
+| [STAGE_TOKEN_BREAKDOWN.json](STAGE_TOKEN_BREAKDOWN.json), [recorded-usage.json](recorded-usage.json), [EVIDENCE_VERIFICATION.json](EVIDENCE_VERIFICATION.json) | Machine-readable stage accounting, all known recorded consumption and integrity checks. Missing interrupted-call usage stays explicit. |
+| `comparison-results.zip` | Packaged evidence from all attempts, including this report and proposed changes; credentials and full raw model transcripts are excluded. |
+
+## Comparison conditions and changes
+
+- Common prepared target commit: `82e12bb908cea139f92ed537dfd2967234976701`; original Ontomesh commit: `f771c8c4ee32a28144f9b08d061d4172e4366ebb`.
+- A bounded compiler prerequisite was prepared before measurement; surface integration remained the measured work. Preparation cost is excluded. Its 72 compiled rules do not reproduce the ticket prototype’s 74/65 counts.
+- Spine v3.52.0: commit `6c0454bac2dbb539665402d31e57e763db2d206a`; spec-kit v1.0.11. The same frozen Jira snapshot and deterministic intake were supplied to both.
+- The observed model ID is the gpt-6-sol alias, not an immutable served snapshot. Spec-kit ran September 30 and the completed Spine attempt October 4; backend stability across those dates is not established by this evidence.
+- Spec-kit used three research sub-sessions despite the CLI disable flag. All their deduplicated response usage is included. The separate review and supervision chats are excluded.
+- The user requested a new Spine chat. Explicit data-transfer approval arrived after spec-kit finished, so measured runs did not overlap. A pass lock prevented duplicate execution by the original queue.
+- Original Spine calls used its upstream 300-second deadline. After infrastructure abort, a fresh attempt used the optional 2,700-second override; inputs and reasoning configuration were unchanged. The second attempt was user-suspended during its second call; an October 4 fresh attempt retained the 2,700-second override. All earlier evidence is retained. Cache conditions and run dates are not controlled.
+- This compares whole workflows. It does not isolate the contribution of PKG; that requires a matched ablation.
+- Original repository unchanged at final verification: **True**. Jira was read through MCP and no Jira write operation was invoked.
+
+## Statistical and financial interpretation
+
+One issue and one completed attempt per workflow provide a descriptive case study, not a reliable estimate of variability or statistical significance. Restarting the same issue does not add an independent task or replicate. These results cannot establish consistent cross-project savings, scaling to medium/large projects, or financial infeasibility of either workflow. Unknown failed-call usage and incomplete acceptance evidence further limit economic interpretation.
+
+## Evidence and reconciliation
+
+Verified 12 exported sessions and 145 unique recorded responses, with four additional interrupted calls of unknown consumption. Completed-attempt components reconcile to their summaries; all known recorded usage, including the suspended attempt, reconciles to the shared calculator. Exported files match their isolated live originals; Jira snapshot/catalog hashes and original-source fingerprint were checked.
+- [Verification JSON](EVIDENCE_VERIFICATION.json), [known recorded usage](recorded-usage.json), [shared calculator](calculator-usage.json), [tokens and cost](tokens-and-cost.txt).
+- [Original spec-kit changes and failed Spine evidence](RESULTS.md); [Spine completed-attempt changes](../ontm4-spine-resumed-20261004/RESULTS.md).
+- [Independent review](INDEPENDENT_REVIEW.md), [supplemental checks](SUPPLEMENTAL_VALIDATION.md), [protocol amendment](PROTOCOL_AMENDMENT.json).
+</pre>

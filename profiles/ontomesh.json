@@ -1,0 +1,9 @@
+{
+  "repository_url": "https://github.com/synaptixs/ontomesh",
+  "jira_url": "https://fibonacci-solutions.atlassian.net/jira",
+  "jira_project": "ONTM",
+  "baseline_commit": "f771c8c4ee32a28144f9b08d061d4172e4366ebb",
+  "source_paths": [".", "src"],
+  "checks": [],
+  "notes": "Candidate baseline from inspected local checkout. Select issue-appropriate regression tests and review the baseline before execution. No blanket repository-quality claim."
+}
