@@ -1,8 +1,8 @@
 import copy
 import importlib
+
 import pytest
-from orchestrator.pkg.facts import FactBatch, Node, NodeKind, Edge, EdgeKind, Provenance
-from orchestrator.pkg.schema import DBColumn, DBTable, DBSchema, ForeignKey
+from orchestrator.pkg.facts import Edge, EdgeKind, FactBatch, Node, NodeKind, Provenance
 from orchestrator.pkg.stats import FunctionCallFrequency
 
 
@@ -32,42 +32,42 @@ def node(ident, file='a.py', line=1, end=None, repo='', **kwargs):
 def test_case_0():
     args = (freq(),0)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.stats"), "top_call_share")
+    function = importlib.import_module("orchestrator.pkg.stats").top_call_share
     assert function(*args) == 0.0
     assert args == before
 
 def test_case_1():
     args = (freq(('a','a',6),('b','b',2),('c','c',2)),1)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.stats"), "top_call_share")
+    function = importlib.import_module("orchestrator.pkg.stats").top_call_share
     assert function(*args) == 0.6
     assert args == before
 
 def test_case_2():
     args = (freq(('a','a',6),('b','b',2),('c','c',2)),2)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.stats"), "top_call_share")
+    function = importlib.import_module("orchestrator.pkg.stats").top_call_share
     assert function(*args) == 0.8
     assert args == before
 
 def test_case_3():
     args = (freq(('a','a',2)),9)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.stats"), "top_call_share")
+    function = importlib.import_module("orchestrator.pkg.stats").top_call_share
     assert function(*args) == 1.0
     assert args == before
 
 def test_case_4():
     args = (freq(('a','a',0)),1)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.stats"), "top_call_share")
+    function = importlib.import_module("orchestrator.pkg.stats").top_call_share
     assert function(*args) == 0.0
     assert args == before
 
 def test_case_5():
     args = (freq(),-1)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.stats"), "top_call_share")
+    function = importlib.import_module("orchestrator.pkg.stats").top_call_share
     with pytest.raises(ValueError):
         function(*args)
     assert args == before

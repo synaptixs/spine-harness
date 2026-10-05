@@ -1,8 +1,7 @@
 import copy
 import importlib
-import pytest
-from orchestrator.pkg.facts import FactBatch, Node, NodeKind, Edge, EdgeKind, Provenance
-from orchestrator.pkg.schema import DBColumn, DBTable, DBSchema, ForeignKey
+
+from orchestrator.pkg.facts import Edge, EdgeKind, FactBatch, Node, NodeKind, Provenance
 from orchestrator.pkg.stats import FunctionCallFrequency
 
 
@@ -32,35 +31,35 @@ def node(ident, file='a.py', line=1, end=None, repo='', **kwargs):
 def test_case_0():
     args = (graph(['a','b','c','d'], [('a','c'),('c','d'),('a','b'),('b','d'),('d','a')]),'a','d')
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.facts"), "shortest_call_path")
+    function = importlib.import_module("orchestrator.pkg.facts").shortest_call_path
     assert function(*args) == ['a','b','d']
     assert args == before
 
 def test_case_1():
     args = (graph(['a']), 'a','a')
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.facts"), "shortest_call_path")
+    function = importlib.import_module("orchestrator.pkg.facts").shortest_call_path
     assert function(*args) == ['a']
     assert args == before
 
 def test_case_2():
     args = (graph([]),'a','a')
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.facts"), "shortest_call_path")
+    function = importlib.import_module("orchestrator.pkg.facts").shortest_call_path
     assert function(*args) == []
     assert args == before
 
 def test_case_3():
     args = (graph(['a','b'], [('a','b',EdgeKind.IMPORTS)]),'a','b')
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.facts"), "shortest_call_path")
+    function = importlib.import_module("orchestrator.pkg.facts").shortest_call_path
     assert function(*args) == []
     assert args == before
 
 def test_case_4():
     args = (graph(['a','b','c'], [('a','c'),('a','b'),('b','c')]),'a','c')
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.facts"), "shortest_call_path")
+    function = importlib.import_module("orchestrator.pkg.facts").shortest_call_path
     assert function(*args) == ['a','c']
     assert args == before
 

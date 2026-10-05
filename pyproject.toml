@@ -1,0 +1,22 @@
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+# Default ruleset, minus initial-adoption debt not yet cleaned up (SSPN-117: this repo had
+# never been linted before its CI gate existed — 2026-10-05). Each code here is a judgment-call
+# fix (subprocess check= semantics, blind except, loop-variable closures, …), not a mechanical
+# one, so it's tracked as follow-up rather than bulk-applied without review. Narrow this list
+# down as each is actually fixed; don't add new codes to it.
+ignore = [
+    "PLW1510", # subprocess-run-without-check — needs per-call judgment on check= semantics
+    "ISC004",  # implicit-string-concatenation-in-collection-literal
+    "SIM117",  # multiple-with-statements
+    "B023",    # function-uses-loop-variable
+    "BLE001",  # blind-except
+    "PIE810",  # multiple-starts-ends-with
+    "TRY004",  # type-check-without-type-error
+    "C401",    # unnecessary-generator-set
+    "RUF059",  # unused-unpacked-variable
+    "F841",    # unused-variable
+]

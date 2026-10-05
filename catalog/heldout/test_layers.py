@@ -1,8 +1,8 @@
 import copy
 import importlib
+
 import pytest
-from orchestrator.pkg.facts import FactBatch, Node, NodeKind, Edge, EdgeKind, Provenance
-from orchestrator.pkg.schema import DBColumn, DBTable, DBSchema, ForeignKey
+from orchestrator.pkg.facts import Edge, EdgeKind, FactBatch, Node, NodeKind, Provenance
 from orchestrator.pkg.stats import FunctionCallFrequency
 
 
@@ -32,21 +32,21 @@ def node(ident, file='a.py', line=1, end=None, repo='', **kwargs):
 def test_case_0():
     args = (graph([]),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.facts"), "import_layers")
+    function = importlib.import_module("orchestrator.pkg.facts").import_layers
     assert function(*args) == []
     assert args == before
 
 def test_case_1():
     args = (graph(['a','b','c','z'], [('a','b',EdgeKind.IMPORTS),('b','c',EdgeKind.IMPORTS),('z','a')]),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.facts"), "import_layers")
+    function = importlib.import_module("orchestrator.pkg.facts").import_layers
     assert function(*args) == [['c','z'],['b'],['a']]
     assert args == before
 
 def test_case_2():
     args = (graph(['a'], [('a','a',EdgeKind.IMPORTS)]),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.facts"), "import_layers")
+    function = importlib.import_module("orchestrator.pkg.facts").import_layers
     with pytest.raises(ValueError):
         function(*args)
     assert args == before
@@ -54,7 +54,7 @@ def test_case_2():
 def test_case_3():
     args = (graph(['a','b'], [('a','b',EdgeKind.IMPORTS),('b','a',EdgeKind.IMPORTS)]),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.facts"), "import_layers")
+    function = importlib.import_module("orchestrator.pkg.facts").import_layers
     with pytest.raises(ValueError):
         function(*args)
     assert args == before
@@ -62,7 +62,7 @@ def test_case_3():
 def test_case_4():
     args = (graph(['a'], [('a','ghost',EdgeKind.IMPORTS)]),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.facts"), "import_layers")
+    function = importlib.import_module("orchestrator.pkg.facts").import_layers
     assert function(*args) == [['a']]
     assert args == before
 

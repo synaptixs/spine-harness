@@ -1,25 +1,21 @@
 #!/usr/bin/env python3
 """Build the macOS or Windows/WSL2 Jira handover from reviewed source/result allowlists."""
 from __future__ import annotations
+
 import argparse
 import hashlib
 import html
 import json
-from pathlib import Path
 import re
-import shutil
 import tempfile
 import zipfile
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 VERSION = '2026-10-04-v7'
 NAME = 'spineharness-macos'
-CORE = ('harness_config.py run_comparison.py speckit_codex.py speckit_claude.py spine_pkg.py spine_intake.py '
-        'codex_llm.py codex_protocol.py codex_usage.py gpt6_shim.py heldout_fix.py constitution.md '
-        'summarize.py report_usage.py scenario_catalog.py scenarios.py report_results.py model_report.py '
-        'jira_import.py project_adapter.py project_benchmark.py report_project.py '
-        'test_codex_backend.py test_report_usage.py test_scenarios.py test_jira_benchmark.py wsl_support.py test_wsl_support.py').split()
-PORTABLE = ('benchmark.py deliverables.py benchmark.example.json README.md QUICKSTART.md CONFIGURATION.md AGENTS.md VALIDATION.md test_portable.py').split()
+CORE = ['harness_config.py', 'run_comparison.py', 'speckit_codex.py', 'speckit_claude.py', 'spine_pkg.py', 'spine_intake.py', 'codex_llm.py', 'codex_protocol.py', 'codex_usage.py', 'gpt6_shim.py', 'heldout_fix.py', 'constitution.md', 'summarize.py', 'report_usage.py', 'scenario_catalog.py', 'scenarios.py', 'report_results.py', 'model_report.py', 'jira_import.py', 'project_adapter.py', 'project_benchmark.py', 'report_project.py', 'test_codex_backend.py', 'test_report_usage.py', 'test_scenarios.py', 'test_jira_benchmark.py', 'wsl_support.py', 'test_wsl_support.py']
+PORTABLE = ['benchmark.py', 'deliverables.py', 'benchmark.example.json', 'README.md', 'QUICKSTART.md', 'CONFIGURATION.md', 'AGENTS.md', 'VALIDATION.md', 'test_portable.py']
 STUDIES = ('ontm4-benchmark-20260930', 'ontm4-spine-recovery-20260930', 'ontm4-spine-resumed-20261004', 'ontm4-spine-continuation-20261004')
 REF_ROOT = {'COMPARISON_REPORT.md','CONTINUATION_REPORT.md','CONTINUATION_VALIDATION.md','CONTINUATION_VERIFICATION.json',
     'ARTIFACT_COMPARISON.md','RESULTS.md','FINALIZATION.json','READING_THE_RESULTS.md','INDEPENDENT_REVIEW.md',

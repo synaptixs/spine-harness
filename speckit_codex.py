@@ -34,24 +34,24 @@ import subprocess
 import time
 from pathlib import Path
 
-
 import harness_config as C
 
 C.use_tree(C.TARGET_DIR)
-import codegen_benchmark as cb  # noqa: E402
-import heldout_fix  # noqa: E402
+import codegen_benchmark as cb
+
+import heldout_fix
 
 HELD_OUT_SUITE = heldout_fix.apply(cb)  # the corrected NEW-DRIFTMD-1 judge; see heldout_fix.py
 CUSTOM_CATALOG = C.configure_tickets(cb)
 if C.PROJECT:
     C.PROJECT.install(cb)
-from scenario_catalog import fingerprint, changed_python_files, split_python_files
+from scenario_catalog import changed_python_files, fingerprint, split_python_files
+
 SCENARIO_FINGERPRINT = fingerprint(cb.TICKETS)
-from orchestrator.evals.graders import run_held_out_tests  # noqa: E402
+from orchestrator.evals.graders import run_held_out_tests
 
-
-from codex_usage import PRICE_BASIS, rates, run_sessions, session_usage
 from codex_protocol import needs_checklist_approval
+from codex_usage import PRICE_BASIS, rates, run_sessions, session_usage
 
 
 def sh(cmd: list[str], cwd: Path, env: dict | None = None, timeout: int = 600, stdin: str | None = None):

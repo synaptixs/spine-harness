@@ -1,8 +1,7 @@
 import copy
 import importlib
-import pytest
-from orchestrator.pkg.facts import FactBatch, Node, NodeKind, Edge, EdgeKind, Provenance
-from orchestrator.pkg.schema import DBColumn, DBTable, DBSchema, ForeignKey
+
+from orchestrator.pkg.facts import Edge, EdgeKind, FactBatch, Node, NodeKind, Provenance
 from orchestrator.pkg.stats import FunctionCallFrequency
 
 
@@ -32,21 +31,21 @@ def node(ident, file='a.py', line=1, end=None, repo='', **kwargs):
 def test_case_0():
     args = (graph([]),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.edge_diagnostics"), "dangling_relations")
+    function = importlib.import_module("orchestrator.pkg.edge_diagnostics").dangling_relations
     assert function(*args) == []
     assert args == before
 
 def test_case_1():
     args = (graph(['a','e'], [('a','x'),('x','a'),('x','y',EdgeKind.IMPORTS),('a','e')],e={'external':True}),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.edge_diagnostics"), "dangling_relations")
+    function = importlib.import_module("orchestrator.pkg.edge_diagnostics").dangling_relations
     assert function(*args) == [('a','x','CALLS'),('x','a','CALLS'),('x','y','IMPORTS')]
     assert args == before
 
 def test_case_2():
     args = (graph(['a'], [('a','a')]),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.edge_diagnostics"), "dangling_relations")
+    function = importlib.import_module("orchestrator.pkg.edge_diagnostics").dangling_relations
     assert function(*args) == []
     assert args == before
 

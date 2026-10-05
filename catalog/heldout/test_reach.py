@@ -1,8 +1,7 @@
 import copy
 import importlib
-import pytest
-from orchestrator.pkg.facts import FactBatch, Node, NodeKind, Edge, EdgeKind, Provenance
-from orchestrator.pkg.schema import DBColumn, DBTable, DBSchema, ForeignKey
+
+from orchestrator.pkg.facts import Edge, EdgeKind, FactBatch, Node, NodeKind, Provenance
 from orchestrator.pkg.stats import FunctionCallFrequency
 
 
@@ -32,28 +31,28 @@ def node(ident, file='a.py', line=1, end=None, repo='', **kwargs):
 def test_case_0():
     args = (graph([]), 'a')
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.facts"), "reachable_calls")
+    function = importlib.import_module("orchestrator.pkg.facts").reachable_calls
     assert function(*args) == []
     assert args == before
 
 def test_case_1():
     args = (graph(['a','b','c','z'], [('a','b'),('b','c'),('c','a'),('a','ghost'),('a','z',EdgeKind.IMPORTS)]), 'a')
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.facts"), "reachable_calls")
+    function = importlib.import_module("orchestrator.pkg.facts").reachable_calls
     assert function(*args) == ['b','c']
     assert args == before
 
 def test_case_2():
     args = (graph(['a']), 'missing')
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.facts"), "reachable_calls")
+    function = importlib.import_module("orchestrator.pkg.facts").reachable_calls
     assert function(*args) == []
     assert args == before
 
 def test_case_3():
     args = (graph(['a','b'], [('a','a'),('b','a')]), 'a')
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.facts"), "reachable_calls")
+    function = importlib.import_module("orchestrator.pkg.facts").reachable_calls
     assert function(*args) == []
     assert args == before
 

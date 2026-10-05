@@ -1,18 +1,23 @@
 import asyncio
-from dataclasses import dataclass
-import hashlib
 import json
 import os
-from pathlib import Path
 import subprocess
 import sys
 import tempfile
 import types
 import unittest
+from dataclasses import dataclass
+from pathlib import Path
 from unittest.mock import patch
-from jira_import import normalize, plain, save_import, unwrap, fetch_mcp
-from project_adapter import disposable_clone, capture_changes, source_fingerprint, ProjectAdapter
-from scenario_catalog import load_catalog, configure
+
+from jira_import import fetch_mcp, normalize, save_import, unwrap
+from project_adapter import (
+    ProjectAdapter,
+    capture_changes,
+    disposable_clone,
+    source_fingerprint,
+)
+from scenario_catalog import load_catalog
 
 
 def run_git(path,*args):

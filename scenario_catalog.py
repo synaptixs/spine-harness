@@ -7,9 +7,9 @@ from __future__ import annotations
 
 import hashlib
 import json
-from pathlib import Path, PurePosixPath
 import re
 import subprocess
+from pathlib import Path, PurePosixPath
 
 
 class CatalogError(ValueError):

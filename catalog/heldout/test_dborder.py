@@ -1,8 +1,9 @@
 import copy
 import importlib
+
 import pytest
-from orchestrator.pkg.facts import FactBatch, Node, NodeKind, Edge, EdgeKind, Provenance
-from orchestrator.pkg.schema import DBColumn, DBTable, DBSchema, ForeignKey
+from orchestrator.pkg.facts import Edge, EdgeKind, FactBatch, Node, NodeKind, Provenance
+from orchestrator.pkg.schema import DBSchema, DBTable, ForeignKey
 from orchestrator.pkg.stats import FunctionCallFrequency
 
 
@@ -32,21 +33,21 @@ def node(ident, file='a.py', line=1, end=None, repo='', **kwargs):
 def test_case_0():
     args = (DBSchema('db'),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.schema"), "table_insert_layers")
+    function = importlib.import_module("orchestrator.pkg.schema").table_insert_layers
     assert function(*args) == []
     assert args == before
 
 def test_case_1():
     args = (DBSchema('db',(DBTable('child',foreign_keys=(ForeignKey('x','parent'),)),DBTable('parent'),DBTable('z',foreign_keys=(ForeignKey('id','z'),ForeignKey('x','ghost'))))),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.schema"), "table_insert_layers")
+    function = importlib.import_module("orchestrator.pkg.schema").table_insert_layers
     assert function(*args) == [['parent','z'],['child']]
     assert args == before
 
 def test_case_2():
     args = (DBSchema('db',(DBTable('a',foreign_keys=(ForeignKey('x','b'),)),DBTable('b',foreign_keys=(ForeignKey('x','a'),)))),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.schema"), "table_insert_layers")
+    function = importlib.import_module("orchestrator.pkg.schema").table_insert_layers
     with pytest.raises(ValueError):
         function(*args)
     assert args == before

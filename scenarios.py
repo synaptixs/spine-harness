@@ -2,11 +2,11 @@
 """Inspect or validate scenarios without making model calls (use the Spine uv environment)."""
 import argparse
 import json
-from pathlib import Path
 import sys
+
 import harness_config as C
-from scenario_catalog import configure, fingerprint
 import heldout_fix
+from scenario_catalog import configure, fingerprint
 
 
 def main():

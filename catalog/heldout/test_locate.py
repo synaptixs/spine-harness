@@ -1,8 +1,8 @@
 import copy
 import importlib
+
 import pytest
-from orchestrator.pkg.facts import FactBatch, Node, NodeKind, Edge, EdgeKind, Provenance
-from orchestrator.pkg.schema import DBColumn, DBTable, DBSchema, ForeignKey
+from orchestrator.pkg.facts import Edge, EdgeKind, FactBatch, Node, NodeKind, Provenance
 from orchestrator.pkg.stats import FunctionCallFrequency
 
 
@@ -32,28 +32,28 @@ def node(ident, file='a.py', line=1, end=None, repo='', **kwargs):
 def test_case_0():
     args = ([], '', 'a.py',1)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.source_lookup"), "symbols_at_line")
+    function = importlib.import_module("orchestrator.pkg.source_lookup").symbols_at_line
     assert function(*args) == []
     assert args == before
 
 def test_case_1():
     args = ([node('a',line=2,end=4),node('b',line=4),node('e',line=4,external=True),node('r',line=4,repo='r')],'','a.py',4)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.source_lookup"), "symbols_at_line")
+    function = importlib.import_module("orchestrator.pkg.source_lookup").symbols_at_line
     assert function(*args) == ['a','b']
     assert args == before
 
 def test_case_2():
     args = ([node('a',line=2,end=4)],'','a.py',5)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.source_lookup"), "symbols_at_line")
+    function = importlib.import_module("orchestrator.pkg.source_lookup").symbols_at_line
     assert function(*args) == []
     assert args == before
 
 def test_case_3():
     args = ([], '', 'a.py',0)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.source_lookup"), "symbols_at_line")
+    function = importlib.import_module("orchestrator.pkg.source_lookup").symbols_at_line
     with pytest.raises(ValueError):
         function(*args)
     assert args == before

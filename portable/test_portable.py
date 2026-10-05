@@ -1,12 +1,11 @@
 import json
-from pathlib import Path
 import tempfile
 import unittest
 import zipfile
-from unittest.mock import patch
+from pathlib import Path
 
-from benchmark import load_config, config_digest
-from deliverables import finalize, read_ledgers, unknown_calls, archive_evidence
+from benchmark import load_config
+from deliverables import archive_evidence, finalize, read_ledgers, unknown_calls
 
 
 class PortableTests(unittest.TestCase):
