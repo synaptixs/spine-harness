@@ -166,7 +166,7 @@ class ProjectAdapter:
                 return SimpleNamespace(findings={},skipped=(),describe=lambda:'project commands; token-only correctness unverified')
             async def run(self,*,path,baseline=None):
                 rows=adapter.checks(path)
-                return SimpleNamespace(passed=all(r.get('exit')==0 for r in rows),
+                return SimpleNamespace(passed=bool(rows) and all(r.get('exit')==0 for r in rows),
                                        output=json.dumps(rows) if rows else 'No project checks configured; correctness unverified')
         cb.SubprocessPreflightRunner=Checks
 
