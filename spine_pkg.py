@@ -50,6 +50,7 @@ if _approval_pending.exists():
 # scheduler still has it queued. Serialize claimants and reuse the recorded
 # outcome; never run or overwrite the same pass twice.
 import fcntl
+
 KEEP.mkdir(parents=True, exist_ok=True)
 _execution_lock = (KEEP / '.execution.lock').open('a+')
 fcntl.flock(_execution_lock, fcntl.LOCK_EX)
@@ -70,16 +71,18 @@ if C.SPINE_BACKEND == "codex":
     install()
 elif A.model.startswith("gpt-6"):
     sys.path.insert(0, str(C.HERE))
-    import gpt6_shim  # noqa: F401,E402
+    import gpt6_shim  # noqa: F401
 
-import codegen_benchmark as cb  # noqa: E402
-import heldout_fix  # noqa: E402
+import codegen_benchmark as cb
+
+import heldout_fix
 
 HELD_OUT_SUITE = heldout_fix.apply(cb)  # the corrected NEW-DRIFTMD-1 judge; see heldout_fix.py
 CUSTOM_CATALOG = C.configure_tickets(cb)
 if C.PROJECT:
     C.PROJECT.install(cb)
-from scenario_catalog import fingerprint, changed_python_files, split_python_files
+from scenario_catalog import fingerprint
+
 SCENARIO_FINGERPRINT = fingerprint(cb.TICKETS)
 
 _drop, _run_ticket = cb.drop_worktree, cb.run_ticket

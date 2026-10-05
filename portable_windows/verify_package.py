@@ -1,6 +1,7 @@
 """Verify release checksums without third-party packages or model access."""
-from pathlib import Path
 import hashlib
+from pathlib import Path
+
 root = Path(__file__).resolve().parent
 count = 0
 for line in (root / 'SHA256SUMS').read_text().splitlines():

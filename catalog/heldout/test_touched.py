@@ -1,8 +1,7 @@
 import copy
 import importlib
-import pytest
-from orchestrator.pkg.facts import FactBatch, Node, NodeKind, Edge, EdgeKind, Provenance
-from orchestrator.pkg.schema import DBColumn, DBTable, DBSchema, ForeignKey
+
+from orchestrator.pkg.facts import Edge, EdgeKind, FactBatch, Node, NodeKind, Provenance
 from orchestrator.pkg.stats import FunctionCallFrequency
 
 
@@ -32,28 +31,28 @@ def node(ident, file='a.py', line=1, end=None, repo='', **kwargs):
 def test_case_0():
     args = ([], '', {})
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.changed_symbols"), "touched_symbols")
+    function = importlib.import_module("orchestrator.pkg.changed_symbols").touched_symbols
     assert function(*args) == []
     assert args == before
 
 def test_case_1():
     args = ([node('a',line=3,end=5),node('b',line=6),node('r',line=4,repo='r'),node('x',line=4,external=True)],'',{'a.py':[0,4,4],'unknown':[1]})
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.changed_symbols"), "touched_symbols")
+    function = importlib.import_module("orchestrator.pkg.changed_symbols").touched_symbols
     assert function(*args) == ['a']
     assert args == before
 
 def test_case_2():
     args = ([node('a',line=3,end=5)],'',{'a.py':[2,6]})
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.changed_symbols"), "touched_symbols")
+    function = importlib.import_module("orchestrator.pkg.changed_symbols").touched_symbols
     assert function(*args) == []
     assert args == before
 
 def test_case_3():
     args = ([node('a',repo='r')],'r',{'a.py':[1]})
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.changed_symbols"), "touched_symbols")
+    function = importlib.import_module("orchestrator.pkg.changed_symbols").touched_symbols
     assert function(*args) == ['a']
     assert args == before
 

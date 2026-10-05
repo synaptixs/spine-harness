@@ -1,8 +1,7 @@
 import copy
 import importlib
-import pytest
-from orchestrator.pkg.facts import FactBatch, Node, NodeKind, Edge, EdgeKind, Provenance
-from orchestrator.pkg.schema import DBColumn, DBTable, DBSchema, ForeignKey
+
+from orchestrator.pkg.facts import Edge, EdgeKind, FactBatch, Node, NodeKind, Provenance
 from orchestrator.pkg.stats import FunctionCallFrequency
 
 
@@ -32,21 +31,21 @@ def node(ident, file='a.py', line=1, end=None, repo='', **kwargs):
 def test_case_0():
     args = (graph([]),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.language_boundaries"), "cross_language_calls")
+    function = importlib.import_module("orchestrator.pkg.language_boundaries").cross_language_calls
     assert function(*args) == []
     assert args == before
 
 def test_case_1():
     args = (graph(['a','b','c','d'], [('a','b'),('b','a'),('a','c'),('a','d'),('a','ghost')],a={'language':'python'},b={'language':'go','external':True},c={'language':'python'}),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.language_boundaries"), "cross_language_calls")
+    function = importlib.import_module("orchestrator.pkg.language_boundaries").cross_language_calls
     assert function(*args) == [('a','b'),('b','a')]
     assert args == before
 
 def test_case_2():
     args = (graph(['a','b'], [('a','b',EdgeKind.IMPORTS)],a={'language':'py'},b={'language':'go'}),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.language_boundaries"), "cross_language_calls")
+    function = importlib.import_module("orchestrator.pkg.language_boundaries").cross_language_calls
     assert function(*args) == []
     assert args == before
 

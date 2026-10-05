@@ -1,8 +1,7 @@
 import copy
 import importlib
-import pytest
-from orchestrator.pkg.facts import FactBatch, Node, NodeKind, Edge, EdgeKind, Provenance
-from orchestrator.pkg.schema import DBColumn, DBTable, DBSchema, ForeignKey
+
+from orchestrator.pkg.facts import Edge, EdgeKind, FactBatch, Node, NodeKind, Provenance
 from orchestrator.pkg.stats import FunctionCallFrequency
 
 
@@ -32,28 +31,28 @@ def node(ident, file='a.py', line=1, end=None, repo='', **kwargs):
 def test_case_0():
     args = (freq(),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.stats"), "median_call_count")
+    function = importlib.import_module("orchestrator.pkg.stats").median_call_count
     assert function(*args) == 0
     assert args == before
 
 def test_case_1():
     args = (freq(('a','a',9),('b','b',1),('c','c',4),('d','d',2)),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.stats"), "median_call_count")
+    function = importlib.import_module("orchestrator.pkg.stats").median_call_count
     assert function(*args) == 2
     assert args == before
 
 def test_case_2():
     args = (freq(('a','a',0),('a','a',7),('b','b',3)),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.stats"), "median_call_count")
+    function = importlib.import_module("orchestrator.pkg.stats").median_call_count
     assert function(*args) == 3
     assert args == before
 
 def test_case_3():
     args = (freq(('a','a',8)),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.stats"), "median_call_count")
+    function = importlib.import_module("orchestrator.pkg.stats").median_call_count
     assert function(*args) == 8
     assert args == before
 

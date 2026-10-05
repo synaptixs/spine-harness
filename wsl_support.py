@@ -1,12 +1,11 @@
 """Linux/WSL2 application-check confinement. Never fall back to unsandboxed tests."""
-from pathlib import Path
-import json
 import os
 import shutil
 import socket
 import subprocess
 import sys
 import tempfile
+from pathlib import Path
 
 
 def linux_sandbox_command(command, root):

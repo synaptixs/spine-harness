@@ -1,8 +1,7 @@
 import copy
 import importlib
-import pytest
-from orchestrator.pkg.facts import FactBatch, Node, NodeKind, Edge, EdgeKind, Provenance
-from orchestrator.pkg.schema import DBColumn, DBTable, DBSchema, ForeignKey
+
+from orchestrator.pkg.facts import Edge, EdgeKind, FactBatch, Node, NodeKind, Provenance
 from orchestrator.pkg.stats import FunctionCallFrequency
 
 
@@ -32,21 +31,21 @@ def node(ident, file='a.py', line=1, end=None, repo='', **kwargs):
 def test_case_0():
     args = (graph([]),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.intent_gaps"), "untraced_symbols")
+    function = importlib.import_module("orchestrator.pkg.intent_gaps").untraced_symbols
     assert function(*args) == []
     assert args == before
 
 def test_case_1():
     args = (graph(['a','b','i','e','m'], [('a','i',EdgeKind.SERVES),('b','e',EdgeKind.SERVES)],i={'kind':NodeKind.INTENT},e={'kind':NodeKind.INTENT,'external':True},m={'kind':NodeKind.MODULE}),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.intent_gaps"), "untraced_symbols")
+    function = importlib.import_module("orchestrator.pkg.intent_gaps").untraced_symbols
     assert function(*args) == ['b']
     assert args == before
 
 def test_case_2():
     args = (graph(['a','i'], [('i','a',EdgeKind.SERVES)],i={'kind':NodeKind.INTENT}),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.intent_gaps"), "untraced_symbols")
+    function = importlib.import_module("orchestrator.pkg.intent_gaps").untraced_symbols
     assert function(*args) == ['a']
     assert args == before
 

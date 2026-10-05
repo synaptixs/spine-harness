@@ -1,12 +1,12 @@
 """Compact read-only status for a running study, without printing prompts or credentials."""
-from pathlib import Path
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+from pathlib import Path
 
 root = Path('results/study-20260929')
 logs = sorted((root/'gpt-6-sol/logs').glob('*.log'), key=lambda p:p.stat().st_mtime)
 summaries = list((root/'gpt-6-sol').glob('speckit/*/summary.json')) + list((root/'gpt-6-sol').glob('spine/pass*/*/summary.json'))
-out = {'utc': datetime.now(timezone.utc).isoformat(), 'saved_ticket_arm_summaries':len(summaries)}
+out = {'utc': datetime.now(UTC).isoformat(), 'saved_ticket_arm_summaries':len(summaries)}
 if logs:
     f=logs[-1]
     out['latest_log']=f.name

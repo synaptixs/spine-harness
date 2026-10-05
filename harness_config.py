@@ -7,8 +7,8 @@ arm and from the SPINE_CODE tree for the Spine + PKG arm, exactly as the publish
 
 from __future__ import annotations
 
-import os
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -116,6 +116,7 @@ def ticket_text(t, heading: bool = False) -> str:  # type: ignore[no-untyped-def
 
 def configure_tickets(cb):
     import json
+
     from scenario_catalog import configure, fingerprint
     metadata = configure(cb, TICKETS, SCENARIO_FILE, TARGET_DIR)
     if metadata and metadata.get('evaluation_mode')=='tokens-only' and not PROJECT:

@@ -1,7 +1,8 @@
 """Argument-preserving bridge from PowerShell/wsl.exe; no shell evaluation."""
 import os
-from pathlib import Path
 import sys
+from pathlib import Path
+
 
 def main():
     if sys.platform != 'linux': raise SystemExit('Use this entry point inside WSL2 Ubuntu')

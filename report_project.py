@@ -3,8 +3,9 @@
 import argparse
 import json
 from pathlib import Path
-from report_usage import summarize_usage
+
 from model_report import model_section
+from report_usage import summarize_usage
 
 
 def report(root):
@@ -12,8 +13,8 @@ def report(root):
     if exp.get('evaluation_mode')!='tokens-only':raise ValueError('This report requires a token-only project experiment')
     usage=summarize_usage(root);inventory=[];sections=[]
     expected={(t,n) for t in exp['tickets'] for n in range(1,exp['passes']+1)}
-    from report_results import indexed, read_rows
     from project_adapter import source_fingerprint
+    from report_results import indexed, read_rows
     for model in exp['models']:
         for label,arm,pattern in [('spec-kit','speckit','speckit/*/summary.json'),('Spine + PKG','spine','spine/pass*/*/summary.json')]:
             if arm not in exp['arms']:continue

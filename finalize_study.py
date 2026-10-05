@@ -7,16 +7,15 @@ restarts, repairs, or changes benchmark worktrees or the frozen harness.
 from __future__ import annotations
 
 import argparse
-from datetime import datetime, timezone
 import hashlib
 import json
-from pathlib import Path
 import shutil
 import subprocess
 import sys
 import time
 import zipfile
-
+from datetime import UTC, datetime
+from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE / 'results/study-20260929'
@@ -75,7 +74,7 @@ def finalize():
     if abs(summary_cost - recorded_cost) > .01:
         errors.append('Summary cost differs from exported response ledger by more than USD0.01; inspect failed/retried calls')
 
-    closed = datetime.now(timezone.utc).isoformat()
+    closed = datetime.now(UTC).isoformat()
     analysis = ROOT / 'analysis'
     analysis.mkdir(exist_ok=True)
     analysis_hashes = {}

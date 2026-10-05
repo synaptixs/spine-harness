@@ -1,8 +1,8 @@
 import copy
 import importlib
+
 import pytest
-from orchestrator.pkg.facts import FactBatch, Node, NodeKind, Edge, EdgeKind, Provenance
-from orchestrator.pkg.schema import DBColumn, DBTable, DBSchema, ForeignKey
+from orchestrator.pkg.facts import Edge, EdgeKind, FactBatch, Node, NodeKind, Provenance
 from orchestrator.pkg.stats import FunctionCallFrequency
 
 
@@ -32,21 +32,21 @@ def node(ident, file='a.py', line=1, end=None, repo='', **kwargs):
 def test_case_0():
     args = ([],)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.stats"), "merge_call_frequencies")
+    function = importlib.import_module("orchestrator.pkg.stats").merge_call_frequencies
     assert function(*args) == []
     assert args == before
 
 def test_case_1():
     args = ([freq(('b','B',2),('a','A',1)),freq(('a','A',4))],)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.stats"), "merge_call_frequencies")
+    function = importlib.import_module("orchestrator.pkg.stats").merge_call_frequencies
     assert function(*args) == freq(('a','A',5),('b','B',2))
     assert args == before
 
 def test_case_2():
     args = ([freq(('a','A',1)),freq(('a','Other',2))],)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.stats"), "merge_call_frequencies")
+    function = importlib.import_module("orchestrator.pkg.stats").merge_call_frequencies
     with pytest.raises(ValueError):
         function(*args)
     assert args == before
@@ -54,13 +54,13 @@ def test_case_2():
 def test_case_3():
     args = ([[],[]],)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.stats"), "merge_call_frequencies")
+    function = importlib.import_module("orchestrator.pkg.stats").merge_call_frequencies
     assert function(*args) == []
     assert args == before
 
 def test_result_records_do_not_alias_inputs():
     records = freq(('a', 'A', 2))
-    function = getattr(importlib.import_module('orchestrator.pkg.stats'), 'merge_call_frequencies')
+    function = importlib.import_module('orchestrator.pkg.stats').merge_call_frequencies
     output = function([records])
     assert output == records
     assert output[0] is not records[0]

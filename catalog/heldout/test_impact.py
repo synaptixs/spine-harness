@@ -1,8 +1,8 @@
 import copy
 import importlib
+
 import pytest
-from orchestrator.pkg.facts import FactBatch, Node, NodeKind, Edge, EdgeKind, Provenance
-from orchestrator.pkg.schema import DBColumn, DBTable, DBSchema, ForeignKey
+from orchestrator.pkg.facts import Edge, EdgeKind, FactBatch, Node, NodeKind, Provenance
 from orchestrator.pkg.stats import FunctionCallFrequency
 
 
@@ -32,28 +32,28 @@ def node(ident, file='a.py', line=1, end=None, repo='', **kwargs):
 def test_case_0():
     args = (graph(['a','b','c'], [('a','b'),('b','c'),('c','a')]),'c',1)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.facts"), "call_impact")
+    function = importlib.import_module("orchestrator.pkg.facts").call_impact
     assert function(*args) == ['b']
     assert args == before
 
 def test_case_1():
     args = (graph(['a','b','c'], [('a','b'),('b','c'),('c','a')]),'c',2)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.facts"), "call_impact")
+    function = importlib.import_module("orchestrator.pkg.facts").call_impact
     assert function(*args) == ['a','b']
     assert args == before
 
 def test_case_2():
     args = (graph(['a']), 'a',0)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.facts"), "call_impact")
+    function = importlib.import_module("orchestrator.pkg.facts").call_impact
     assert function(*args) == []
     assert args == before
 
 def test_case_3():
     args = (graph([]),'x',-1)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.facts"), "call_impact")
+    function = importlib.import_module("orchestrator.pkg.facts").call_impact
     with pytest.raises(ValueError):
         function(*args)
     assert args == before
@@ -61,7 +61,7 @@ def test_case_3():
 def test_case_4():
     args = (graph(['a'], [('a','missing')]),'missing',2)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.facts"), "call_impact")
+    function = importlib.import_module("orchestrator.pkg.facts").call_impact
     assert function(*args) == []
     assert args == before
 

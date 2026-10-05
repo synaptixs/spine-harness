@@ -35,18 +35,21 @@ if C.SPINE_BACKEND == "codex":
     install()
 elif A.model.startswith("gpt-6"):
     sys.path.insert(0, str(C.HERE))
-    import gpt6_shim  # noqa: F401,E402
+    import gpt6_shim  # noqa: F401
 os.environ["ORCHESTRATOR_INTAKE_MODEL"] = A.model
 
-import codegen_benchmark as cb  # noqa: E402
+import codegen_benchmark as cb
+
 import heldout_fix
+
 heldout_fix.apply(cb)
 CUSTOM_CATALOG = C.configure_tickets(cb)
 from scenario_catalog import fingerprint
+
 SCENARIO_FINGERPRINT = fingerprint(cb.TICKETS)
-from orchestrator.core.llm import litellm_client as lc  # noqa: E402
-from orchestrator.intake.factory import build_service_for  # noqa: E402
-from orchestrator.intake.service import parse_source_uri  # noqa: E402
+from orchestrator.core.llm import litellm_client as lc
+from orchestrator.intake.factory import build_service_for
+from orchestrator.intake.service import parse_source_uri
 
 calls: list[dict] = []
 _complete = lc.LiteLLMClient.complete

@@ -1,8 +1,7 @@
 import copy
 import importlib
-import pytest
-from orchestrator.pkg.facts import FactBatch, Node, NodeKind, Edge, EdgeKind, Provenance
-from orchestrator.pkg.schema import DBColumn, DBTable, DBSchema, ForeignKey
+
+from orchestrator.pkg.facts import Edge, EdgeKind, FactBatch, Node, NodeKind, Provenance
 from orchestrator.pkg.stats import FunctionCallFrequency
 
 
@@ -32,21 +31,21 @@ def node(ident, file='a.py', line=1, end=None, repo='', **kwargs):
 def test_case_0():
     args = (graph([]),{'a'})
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.dependency_cut"), "outgoing_boundary")
+    function = importlib.import_module("orchestrator.pkg.dependency_cut").outgoing_boundary
     assert function(*args) == []
     assert args == before
 
 def test_case_1():
     args = (graph(['a','b','c','e'], [('a','b'),('b','c',EdgeKind.IMPORTS),('c','a'),('a','e',EdgeKind.READS),('a','ghost')],e={'external':True}),{'a','b','missing'})
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.dependency_cut"), "outgoing_boundary")
+    function = importlib.import_module("orchestrator.pkg.dependency_cut").outgoing_boundary
     assert function(*args) == [('a','e','READS'),('b','c','IMPORTS')]
     assert args == before
 
 def test_case_2():
     args = (graph(['a'], [('a','a')]),{'a'})
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.dependency_cut"), "outgoing_boundary")
+    function = importlib.import_module("orchestrator.pkg.dependency_cut").outgoing_boundary
     assert function(*args) == []
     assert args == before
 

@@ -1,8 +1,7 @@
 import copy
 import importlib
-import pytest
-from orchestrator.pkg.facts import FactBatch, Node, NodeKind, Edge, EdgeKind, Provenance
-from orchestrator.pkg.schema import DBColumn, DBTable, DBSchema, ForeignKey
+
+from orchestrator.pkg.facts import Edge, EdgeKind, FactBatch, Node, NodeKind, Provenance
 from orchestrator.pkg.stats import FunctionCallFrequency
 
 
@@ -32,21 +31,21 @@ def node(ident, file='a.py', line=1, end=None, repo='', **kwargs):
 def test_case_0():
     args = (graph([]),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.call_balance"), "call_degree_balance")
+    function = importlib.import_module("orchestrator.pkg.call_balance").call_degree_balance
     assert function(*args) == {}
     assert args == before
 
 def test_case_1():
     args = (graph(['a','b','c','z'], [('a','b'),('a','c'),('b','c'),('c','c'),('z','a',EdgeKind.IMPORTS),('a','ghost')]),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.call_balance"), "call_degree_balance")
+    function = importlib.import_module("orchestrator.pkg.call_balance").call_degree_balance
     assert function(*args) == {'a':2,'b':0,'c':-2,'z':0}
     assert args == before
 
 def test_case_2():
     args = (graph(['a','b'], [('a','b'),('b','a')]),)
     before = copy.deepcopy(args)
-    function = getattr(importlib.import_module("orchestrator.pkg.call_balance"), "call_degree_balance")
+    function = importlib.import_module("orchestrator.pkg.call_balance").call_degree_balance
     assert function(*args) == {'a':0,'b':0}
     assert args == before
 

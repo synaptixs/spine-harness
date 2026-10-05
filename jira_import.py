@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 """Read Jira via MCP into frozen token-benchmark drafts; never write to Jira."""
 from __future__ import annotations
+
 import argparse
 import asyncio
-from dataclasses import replace
-from datetime import datetime, timezone
 import hashlib
 import json
-from pathlib import Path
 import re
 import sys
+from dataclasses import replace
+from datetime import UTC, datetime
+from pathlib import Path
 from urllib.parse import urlparse
 
 KEY = re.compile(r'[A-Z][A-Z0-9_]*-[1-9][0-9]*\Z')
@@ -96,7 +97,7 @@ def save_import(issues, destination, jira_url, acceptance_field=None):
         path.write_text(body);hashes[path.name]=hashlib.sha256(body.encode()).hexdigest()
     catalog={'schema_version':1,'evaluation_mode':'tokens-only','scenarios':rows}
     body=json.dumps(catalog,indent=2,ensure_ascii=False)+'\n';(destination/'scenarios.json').write_text(body)
-    provenance={'created_utc':datetime.now(timezone.utc).isoformat(),'jira_site':site,
+    provenance={'created_utc':datetime.now(UTC).isoformat(),'jira_site':site,
                 'issue_urls':{key:f'{site}/browse/{key}' for key in sorted(seen)},'read_only':True,
                 'normalization':'deterministic; no model calls','conversion_model_tokens':0,
                 'snapshot_sha256':hashes,'catalog_sha256':hashlib.sha256(body.encode()).hexdigest(),
@@ -111,8 +112,8 @@ def save_import(issues, destination, jira_url, acceptance_field=None):
 
 async def fetch_mcp(config_path, server, keys, acceptance_field=None):
     # Imported lazily: offline conversion requires only Python's standard library.
-    from orchestrator.mcp.config import load_mcp_configs
     from orchestrator.mcp.client import SessionMCPClient
+    from orchestrator.mcp.config import load_mcp_configs
     configs={c.name:c for c in load_mcp_configs(config_path) if c.enabled}
     if server not in configs:raise ValueError(f'MCP server {server!r} not configured')
     config=replace(configs[server],allow=('jira_get_issue',),write_enabled=False)
