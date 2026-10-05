@@ -186,6 +186,7 @@ The experimental project mode now separates clones/imports/checks as described i
 | Shared task and judge | Feed the identical frozen Jira spec and held-out judge to both arms and matching intake. Keep judges and reference solutions outside model-visible task text and the target graph. |
 | Project grading | Use the team's tests, lint/type checks, and CI gates. Replace the Spine-specific `scripts/state-numbers.py --check` gate. Review the inherited create/edit fit rules for legitimate multi-file, configuration, or migration changes. |
 | Evidence and reports | Record application identity, full baseline SHA, adapter revision, commands, task/judge hashes, failures, and complete per-response usage. Extend the generic report if grading fields change; preserve matching by issue/pass/model. |
+| Required-behavior gates (optional, target-declared) | Independent of this harness's own `checks` config — if the target application itself commits `.spine/required-behavior.yaml`, Spine's native pipeline gates on it automatically, no adapter change needed. See **[JIRA_BENCHMARK.md](JIRA_BENCHMARK.md)**, "Required-behavior gates are a separate, independent signal." |
 
 There is no supported `TARGET_REPO` switch in this release. Do not point `SPINE_REPO` at `orders-service`, copy Spine benchmark files into it, or treat a successful catalog syntax check as adapter validation. Non-Python projects also need language-specific discovery, execution, and grading.
 

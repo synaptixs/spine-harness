@@ -73,6 +73,32 @@ Inspect `PROJECT.json`: set `python` to the dedicated application interpreter; a
 
 This is **token-only mode**: held-out tests and strict create/edit fit rules are not required. Generated tests and operator checks are reported, but independent correctness is explicitly **unverified**. No project check configured means no project-quality signal, not a full-suite pass. Baseline dependencies/checks must be reviewed before a meaningful experiment.
 
+### Required-behavior gates are a separate, independent signal
+
+`PROJECT.json`'s `checks` (above) is this harness's own config — commands *you* choose per target, substituted into Spine's preflight seam for this benchmark run only. Spine is gaining a second, independent mechanism, native to Spine itself (SSPN-116; not yet released as of this writing — check Spine's own CHANGELOG for the version that first carries it): if the **target application** (not this harness) commits its own `.spine/required-behavior.yaml`, Spine's real `orchestrator sdlc feature` pipeline will gate on it automatically — the same way for a benchmark run as for any direct production use. Nothing in `PROJECT.json` turns this on or off; it activates purely from what the target repository itself declares.
+
+This closes the gap ONTM-4 exposed: six generated tests passed against substituted parser/compiler implementations without the default-wiring path ever actually running. A `.spine/required-behavior.yaml` entry declares a check the model does not author and cannot edit away — e.g. "the default rule loader must invoke the configured compiler" — and Spine's native `implement → author_tests → refine` loop re-verifies it after every refinement, not just once.
+
+What to look for in the Jira worklog Spine posts for a live run against a target with this manifest (`required_behavior`/`Outcome` are not yet surfaced in this harness's own `RESULTS.md` — that would be a separate follow-up, not covered here):
+
+- A `required_behavior` row in the per-stage table with `0` tokens and a real, nonzero **Deterministic (s)** value — that is correct, not a bug: the check is a subprocess run, not a model call, so zero tokens does not mean it did not run.
+- An **Outcome** line reading either `initial generated candidate passed with no correction needed` or `first completed autonomous workflow after N refine(s)` — the roadmap's own "distinct outcomes" framing, for the two of the three outcomes a single run can speak to. (The third, a later human-assisted continuation addressing PR review comments, deliberately does not re-verify `required_behavior` — a documented design choice, not a gap: that loop only re-runs tests and preflight.)
+
+To exercise this in a benchmark, add `.spine/required-behavior.yaml` to the **target application's** baseline commit (not to this harness, and not to `PROJECT.json`) before preparation clones it. Example, in the target repository's own tree:
+
+```yaml
+# <target-application>/.spine/required-behavior.yaml
+requirements:
+  - id: default-wiring-compiles-rules
+    description: Default rule loading must invoke the configured compiler
+    entry_point: DefaultRuleLoader   # a symbol in the target's own graph
+    command: ["python3", "check_default_wiring.py"]
+    timeout: 60
+    required: true
+```
+
+The manifest schema (`id`, `command`, `entry_point`, `timeout`, `required`) is documented on `Requirement` and `load_manifest()` in `ai/spine`'s `src/orchestrator/sdlc/required_behavior.py` — there is no separate schema reference yet; read the docstrings there until one exists.
+
 After reviewing requirements and baseline, set `baseline_reviewed: true` in PROJECT.json and `reviewed: true` in the import's REVIEW.json, preserving its matching catalog hash. Changes to the catalog require another review. These reviews alone do not start model execution.
 
 ## 4. Run only when explicitly requested
