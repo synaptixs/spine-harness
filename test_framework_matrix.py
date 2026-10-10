@@ -377,6 +377,129 @@ class MatrixTests(unittest.TestCase):
                 )
             self.assertTrue(commands[0][1].endswith("framework_spine_pkg.py"))
 
+    def test_spine_pkg_passes_frozen_task_directly_to_native_feature(self):
+        from framework_spine_pkg import execute
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            out = root / "out"
+            out.mkdir()
+            received = []
+
+            async def feature(project, ticket, model, destination, calls_root, **kwargs):
+                received.append((project.config, ticket, model, destination, calls_root, kwargs))
+                return {
+                    "usage_complete": True, "prompt_tokens": 10, "completion_tokens": 2,
+                    "calls": 1, "cost_usd": 0.01,
+                    "stages": {"implement": {"calls": 1, "prompt_tokens": 10,
+                                              "completion_tokens": 2, "cost_usd": 0.01}},
+                }
+
+            config = {
+                "tools_dir": str(root / "tools"), "spine_commit": "a" * 40,
+                "spine_ref": "pinned", "application_python": sys.executable,
+                "source_repo": str(root / "source"), "source_paths": ["."],
+                "checks": [[sys.executable, "-c", "pass"]],
+                "work_dir": str(root), "results_dir": str(out), "login_home": str(root / "login"),
+                "reasoning_effort": "high", "timeout_seconds": 30, "model": "gpt-6-sol",
+            }
+            task = {
+                "id": "TASK-1", "title": "Feature", "description": "Implement behavior.",
+                "question_answers": {"Which mode?": "Use the saved mode."},
+            }
+            with (
+                patch("framework_spine_pkg.verify_spine"),
+                patch("framework_spine_pkg.ProjectAdapter.verify_target"),
+                patch("framework_spine_pkg.run_project_ticket", side_effect=feature),
+                patch.dict(sys.modules, {"codex_llm": SimpleNamespace(install=lambda: None)}),
+                patch.dict("os.environ", {}, clear=False),
+                patch.object(sys, "path", list(sys.path)),
+            ):
+                stages = execute(config, task, root / "common", root / "repo", out, "baseline")
+            self.assertEqual(len(received), 1)
+            self.assertIn("Use the saved mode.", received[0][1].spec["summary"])
+            self.assertEqual(received[0][5], {"metadata": {"arm": "spine-pkg", "pass": 1,
+                                                         "spine": "pinned", "spine_commit": "a" * 40}})
+            self.assertEqual([stage["stage"] for stage in stages], ["implement"])
+            self.assertFalse((out / "openspec").exists())
+
+    def test_spine_integrated_openspec_checks_clarity_before_native_feature(self):
+        from orchestrator.intake.intents import Intent
+        from orchestrator.intake.openspec_writer import render_change, write_change
+        from orchestrator.intake.specs import FeatureSpec
+
+        from framework_spine_openspec import execute
+
+        for answer_recorded in (False, True):
+            with self.subTest(answer_recorded=answer_recorded), tempfile.TemporaryDirectory() as temp:
+                root = Path(temp)
+                tools = root / "tools"
+                tools.mkdir()
+                out = root / "out"
+                out.mkdir()
+                received = []
+                question = "Which mode?"
+                intent = Intent(
+                    id="intent-feature", title="Add feature", description="A reliable feature for readers",
+                    problem="Readers cannot see results", users=["Readers"],
+                    outcome="Readers see results", non_goals=["Unrelated changes"],
+                    acceptance_criteria=["The search returns the selected result"],
+                    open_questions=[question],
+                )
+                spec = FeatureSpec(intent_id=intent.id, title=intent.title, summary=intent.description)
+
+                async def draft(_source, *, out, **_kwargs):
+                    write_change(Path(out), intent, render_change(spec, intent))
+                    usage = root / "out/codex-calls/draft/usage.json"
+                    usage.parent.mkdir(parents=True)
+                    usage.write_text(json.dumps({
+                        "usage": {"input": 10, "output": 2, "requests": 1},
+                        "cost_usd": 0.01, "usage_complete": True,
+                    }))
+
+                async def feature(_project, _ticket, _model, _destination, _calls_root, **kwargs):
+                    received.append(kwargs)
+                    return {
+                        "usage_complete": True, "prompt_tokens": 10, "completion_tokens": 2,
+                        "calls": 1, "cost_usd": 0.01,
+                        "stages": {"implement": {"calls": 1, "prompt_tokens": 10,
+                                                  "completion_tokens": 2, "cost_usd": 0.01}},
+                    }
+
+                config = {
+                    "tools_dir": str(tools), "spine_commit": "a" * 40,
+                    "spine_ref": "pinned", "application_python": sys.executable,
+                    "source_repo": str(root / "source"), "source_paths": ["."],
+                    "checks": [[sys.executable, "-c", "pass"]],
+                    "work_dir": str(root), "results_dir": str(out),
+                    "login_home": str(root / "login"), "reasoning_effort": "high",
+                    "timeout_seconds": 30, "model": "gpt-6-sol",
+                    "question_answers": {question: "Use the saved mode."} if answer_recorded else {},
+                    "unresolved_question_policy": {"mode": "stop"},
+                }
+                task = {"id": "TASK-1", "title": "Feature", "description": "Implement behavior."}
+                with (
+                    patch("framework_spine_openspec.verify_spine"),
+                    patch("framework_spine_openspec.ProjectAdapter.verify_target"),
+                    patch("orchestrator.cli.build._run_openspec_draft", side_effect=draft),
+                    patch("framework_spine_openspec.run_project_ticket", side_effect=feature),
+                    patch.dict(sys.modules, {"codex_llm": SimpleNamespace(install=lambda: None)}),
+                    patch.dict("os.environ", {}, clear=False),
+                    patch.object(sys, "path", list(sys.path)),
+                ):
+                    if answer_recorded:
+                        stages = execute(config, task, root / "common", root / "repo", out, "baseline")
+                    else:
+                        with self.assertRaisesRegex(RuntimeError, "clarity check failed"):
+                            execute(config, task, root / "common", root / "repo", out, "baseline")
+                self.assertEqual(len(received), int(answer_recorded))
+                self.assertTrue((out / "OPENSPEC_CHECK.json").is_file())
+                if answer_recorded:
+                    self.assertEqual(received[0]["source_uri"], "openspec://feature")
+                    self.assertEqual([stage["stage"] for stage in stages], ["openspec_draft", "implement"])
+                else:
+                    self.assertEqual(json.loads((out / "STAGES.json").read_text())[0]["stage"], "openspec_draft")
+
     def test_reference_task_preserves_structured_spec_for_native_spine(self):
         with tempfile.TemporaryDirectory() as temp:
             file = Path(temp) / "task.json"
@@ -449,8 +572,45 @@ class MatrixTests(unittest.TestCase):
                     out,
                 )
             self.assertIn(["openspec", "validate", "new-change", "--strict", "--no-interactive"], commands)
+            self.assertEqual([label for label, _ in prompts], ["propose", "apply"])
             self.assertIn("$openspec-apply-change new-change", prompts[1][1])
             self.assertEqual(json.loads((out / "OPENSPEC_CHANGE.json").read_text())["change"], "new-change")
+
+    def test_openspec_validation_failure_stops_before_apply(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            repo = root / "repo"
+            changes = repo / "openspec/changes"
+            changes.mkdir(parents=True)
+            out = root / "out"
+            out.mkdir()
+            labels = []
+
+            def command(argv, **_kwargs):
+                if argv[:2] == ["openspec", "validate"]:
+                    return SimpleNamespace(returncode=1, stdout="invalid proposal", stderr="")
+                return SimpleNamespace(returncode=0, stdout="", stderr="")
+
+            def model(_config, _repo, _out, label, _prompt, _thread):
+                labels.append(label)
+                (changes / "new-change").mkdir()
+                (changes / "new-change/proposal.md").write_text("# Proposal\n")
+                return "thread", {"stage": label, "last_message_tail": "done"}
+
+            with (
+                patch("framework_matrix.codex_environment", return_value={}),
+                patch("framework_matrix.subprocess.run", side_effect=command),
+                patch("framework_matrix.model_step", side_effect=model),
+            ):
+                with self.assertRaisesRegex(RuntimeError, "validation failed"):
+                    run_codex_framework(
+                        {"login_home": str(root / "login")},
+                        {"id": "TASK-1", "title": "Feature", "description": "Build it"},
+                        "openspec", repo, out,
+                    )
+            self.assertEqual(labels, ["propose"])
+            self.assertEqual([x["stage"] for x in json.loads((out / "STAGES.json").read_text())], labels)
+            self.assertIn("invalid proposal", (out / "openspec-validate.log").read_text())
 
     def test_official_patch_excludes_framework_scaffolding(self):
         raw = "diff --git a/.specify/config.md b/.specify/config.md\nnew file mode 100644\n+plan\n"
