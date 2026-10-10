@@ -76,23 +76,28 @@ class FeatureTests(unittest.TestCase):
         class Client:
             def __init__(self):
                 self.n = 0
+                self.file_n = 0
                 self.messages = []
 
             async def complete(self, messages, **kwargs):
                 self.n += 1
                 self.messages.append(str(messages))
                 name = kwargs['tool_choice']
-                if name != 'submit_files':
+                if name == 'submit_feature_spec':
+                    args = {'summary': 'Default must return the helper result',
+                            'acceptance_criteria': ['Default returns 42']}
+                elif name != 'submit_files':
                     # Match the native semantic review tool schema, without mocking the judge.
                     args = {'criteria': [{'criterion': 'Default returns 42', 'status': 'met', 'evidence': 'default calls helper'}], 'summary': 'met'}
                     if review_break:
                         (owner.workrepo/'app.py').write_text('def helper():\n    return 42\n\ndef default():\n    return []\n')
-                elif self.n == 1:
-                    args = {'files': [{'path': 'app.py', 'edits': [{'find': 'return 0', 'replace': 'return 42'}]}], 'summary': 'helper'}
-                elif self.n == 2:
-                    args = {'files': [{'path': 'tests/test_generated.py', 'content': 'from app import helper\ndef test_helper():\n    assert helper() == 42\n'}], 'summary': 'tests'}
                 else:
-                    if tamper:
+                    self.file_n += 1
+                    if self.file_n == 1:
+                        args = {'files': [{'path': 'app.py', 'edits': [{'find': 'return 0', 'replace': 'return 42'}]}], 'summary': 'helper'}
+                    elif self.file_n == 2:
+                        args = {'files': [{'path': 'tests/test_generated.py', 'content': 'from app import helper\ndef test_helper():\n    assert helper() == 42\n'}], 'summary': 'tests'}
+                    elif tamper:
                         args = {'files': [{'path': 'checks/default_check.py', 'edits': [{'find': 'assert default() == [42]', 'replace': 'assert True'}]}], 'summary': 'tamper'}
                     else:
                         args = {'files': [{'path': 'app.py', 'edits': [{'find': 'return []', 'replace': 'return [helper()]' if repair else 'return [0]'}]}], 'summary': 'default wiring'}
@@ -100,7 +105,7 @@ class FeatureTests(unittest.TestCase):
                     completion_tokens=20, cost_usd=.001, latency_ms=1, tool_calls=(ToolCall(str(self.n), name, args),))
         return Client()
 
-    def run_case(self, **kwargs):
+    def run_case(self, *, source_uri=None, openspec_root=None, **kwargs):
         client = self.scripted(**kwargs)
         before = source_fingerprint(self.repo)
         # Narrow transport substitution: remove only OS sandbox wrapping when unit
@@ -118,7 +123,8 @@ class FeatureTests(unittest.TestCase):
             result = asyncio.run(run_project_ticket(self.project, SimpleNamespace(key='TEAM-1', spec={
                 'title': 'Connect default', 'summary': 'Default must return the helper result',
                 'acceptance_criteria': ['Default returns 42'], 'technical_notes': ''}),
-                'gpt-6-sol', self.root/'results/pass1/TEAM-1', self.root/'calls', client=client))
+                'gpt-6-sol', self.root/'results/pass1/TEAM-1', self.root/'calls', client=client,
+                source_uri=source_uri, openspec_root=openspec_root))
         self.assertEqual(source_fingerprint(self.repo), before)
         return result, client
 
@@ -134,6 +140,29 @@ class FeatureTests(unittest.TestCase):
         self.assertGreater(result['stages']['required_behavior']['deterministic_seconds'], 0)
         self.assertEqual(sum(s['calls'] for s in result['stages'].values()), client.n)
         self.assertIn('semantic_review', result['stages'])
+
+    def test_native_openspec_source_uses_same_feature_loop(self):
+        from orchestrator.intake.intents import Intent
+        from orchestrator.intake.openspec_writer import render_change, write_change
+        from orchestrator.intake.specs import FeatureSpec
+
+        root = self.root/'openspec'
+        intent = Intent(id='intent-connect-default', title='Connect default',
+                        description='Default must return the helper result',
+                        problem='The default result is empty', users=['Application users'],
+                        outcome='Default returns 42', non_goals=['Unrelated API changes'],
+                        acceptance_criteria=['Default returns 42'])
+        spec = FeatureSpec(intent_id=intent.id, title=intent.title,
+                           summary=intent.description,
+                           acceptance_criteria=['Default returns 42'])
+        write_change(root, intent, render_change(spec, intent))
+        result, client = self.run_case(source_uri='openspec://connect-default', openspec_root=root)
+        self.assertTrue(result['passed'], result)
+        self.assertEqual(result['source_uri'], 'openspec://connect-default')
+        self.assertEqual(result['status'], 'verified_selected_behaviors')
+        self.assertIn('semantic_review', result['stages'])
+        self.assertGreaterEqual(client.n, 3)
+        self.assertEqual(result['model_calls_started'], client.n)
 
     def test_failure_stops_at_native_refinement_limit(self):
         result, _ = self.run_case(repair=False)
