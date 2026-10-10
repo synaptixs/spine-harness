@@ -209,12 +209,11 @@ CLI. External adapters receive placeholders `{repo}`, `{task}`, `{output}`,
 Set `approve_checklist: true` only when the operator explicitly authorizes
 continuing through routine spec-kit checklist questions; otherwise that arm
 stops and preserves its evidence if such a question occurs.
-After `$speckit-analyze`, the harness reads the full analysis report. HIGH or
-CRITICAL findings trigger up to two spec/plan/task remediation passes and a
-fresh analysis before implementation. `ANALYSIS_GATE.json` records each review.
-An absent report, an unresolved operator choice, or findings remaining after
-those passes stop the Spec Kit workflow before implementation. Remediation
-must preserve the frozen task and its recorded answers.
+The Spec Kit arm follows the pinned workflow's four core commands: specify,
+plan, tasks, implement. Clarify, checklist, analyze, and converge are optional
+commands and are not part of this benchmark protocol. Frozen issue context,
+including recorded operator answers, is supplied to the specify command; the
+same independent acceptance checks judge its output as every other arm.
 
 An external adapter writes its patch into `{repo}` and may write `{output}/USAGE.json`:
 
