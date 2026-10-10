@@ -29,4 +29,4 @@ jobs:
       # `pip install synaptixs-spine` over checking out ai/spine as a sibling repo in CI).
       # Tracked as follow-up, not silently dropped.
       - name: Tests
-        run: python -m pytest -q test_scenarios.py test_report_usage.py test_wsl_support.py test_jira_benchmark.py
+        run: python -m pytest -q test_scenarios.py test_report_usage.py test_wsl_support.py test_jira_benchmark.py test_framework_matrix.py test_matrix_study.py test_spine_feature.py

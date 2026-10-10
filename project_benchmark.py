@@ -8,7 +8,7 @@ import shlex
 from datetime import UTC, datetime
 from pathlib import Path
 
-from project_adapter import disposable_clone, source_fingerprint
+from project_adapter import capture_changes, disposable_clone, git, source_fingerprint
 
 CONSTITUTION='''# Benchmark implementation principles
 
@@ -30,12 +30,33 @@ def prepare(profile, source, spine_code, work, results, python, catalog=None):
     before=source_fingerprint(source)
     sha=disposable_clone(source,work/'target',profile['baseline_commit'])
     results.mkdir(parents=True)
+    preparation_base = sha
+    if profile.get('behavior_files'):
+        for relative, source_file in profile['behavior_files'].items():
+            rel = Path(relative)
+            if rel.is_absolute() or '..' in rel.parts or '.git' in rel.parts:
+                raise ValueError('behavior_files destinations must be safe repository-relative paths')
+            dest = work/'target'/rel
+            if dest.exists() or dest.is_symlink() or not dest.resolve().is_relative_to(work/'target'):
+                raise ValueError('behavior_files may only add new files inside the disposable baseline')
+            src = Path(source_file)
+            if src.is_symlink() or not src.is_file():
+                raise ValueError('behavior_files source must be a regular file')
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_bytes(src.read_bytes())
+        capture_changes(work/'target', sha, results/'public-behavior-preparation')
+        git(work/'target', 'add', '-A')
+        git(work/'target', '-c', 'user.name=Benchmark', '-c', 'user.email=benchmark@example.invalid',
+            'commit', '-m', 'Prepare common public behavior checks')
+        sha = git(work/'target', 'rev-parse', 'HEAD').decode().strip()
+        profile['behavior_protected_files'] = sorted(set(profile.get('behavior_protected_files', [])) | set(profile['behavior_files']))
+    profile.pop('behavior_files', None)
     config={**profile,'source_repo':str(source),'baseline_commit':sha,'target_dir':str(work/'target'),
-            'python':str(Path(python).resolve()),'baseline_reviewed':False}
+            'python':str(Path(python).absolute()),'baseline_reviewed':False}
     (results/'PROJECT.json').write_text(json.dumps(config,indent=2)+'\n')
     (results/'constitution.md').write_text(CONSTITUTION)
     state={'created_utc':datetime.now(UTC).isoformat(),'source_before':before,
-           'source_after':source_fingerprint(source),'model_execution':'disabled',
+           'unmodified_baseline_commit':preparation_base,'source_after':source_fingerprint(source),'model_execution':'disabled',
            'baseline_note':'Candidate committed baseline; review against actual Jira issue before execution.'}
     (results/'PREPARATION.json').write_text(json.dumps(state,indent=2)+'\n')
     env={'PROJECT_CONFIG':str(results/'PROJECT.json'),'SPINE_REPO':str(spine_code),'SPINE_CODE_DIR':str(spine_code),
