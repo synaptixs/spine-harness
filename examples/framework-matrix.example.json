@@ -1,0 +1,28 @@
+{
+  "name": "team-issue-001",
+  "source_repo": "~/code/my-application",
+  "repository_url": "https://github.com/my-team/my-application",
+  "baseline": "HEAD",
+  "task_file": "inputs/TEAM-123.json",
+  "required_grounding": {"symbols": ["OwningClass.method"], "files": ["src/my_application/owner.py"]},
+  "model": "gpt-6-sol",
+  "reasoning_effort": "high",
+  "passes": 1,
+  "approve_checklist": true,
+  "question_answers": {},
+  "unresolved_question_policy": {"mode": "defer", "owner": "benchmark-operator"},
+  "login_home": "~/.codex-spineharness",
+  "tools_dir": ".local/spine-tools-v3.57.1",
+  "spine_commit": "a8952c1a14fc31601fb5721b77b61e36003287e3",
+  "spine_ref": "v3.57.1",
+  "application_python": "~/code/my-application/.venv/bin/python",
+  "source_paths": [".", "src"],
+  "checks": [["{python}", "-m", "pytest", "-q", "tests"]],
+  "acceptance_checks": [],
+  "frameworks": [
+    "openspec",
+    "spine-openspec",
+    "speckit",
+    "spine-pkg"
+  ]
+}

@@ -50,6 +50,12 @@ def disposable_clone(source, dest, commit):
     git(dest,'checkout','--detach',sha)
     git(dest,'remote','remove','origin')
     git(dest,'config','core.hooksPath','/dev/null')
+    # The test sandbox writes scratch files inside this disposable clone. Keep
+    # them out of native workflow status/coverage/commits without changing the
+    # benchmarked repository's tracked .gitignore.
+    exclude=dest/'.git'/'info'/'exclude'
+    with exclude.open('a') as stream:
+        stream.write('\n.benchmark-tmp/\n')
     if source_fingerprint(source)!=before:raise RuntimeError('Original repository changed during clone preparation')
     return sha
 
@@ -60,7 +66,11 @@ def capture_changes(root, baseline, destination):
     with tempfile.TemporaryDirectory(prefix='benchmark-index-') as temp:
         env=dict(os.environ,GIT_INDEX_FILE=str(Path(temp)/'index'),GIT_OPTIONAL_LOCKS='0')
         git(root,'read-tree','HEAD',env=env)
-        git(root,'add','--all','--','.',':(exclude).benchmark-tmp',env=env)
+        # An explicit exclude pathspec can make Git reject an ignored scratch
+        # directory. Stage normally, then restore only that scratch path in the
+        # temporary index so it never appears in the captured patch.
+        git(root,'add','--all','--','.',env=env)
+        git(root,'reset','-q','HEAD','--','.benchmark-tmp',env=env)
         patch=git(root,'diff','--cached','--binary','--no-ext-diff','--no-textconv',baseline,'--',env=env)
         names=git(root,'diff','--cached','--name-status','-z',baseline,'--',env=env)
     (destination/'changes.patch').write_bytes(patch)
