@@ -535,13 +535,13 @@ repo, output = map(pathlib.Path, sys.argv[1:])
                 "from pathlib import Path\ndef test_feature(): assert Path('app.py').read_text() == 'answer = 1\\n'\n"
             )
             data = json.loads(config.read_text())
-            data["acceptance_checks"] = [["{python}", "-m", "pytest", str(acceptance)]]
+            data["acceptance_checks"] = [["{python}", "-m", "pytest", "{config_dir}/test_acceptance.py"]]
             config.write_text(json.dumps(data))
             c = load(config)
             with patch("framework_matrix.sandboxed_command", side_effect=lambda cmd, repo: (cmd, repo)):
                 prepared = prepare(c)
             saved = json.loads((prepared / "PREPARED.json").read_text())
-            self.assertEqual(saved["external_acceptance_inputs"][str(acceptance)], sha(acceptance))
+            self.assertEqual(saved["external_acceptance_inputs"][str(acceptance.resolve())], sha(acceptance))
             self.assertEqual(len(list((prepared / "frozen-acceptance").iterdir())), 1)
             acceptance.write_text("def test_feature(): assert False\n")
             with self.assertRaisesRegex(ValueError, "External acceptance input changed"):

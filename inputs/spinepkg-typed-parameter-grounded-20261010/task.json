@@ -1,0 +1,8 @@
+{
+  "id": "SPKG-1",
+  "title": "Benchmark replay: Python CALLS graph omits typed-parameter method calls",
+  "description": "## Historical benchmark replay\n\nThis issue records a benchmark task against `spine-pkg` commit `40f7fa495bad23fcafb82df30f948c314882daef`. It is not a claim that the current `develop` branch still has this defect.\n\n## Problem\n\nDevelopers use the Program Knowledge Graph's `CALLS` edges to inspect callers and blast radius. At the pinned baseline, a method call through a parameter with an explicit in-repository type annotation is omitted. For example:\n\n```python\nclass Service:\n    def ping(self):\n        return 1\n\ndef checked(item: Service):\n    return item.ping()\n```\n\nThe graph should contain a `CALLS` edge from `checked` to `Service.ping`.\n\n## Acceptance criteria\n\n- Ground a `CALLS` edge for a method call through a parameter annotated with a class defined in the same repository.\n- Preserve the source provenance of that edge.\n- Do not guess a target for an otherwise identical untyped parameter call.\n- Keep repeated extraction of unchanged source deterministic, and keep the existing regression suite passing.\n\nScope: Python annotated parameters. Other local binding forms and cross-module re-export resolution are outside this task.\n\nBenchmark implementation context: RepoCodeExtractor.extract in src/spine/extractor.py is the existing public extraction entry point. The typed-parameter CALLS behavior must be visible through that method.\n",
+  "kind": "github",
+  "source_url": "https://github.com/synaptixs/spine-pkg/issues/1",
+  "baseline": "40f7fa495bad23fcafb82df30f948c314882daef"
+}
