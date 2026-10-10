@@ -1151,15 +1151,17 @@ def run(c: dict, approved: bool) -> Path:
         raise ValueError("External acceptance input changed after preparation")
     if (result / "STARTED").exists():
         raise ValueError("Attempt already started; do not overwrite results")
-    if not shutil.which("caffeinate"):
-        raise ValueError("caffeinate is required to prevent host idle sleep during measurement")
     task = json.loads((result / "TASK.json").read_text())
-    sleep_guard = subprocess.Popen(
-        ["caffeinate", "-i", "-w", str(os.getpid())], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
-    )
-    time.sleep(0.05)
-    if sleep_guard.poll() is not None:
-        raise RuntimeError("Could not acquire macOS idle-sleep assertion; no model run started")
+    sleep_guard = None
+    if sys.platform == "darwin":
+        if not shutil.which("caffeinate"):
+            raise ValueError("caffeinate is required to prevent host idle sleep during measurement")
+        sleep_guard = subprocess.Popen(
+            ["caffeinate", "-i", "-w", str(os.getpid())], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+        )
+        time.sleep(0.05)
+        if sleep_guard.poll() is not None:
+            raise RuntimeError("Could not acquire macOS idle-sleep assertion; no model run started")
     (result / "STARTED").write_text(stamp() + "\n")
     write(
         result / "EXPERIMENT.json",
@@ -1304,12 +1306,13 @@ def run(c: dict, approved: bool) -> Path:
         interrupted = True
         raise
     finally:
-        sleep_guard.terminate()
-        try:
-            sleep_guard.wait(timeout=5)
-        except subprocess.TimeoutExpired:
-            sleep_guard.kill()
-            sleep_guard.wait()
+        if sleep_guard is not None:
+            sleep_guard.terminate()
+            try:
+                sleep_guard.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                sleep_guard.kill()
+                sleep_guard.wait()
         write(
             result / "SOURCE_VERIFICATION.json",
             {"unchanged": source_fingerprint(c["source_repo"]) == prepared["source_before"]},
