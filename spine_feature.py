@@ -242,6 +242,7 @@ async def run_project_ticket(project, ticket, model, destination, calls_root, *,
             for target, value in {
                 'orchestrator.core.env.load_local_env': lambda *a, **k: None,
                 'orchestrator.core.llm.LiteLLMClient': lambda: BoundedClient(),
+                'orchestrator.intake.factory.LiteLLMClient': lambda: BoundedClient(),
                 'orchestrator.sdlc.workspace.WorkspaceManager': Workspace,
                 'orchestrator.sdlc.testenv.make_test_environment': lambda *a, **k: Environment(),
                 'orchestrator.sdlc.testenv.make_test_runner': lambda *a, **k: boundary,
