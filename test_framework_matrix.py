@@ -19,11 +19,13 @@ from framework_matrix import (
     openspec_active_changes,
     package,
     prepare,
+    protected_hashes,
     report,
     run,
     run_codex_framework,
     run_spine_worker,
     sha,
+    speckit_clarification_gate,
     task_from_file,
     task_material,
     timing_evidence,
@@ -174,6 +176,108 @@ class MatrixTests(unittest.TestCase):
             self.assertTrue(result["passed"])
             self.assertTrue(process.call_args.kwargs["input"].find("OwnerExtractor") >= 0)
             self.assertEqual(process.call_args.args[0][0], str(root / "tools/.venv/bin/python"))
+
+    def test_grounding_preflight_accepts_qualified_python_ids(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            repo = root / "repo"
+            repo.mkdir()
+            (repo / "owner.py").write_text("def api_search(): pass\n")
+            tools = root / "tools"
+            interpreter = tools / ".venv/bin/python"
+            interpreter.parent.mkdir(parents=True)
+            interpreter.symlink_to(sys.executable)
+            package = tools / "src/orchestrator/sdlc"
+            package.mkdir(parents=True)
+            (package.parent / "__init__.py").write_text("")
+            (package / "__init__.py").write_text("")
+            (package / "grounding.py").write_text(
+                "class PKGCodegenGrounder:\n"
+                "    @classmethod\n"
+                "    def from_repo(cls, root, use_cache=False): return cls()\n"
+                "    def context_for_spec(self, spec):\n"
+                "        return '### Function `py:wizard.app.api_search`  @ owner.py:1\\n'\n"
+            )
+            config = {
+                "tools_dir": str(tools),
+                "required_grounding": {
+                    "symbols": ["wizard.app.api_search"],
+                    "files": ["owner.py"],
+                },
+            }
+            task = {
+                "title": "Repair wizard.app.api_search",
+                "description": "Restore the existing owner.",
+            }
+            result = grounding_preflight(config, repo, task)
+            self.assertTrue(result["passed"])
+            self.assertTrue(result["symbols_present"]["wizard.app.api_search"])
+
+    def test_protected_hashes_include_public_script_and_requirement_manifest(self):
+        with tempfile.TemporaryDirectory() as temp:
+            repo = Path(temp)
+            (repo / "checks").mkdir()
+            (repo / ".spine").mkdir()
+            (repo / "checks/ask_ui.js").write_text("console.log('check');\n")
+            (repo / ".spine/required-behavior.yaml").write_text("requirements: []\n")
+            hashes = protected_hashes(repo, [])
+            self.assertIn("checks/ask_ui.js", hashes)
+            self.assertIn(".spine/required-behavior.yaml", hashes)
+
+    def test_speckit_stops_before_an_unrecorded_clarification_answer(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            repo = root / "repo"
+            spec = repo / "specs/feature/spec.md"
+            spec.parent.mkdir(parents=True)
+            spec.write_text("## Clarifications\n- Q: Which rules take precedence? → A: Combine them.\n")
+            feature = repo / ".specify/feature.json"
+            feature.parent.mkdir()
+            feature.write_text(json.dumps({"feature_directory": "specs/feature"}))
+            out = root / "out"
+            out.mkdir()
+            labels = []
+
+            def model(_config, _repo, _out, label, _prompt, _thread):
+                labels.append(label)
+                tail = (
+                    "Which rules take precedence? Reply A, B, or C.\n"
+                    "BENCHMARK_CLARIFICATION_STATUS: OPEN"
+                    if label == "clarify"
+                    else "Specification created"
+                )
+                return "thread", {"stage": label, "last_message_tail": tail}
+
+            config = {
+                "login_home": str(root / "login"),
+                "question_answers": {},
+                "unresolved_question_policy": {"mode": "stop"},
+            }
+            with (
+                patch("framework_matrix.codex_environment", return_value={}),
+                patch(
+                    "framework_matrix.subprocess.run",
+                    return_value=SimpleNamespace(returncode=0, stdout="", stderr=""),
+                ),
+                patch("framework_matrix.model_step", side_effect=model),
+            ):
+                with self.assertRaisesRegex(RuntimeError, "unresolved operator clarification"):
+                    run_codex_framework(
+                        config,
+                        {"id": "TASK-1", "title": "Feature", "description": "Build it"},
+                        "speckit",
+                        repo,
+                        out,
+                    )
+            self.assertEqual(labels, ["specify", "clarify"])
+            self.assertFalse(json.loads((out / "CLARIFICATION_GATE.json").read_text())["passed"])
+            self.assertFalse(
+                speckit_clarification_gate(config, repo, "BENCHMARK_CLARIFICATION_STATUS: CLEAR")["passed"]
+            )
+            config["question_answers"] = {"Which rules take precedence?": "Combine them."}
+            self.assertTrue(
+                speckit_clarification_gate(config, repo, "BENCHMARK_CLARIFICATION_STATUS: CLEAR")["passed"]
+            )
 
     def test_sleep_gap_invalidates_time_comparison(self):
         start = "2026-10-10T12:43:33+00:00"

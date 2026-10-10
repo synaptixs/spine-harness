@@ -534,6 +534,14 @@ def implementation_patch(raw: str) -> str:
 
 def protected_hashes(repo: Path, commands: list[list[str]]) -> dict[str, str]:
     paths = {p.relative_to(repo).as_posix() for p in repo.rglob("test_*.py") if ".git" not in p.parts}
+    checks_dir = repo / "checks"
+    if checks_dir.is_dir():
+        paths.update(
+            p.relative_to(repo).as_posix()
+            for p in checks_dir.rglob("*")
+            if p.is_file() and not p.is_symlink()
+        )
+    paths.add(".spine/required-behavior.yaml")
     for command in commands:
         for arg in command:
             candidate = repo / arg
@@ -572,7 +580,8 @@ def grounding_preflight(c: dict, repo: Path, task: dict) -> dict:
         "headers=[line for line in context.splitlines() if line.startswith('### ')]\n"
         "ids=[match.group(1) for line in headers if (match:=re.search(r'`([^`]+)`',line))]\n"
         "print(json.dumps({'context_chars':len(context),'symbols_present':"
-        "{name:any(identifier.endswith('.'+name) or identifier==name for identifier in ids) "
+        "{name:any(identifier.endswith((':'+name,'.'+name)) or identifier==name "
+        "for identifier in ids) "
         "for name in data['symbols']},'files_present':"
         "{name:any('@ '+name+':' in line for line in headers) for name in data['files']},"
         "'symbol_headers':headers[:12]}))\n"
@@ -873,6 +882,33 @@ def openspec_active_changes(repo: Path) -> set[str]:
     return {p.name for p in root.iterdir() if p.is_dir() and p.name != "archive"} if root.is_dir() else set()
 
 
+def speckit_clarification_gate(c: dict, repo: Path, response_tail: str) -> dict:
+    """Fail closed when Spec Kit asks for an unrecorded operator decision."""
+    markers = re.findall(
+        r"(?im)^BENCHMARK_CLARIFICATION_STATUS:\s*(CLEAR|OPEN)\s*$", response_tail
+    )
+    marker = markers[-1].lower() if markers else "missing"
+    try:
+        feature = json.loads((repo / ".specify/feature.json").read_text())["feature_directory"]
+        spec_path = (repo / feature / "spec.md").resolve()
+        if not spec_path.is_relative_to(repo.resolve()):
+            raise ValueError("feature directory escapes the repository")
+        spec = spec_path.read_text()
+    except (OSError, KeyError, ValueError, TypeError, json.JSONDecodeError):
+        return {"passed": False, "marker": marker, "reason": "Current Spec Kit spec is unavailable"}
+    questions = re.findall(r"(?m)^\s*-\s*Q:\s*(.+?)\s*(?:→|->)\s*A:", spec)
+    recorded = {" ".join(question.split()).casefold() for question in c.get("question_answers", {})}
+    unrecorded = [question for question in questions if " ".join(question.split()).casefold() not in recorded]
+    return {
+        "passed": marker == "clear" and not unrecorded,
+        "marker": marker,
+        "unrecorded_questions": unrecorded,
+        "reason": "Unrecorded operator choice or missing clarification marker"
+        if marker != "clear" or unrecorded
+        else "No open operator choice",
+    }
+
+
 def run_codex_framework(c: dict, task: dict, name: str, repo: Path, out: Path) -> list[dict]:
     env = codex_environment(c, repo)
     if subprocess.run(["codex", "login", "status"], env=env, capture_output=True).returncode:
@@ -909,10 +945,12 @@ def run_codex_framework(c: dict, task: dict, name: str, repo: Path, out: Path) -
         ]
         prompts = [
             ("specify", "$speckit-specify " + task_prompt(task)),
-            ("clarify", "$speckit-clarify"),
             (
-                "clarify-answer",
-                "No further detail is available. Use reasonable defaults for every open question, record them in the spec, and finish clarification.",
+                "clarify",
+                "$speckit-clarify Use only answers recorded in the frozen task context. "
+                "Do not choose a default for an unresolved operator decision. End your final "
+                "message with exactly BENCHMARK_CLARIFICATION_STATUS: CLEAR when no operator "
+                "decision remains, or BENCHMARK_CLARIFICATION_STATUS: OPEN when one remains.",
             ),
             ("plan", "$speckit-plan"),
             ("checklist", "$speckit-checklist code quality and requirements completeness"),
@@ -944,6 +982,11 @@ def run_codex_framework(c: dict, task: dict, name: str, repo: Path, out: Path) -
         row["checklist_approval_requested"] = checklist_requested
         stages.append(row)
         write(out / "STAGES.json", stages)
+        if name == "speckit" and label == "clarify":
+            gate = speckit_clarification_gate(c, repo, row["last_message_tail"])
+            write(out / "CLARIFICATION_GATE.json", gate)
+            if not gate["passed"]:
+                raise RuntimeError("Spec Kit has an unresolved operator clarification; no automatic answer supplied")
         if checklist_requested:
             if not c["approve_checklist"]:
                 raise RuntimeError(
