@@ -120,6 +120,8 @@ Spine checks. `acceptance_checks` are post-run diagnostics, never model feedback
 Absolute local acceptance scripts named in those commands are hashed and copied
 to `frozen-acceptance/` during preparation. A changed script blocks the model
 run; the report checks it again after closure.
+Use `{config_dir}` in a check argument for a script saved beside the config;
+the loader resolves it to the config directory before freezing the input.
 
 `prepare` runs independent acceptance on the unfixed baseline. At least one
 command must fail with exit 1 while no command may fail to start or report a

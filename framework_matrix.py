@@ -247,6 +247,7 @@ def load(path: Path) -> dict:
     for field in ("checks", "acceptance_checks"):
         if any(not isinstance(cmd, list) or not cmd or not all(isinstance(x, str) for x in cmd) for cmd in c[field]):
             raise ValueError(f"{field} must be argv arrays")
+        c[field] = [[arg.replace("{config_dir}", str(base)) for arg in cmd] for cmd in c[field]]
     if {"spine-openspec", "spine-pkg"} & set(names) and not c["checks"]:
         raise ValueError("Native Spine arms require at least one passing baseline regression check")
     source = Path(c["source_repo"])

@@ -1,0 +1,74 @@
+{
+  "name": "spinepkg-typed-grounded-20261010d",
+  "repository_url": "https://github.com/synaptixs/spine-pkg",
+  "source_repo": "${SPKG_SOURCE_REPO}",
+  "baseline": "40f7fa495bad23fcafb82df30f948c314882daef",
+  "task_file": "task.json",
+  "application_python": "${SPKG_APP_PYTHON}",
+  "source_paths": [
+    "src"
+  ],
+  "checks": [
+    [
+      "{python}",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests",
+      "-k",
+      "not test_non_git_dir_always_extracts"
+    ]
+  ],
+  "acceptance_checks": [
+    [
+      "{python}",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "{config_dir}/test_independent_acceptance.py"
+    ]
+  ],
+  "task_context": {
+    "problem": "The Python Program Knowledge Graph omits CALLS edges for method calls through parameters annotated with an in-repository class.",
+    "users": "Developers querying callers and blast radius from the graph.",
+    "outcome": "The graph grounds the annotated call with source provenance while leaving the untyped call unresolved.",
+    "non_functional_requirements": "Extraction remains deterministic for unchanged source and the existing regression suite passes.",
+    "non_goals": "Other local binding forms and cross-module re-export resolution are outside this task."
+  },
+  "frameworks": [
+    "speckit",
+    "openspec",
+    "spine-pkg",
+    "spine-openspec"
+  ],
+  "passes": 1,
+  "model": "gpt-6-sol",
+  "reasoning_effort": "high",
+  "timeout_seconds": 2700,
+  "approve_checklist": true,
+  "question_answers": {},
+  "unresolved_question_policy": {
+    "mode": "stop"
+  },
+  "login_home": "${SPKG_CODEX_LOGIN_HOME}",
+  "tools_dir": "${SPKG_SPINE_TOOLS_DIR}",
+  "spine_commit": "5007638472a7400cf566e80da835e6b11f92dbaf",
+  "spine_ref": "develop-merged-541",
+  "speckit_ref": "git+https://github.com/github/spec-kit.git@v1.0.11",
+  "openspec_version": "1.14.1",
+  "work_dir": "${SPKG_WORK_DIR}",
+  "results_dir": "${SPKG_RESULTS_DIR}",
+  "required_grounding": {
+    "symbols": [
+      "RepoCodeExtractor.extract"
+    ],
+    "files": [
+      "src/spine/extractor.py"
+    ]
+  },
+  "known_fix_commit": "c8ceb2741c7139aa8e6454f0a88f0f7388c89423"
+}
