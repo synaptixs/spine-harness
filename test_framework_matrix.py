@@ -175,6 +175,42 @@ class MatrixTests(unittest.TestCase):
             self.assertTrue(process.call_args.kwargs["input"].find("OwnerExtractor") >= 0)
             self.assertEqual(process.call_args.args[0][0], str(root / "tools/.venv/bin/python"))
 
+    def test_grounding_preflight_accepts_qualified_python_ids(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            repo = root / "repo"
+            repo.mkdir()
+            (repo / "owner.py").write_text("def api_search(): pass\n")
+            tools = root / "tools"
+            interpreter = tools / ".venv/bin/python"
+            interpreter.parent.mkdir(parents=True)
+            interpreter.symlink_to(sys.executable)
+            package = tools / "src/orchestrator/sdlc"
+            package.mkdir(parents=True)
+            (package.parent / "__init__.py").write_text("")
+            (package / "__init__.py").write_text("")
+            (package / "grounding.py").write_text(
+                "class PKGCodegenGrounder:\n"
+                "    @classmethod\n"
+                "    def from_repo(cls, root, use_cache=False): return cls()\n"
+                "    def context_for_spec(self, spec):\n"
+                "        return '### Function `py:wizard.app.api_search`  @ owner.py:1\\n'\n"
+            )
+            config = {
+                "tools_dir": str(tools),
+                "required_grounding": {
+                    "symbols": ["wizard.app.api_search"],
+                    "files": ["owner.py"],
+                },
+            }
+            task = {
+                "title": "Repair wizard.app.api_search",
+                "description": "Restore the existing owner.",
+            }
+            result = grounding_preflight(config, repo, task)
+            self.assertTrue(result["passed"])
+            self.assertTrue(result["symbols_present"]["wizard.app.api_search"])
+
     def test_sleep_gap_invalidates_time_comparison(self):
         start = "2026-10-10T12:43:33+00:00"
         end = "2026-10-10T13:18:05+00:00"
