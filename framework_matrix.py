@@ -909,6 +909,30 @@ def speckit_clarification_gate(c: dict, repo: Path, response_tail: str) -> dict:
     }
 
 
+def speckit_analysis_gate(log: Path) -> dict:
+    """Read the full analysis report; a short stage tail can omit its findings."""
+    message = ""
+    for line in log.read_text().splitlines():
+        try:
+            event = json.loads(line)
+        except ValueError:
+            continue
+        if event.get("type") == "item.completed" and event.get("item", {}).get("type") == "agent_message":
+            message = event["item"].get("text", "")
+    has_report = "Specification Analysis Report" in message and re.search(r"\|\s*Severity\s*\|", message)
+    findings = [
+        line.strip()
+        for line in message.splitlines()
+        if line.lstrip().startswith("|") and re.search(r"\|\s*(?:HIGH|CRITICAL)\s*\|", line, re.IGNORECASE)
+    ]
+    return {
+        "passed": bool(has_report) and not findings,
+        "report_present": bool(has_report),
+        "high_or_critical_findings": findings,
+        "reason": "Analysis is clear" if has_report and not findings else "Resolve analysis findings before implementation",
+    }
+
+
 def run_codex_framework(c: dict, task: dict, name: str, repo: Path, out: Path) -> list[dict]:
     env = codex_environment(c, repo)
     if subprocess.run(["codex", "login", "status"], env=env, capture_output=True).returncode:
@@ -987,6 +1011,41 @@ def run_codex_framework(c: dict, task: dict, name: str, repo: Path, out: Path) -
             write(out / "CLARIFICATION_GATE.json", gate)
             if not gate["passed"]:
                 raise RuntimeError("Spec Kit has an unresolved operator clarification; no automatic answer supplied")
+        if name == "speckit" and label == "analyze":
+            gates = []
+            for attempt in range(3):
+                analysis_label = "analyze" if attempt == 0 else f"analyze-verify-{attempt}"
+                gate = speckit_analysis_gate(out / f"{analysis_label}.jsonl")
+                gates.append({"stage": analysis_label, **gate})
+                write(out / "ANALYSIS_GATE.json", gates)
+                if gate["passed"]:
+                    break
+                if not gate["report_present"]:
+                    raise RuntimeError("Spec Kit analysis report is missing; implementation was not started")
+                if attempt == 2:
+                    raise RuntimeError("Spec Kit still has HIGH or CRITICAL findings; implementation was not started")
+                thread, remediation = model_step(
+                    c,
+                    repo,
+                    out,
+                    f"analyze-remediate-{attempt + 1}",
+                    "Resolve every HIGH and CRITICAL finding in the latest $speckit-analyze report "
+                    "by revising the specification, plan, and tasks. Inspect the actual source for technical facts. "
+                    "Keep all frozen task requirements and recorded answers, and do not implement code or edit "
+                    "frozen benchmark checks. If an operator decision is genuinely missing, stop and end with "
+                    "BENCHMARK_REMEDIATION_STATUS: OPEN; otherwise end with BENCHMARK_REMEDIATION_STATUS: CLEAR.",
+                    thread,
+                )
+                stages.append(remediation)
+                write(out / "STAGES.json", stages)
+                if not re.search(r"(?im)^BENCHMARK_REMEDIATION_STATUS:\s*CLEAR\s*$", remediation["last_message_tail"]):
+                    raise RuntimeError("Spec Kit remediation needs an operator decision or lacked a clear marker")
+                clarification = speckit_clarification_gate(c, repo, "BENCHMARK_CLARIFICATION_STATUS: CLEAR")
+                if not clarification["passed"]:
+                    raise RuntimeError("Spec Kit remediation introduced an unrecorded operator choice")
+                thread, verification = model_step(c, repo, out, f"analyze-verify-{attempt + 1}", "$speckit-analyze", thread)
+                stages.append(verification)
+                write(out / "STAGES.json", stages)
         if checklist_requested:
             if not c["approve_checklist"]:
                 raise RuntimeError(
