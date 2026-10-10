@@ -215,6 +215,10 @@ fresh analysis before implementation. `ANALYSIS_GATE.json` records each review.
 An absent report, an unresolved operator choice, or findings remaining after
 those passes stop the Spec Kit workflow before implementation. Remediation
 must preserve the frozen task and its recorded answers.
+Spec Kit copies recorded clarification questions and answers verbatim. If its
+spec records a different question, the matrix stops all later arms and marks
+the partial comparison invalid. Record an owner-approved answer for that exact
+question in a fresh shared config before another model-spending attempt.
 
 An external adapter writes its patch into `{repo}` and may write `{output}/USAGE.json`:
 

@@ -9,6 +9,7 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 from framework_matrix import (
+    UnrecordedOperatorClarification,
     doctor,
     evaluate_swebench,
     export_swebench,
@@ -412,6 +413,25 @@ class MatrixTests(unittest.TestCase):
             self.assertIn("no framework ranking or score is valid", report_text)
             with self.assertRaisesRegex(ValueError, "incomplete|invalid|Interrupted"):
                 package(result)
+
+    def test_unrecorded_operator_choice_stops_all_later_arms(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            config, _, _ = self.fixture(root)
+            payload = json.loads(config.read_text())
+            payload["frameworks"].append(dict(payload["frameworks"][0], name="second-framework"))
+            config.write_text(json.dumps(payload))
+            c = load(config)
+            prepare(c)
+            with patch(
+                "framework_matrix.run_external",
+                side_effect=UnrecordedOperatorClarification("recorded answer did not match the generated question"),
+            ) as worker:
+                result = run(c, approved=True)
+            self.assertEqual(worker.call_count, 1)
+            self.assertEqual((result / "EXIT_CODE").read_text().strip(), "2")
+            self.assertFalse(json.loads((result / "RUN_INVALID.json").read_text())["result_is_comparable"])
+            self.assertIn("1/2 arms have final evidence", (result / "COMPARISON_REPORT.md").read_text())
 
     def test_scope_resolutions_are_shared_and_validated_before_run(self):
         with tempfile.TemporaryDirectory() as temp:

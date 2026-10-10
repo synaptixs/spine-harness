@@ -43,6 +43,10 @@ SECRET = re.compile(
 )
 
 
+class UnrecordedOperatorClarification(RuntimeError):
+    """A shared task input is missing, so no later arm may spend model tokens."""
+
+
 def stamp() -> str:
     return datetime.now(UTC).isoformat()
 
@@ -972,6 +976,7 @@ def run_codex_framework(c: dict, task: dict, name: str, repo: Path, out: Path) -
             (
                 "clarify",
                 "$speckit-clarify Use only answers recorded in the frozen task context. "
+                "Copy each recorded question and answer exactly into the spec clarification entry; do not paraphrase. "
                 "Do not choose a default for an unresolved operator decision. End your final "
                 "message with exactly BENCHMARK_CLARIFICATION_STATUS: CLEAR when no operator "
                 "decision remains, or BENCHMARK_CLARIFICATION_STATUS: OPEN when one remains.",
@@ -1010,7 +1015,9 @@ def run_codex_framework(c: dict, task: dict, name: str, repo: Path, out: Path) -
             gate = speckit_clarification_gate(c, repo, row["last_message_tail"])
             write(out / "CLARIFICATION_GATE.json", gate)
             if not gate["passed"]:
-                raise RuntimeError("Spec Kit has an unresolved operator clarification; no automatic answer supplied")
+                raise UnrecordedOperatorClarification(
+                    "Spec Kit has an unresolved operator clarification; no automatic answer supplied"
+                )
         if name == "speckit" and label == "analyze":
             gates = []
             for attempt in range(3):
@@ -1039,10 +1046,12 @@ def run_codex_framework(c: dict, task: dict, name: str, repo: Path, out: Path) -
                 stages.append(remediation)
                 write(out / "STAGES.json", stages)
                 if not re.search(r"(?im)^BENCHMARK_REMEDIATION_STATUS:\s*CLEAR\s*$", remediation["last_message_tail"]):
-                    raise RuntimeError("Spec Kit remediation needs an operator decision or lacked a clear marker")
+                    raise UnrecordedOperatorClarification(
+                        "Spec Kit remediation needs an operator decision or lacked a clear marker"
+                    )
                 clarification = speckit_clarification_gate(c, repo, "BENCHMARK_CLARIFICATION_STATUS: CLEAR")
                 if not clarification["passed"]:
-                    raise RuntimeError("Spec Kit remediation introduced an unrecorded operator choice")
+                    raise UnrecordedOperatorClarification("Spec Kit remediation introduced an unrecorded operator choice")
                 thread, verification = model_step(c, repo, out, f"analyze-verify-{attempt + 1}", "$speckit-analyze", thread)
                 stages.append(verification)
                 write(out / "STAGES.json", stages)
@@ -1317,6 +1326,10 @@ def run(c: dict, approved: bool) -> Path:
                     else:
                         stages = run_external(c, task, item, repo, out)
                     row["status"] = "completed_workflow"
+                except UnrecordedOperatorClarification as exc:
+                    row.update(status="workflow_failed", error=f"{type(exc).__name__}: {exc}")
+                    measurement_defect = f"pass {pass_no} {name}: shared task clarification is not recorded; {exc}"
+                    failures.append(measurement_defect)
                 except Exception as exc:
                     row.update(status="workflow_failed", error=f"{type(exc).__name__}: {exc}")
                     failures.append(f"pass {pass_no} {name}: {exc}")
