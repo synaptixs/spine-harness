@@ -9,7 +9,6 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 from framework_matrix import (
-    UnrecordedOperatorClarification,
     doctor,
     evaluate_swebench,
     export_swebench,
@@ -26,8 +25,6 @@ from framework_matrix import (
     run_codex_framework,
     run_spine_worker,
     sha,
-    speckit_analysis_gate,
-    speckit_clarification_gate,
     task_from_file,
     task_material,
     timing_evidence,
@@ -226,157 +223,38 @@ class MatrixTests(unittest.TestCase):
             self.assertIn("checks/ask_ui.js", hashes)
             self.assertIn(".spine/required-behavior.yaml", hashes)
 
-    def test_speckit_stops_before_an_unrecorded_clarification_answer(self):
+    def test_speckit_runs_documented_core_workflow_with_shared_answer(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             repo = root / "repo"
-            spec = repo / "specs/feature/spec.md"
-            spec.parent.mkdir(parents=True)
-            spec.write_text("## Clarifications\n- Q: Which rules take precedence? → A: Combine them.\n")
-            feature = repo / ".specify/feature.json"
-            feature.parent.mkdir()
-            feature.write_text(json.dumps({"feature_directory": "specs/feature"}))
+            repo.mkdir()
             out = root / "out"
             out.mkdir()
             labels = []
+            prompts = []
 
-            def model(_config, _repo, _out, label, _prompt, _thread):
+            def model(_config, _repo, _out, label, prompt, _thread):
                 labels.append(label)
-                tail = (
-                    "Which rules take precedence? Reply A, B, or C.\n"
-                    "BENCHMARK_CLARIFICATION_STATUS: OPEN"
-                    if label == "clarify"
-                    else "Specification created"
-                )
-                return "thread", {"stage": label, "last_message_tail": tail}
+                prompts.append(prompt)
+                return "thread", {"stage": label, "last_message_tail": "Done"}
 
-            config = {
-                "login_home": str(root / "login"),
-                "question_answers": {},
-                "unresolved_question_policy": {"mode": "stop"},
+            task = {
+                "id": "TASK-1",
+                "title": "Wire search rules",
+                "description": "Use available rules by default.",
+                "question_answers": {"Which rules are used?": "Combine compatible sources and deduplicate."},
             }
-            with (
-                patch("framework_matrix.codex_environment", return_value={}),
-                patch(
-                    "framework_matrix.subprocess.run",
-                    return_value=SimpleNamespace(returncode=0, stdout="", stderr=""),
-                ),
-                patch("framework_matrix.model_step", side_effect=model),
-            ):
-                with self.assertRaisesRegex(RuntimeError, "unresolved operator clarification"):
-                    run_codex_framework(
-                        config,
-                        {"id": "TASK-1", "title": "Feature", "description": "Build it"},
-                        "speckit",
-                        repo,
-                        out,
-                    )
-            self.assertEqual(labels, ["specify", "clarify"])
-            self.assertFalse(json.loads((out / "CLARIFICATION_GATE.json").read_text())["passed"])
-            self.assertFalse(
-                speckit_clarification_gate(config, repo, "BENCHMARK_CLARIFICATION_STATUS: CLEAR")["passed"]
-            )
-            config["question_answers"] = {"Which rules take precedence?": "Combine them."}
-            self.assertTrue(
-                speckit_clarification_gate(config, repo, "BENCHMARK_CLARIFICATION_STATUS: CLEAR")["passed"]
-            )
-
-    def test_speckit_repairs_high_analysis_findings_before_implementation(self):
-        with tempfile.TemporaryDirectory() as temp:
-            root = Path(temp)
-            repo = root / "repo"
-            spec = repo / "specs/feature/spec.md"
-            spec.parent.mkdir(parents=True)
-            spec.write_text("# Feature\n")
-            feature = repo / ".specify/feature.json"
-            feature.parent.mkdir()
-            feature.write_text(json.dumps({"feature_directory": "specs/feature"}))
-            out = root / "out"
-            out.mkdir()
-            labels = []
-            high = (
-                "## Specification Analysis Report\n"
-                "| ID | Severity | Summary |\n|---|---|---|\n"
-                "| U1 | HIGH | Rule source undefined |\n"
-            )
-            clear = "## Specification Analysis Report\n| ID | Severity | Summary |\n|---|---|---|\n"
-
-            def model(_config, _repo, result, label, _prompt, _thread):
-                labels.append(label)
-                message = high if label == "analyze" else clear if label == "analyze-verify-1" else "Done"
-                if label == "clarify":
-                    message = "BENCHMARK_CLARIFICATION_STATUS: CLEAR"
-                if label == "analyze-remediate-1":
-                    message = "Technical findings resolved.\nBENCHMARK_REMEDIATION_STATUS: CLEAR"
-                if label.startswith("analyze") and label != "analyze-remediate-1":
-                    (result / f"{label}.jsonl").write_text(json.dumps({
-                        "type": "item.completed", "item": {"type": "agent_message", "text": message}
-                    }) + "\n")
-                return "thread", {"stage": label, "last_message_tail": message[-400:]}
-
-            config = {
-                "login_home": str(root / "login"),
-                "question_answers": {},
-                "unresolved_question_policy": {"mode": "stop"},
-                "approve_checklist": False,
-            }
+            config = {"login_home": str(root / "login"), "approve_checklist": False}
             with (
                 patch("framework_matrix.codex_environment", return_value={}),
                 patch("framework_matrix.subprocess.run", return_value=SimpleNamespace(returncode=0, stdout="", stderr="")),
                 patch("framework_matrix.model_step", side_effect=model),
                 patch("framework_matrix.run_sessions", return_value=[]),
             ):
-                run_codex_framework(config, {"id": "TASK-1", "title": "Feature", "description": "Build it"},
-                                    "speckit", repo, out)
-            self.assertLess(labels.index("analyze-verify-1"), labels.index("implement"))
-            self.assertEqual(len(json.loads((out / "ANALYSIS_GATE.json").read_text())), 2)
-            self.assertTrue(json.loads((out / "ANALYSIS_GATE.json").read_text())[-1]["passed"])
-            self.assertEqual(len(speckit_analysis_gate(out / "analyze.jsonl")["high_or_critical_findings"]), 1)
-
-    def test_speckit_stops_if_high_analysis_findings_remain(self):
-        with tempfile.TemporaryDirectory() as temp:
-            root = Path(temp)
-            repo = root / "repo"
-            spec = repo / "specs/feature/spec.md"
-            spec.parent.mkdir(parents=True)
-            spec.write_text("# Feature\n")
-            feature = repo / ".specify/feature.json"
-            feature.parent.mkdir()
-            feature.write_text(json.dumps({"feature_directory": "specs/feature"}))
-            out = root / "out"
-            out.mkdir()
-            labels = []
-
-            def model(_config, _repo, result, label, _prompt, _thread):
-                labels.append(label)
-                message = "Done"
-                if label == "clarify":
-                    message = "BENCHMARK_CLARIFICATION_STATUS: CLEAR"
-                if label.startswith("analyze-remediate"):
-                    message = "BENCHMARK_REMEDIATION_STATUS: CLEAR"
-                elif label.startswith("analyze"):
-                    message = "## Specification Analysis Report\n| ID | Severity |\n|---|---|\n| U1 | HIGH |\n"
-                    (result / f"{label}.jsonl").write_text(json.dumps({
-                        "type": "item.completed", "item": {"type": "agent_message", "text": message}
-                    }) + "\n")
-                return "thread", {"stage": label, "last_message_tail": message[-400:]}
-
-            config = {
-                "login_home": str(root / "login"),
-                "question_answers": {},
-                "unresolved_question_policy": {"mode": "stop"},
-                "approve_checklist": False,
-            }
-            with (
-                patch("framework_matrix.codex_environment", return_value={}),
-                patch("framework_matrix.subprocess.run", return_value=SimpleNamespace(returncode=0, stdout="", stderr="")),
-                patch("framework_matrix.model_step", side_effect=model),
-            ):
-                with self.assertRaisesRegex(RuntimeError, "still has HIGH or CRITICAL"):
-                    run_codex_framework(config, {"id": "TASK-1", "title": "Feature", "description": "Build it"},
-                                        "speckit", repo, out)
-            self.assertNotIn("implement", labels)
-            self.assertEqual(len(json.loads((out / "ANALYSIS_GATE.json").read_text())), 3)
+                run_codex_framework(config, task, "speckit", repo, out)
+            self.assertEqual(labels, ["specify", "plan", "tasks", "implement"])
+            self.assertIn("Combine compatible sources and deduplicate.", prompts[0])
+            self.assertEqual([stage["stage"] for stage in json.loads((out / "STAGES.json").read_text())], labels)
 
     def test_sleep_gap_invalidates_time_comparison(self):
         start = "2026-10-10T12:43:33+00:00"
@@ -413,25 +291,6 @@ class MatrixTests(unittest.TestCase):
             self.assertIn("no framework ranking or score is valid", report_text)
             with self.assertRaisesRegex(ValueError, "incomplete|invalid|Interrupted"):
                 package(result)
-
-    def test_unrecorded_operator_choice_stops_all_later_arms(self):
-        with tempfile.TemporaryDirectory() as temp:
-            root = Path(temp)
-            config, _, _ = self.fixture(root)
-            payload = json.loads(config.read_text())
-            payload["frameworks"].append(dict(payload["frameworks"][0], name="second-framework"))
-            config.write_text(json.dumps(payload))
-            c = load(config)
-            prepare(c)
-            with patch(
-                "framework_matrix.run_external",
-                side_effect=UnrecordedOperatorClarification("recorded answer did not match the generated question"),
-            ) as worker:
-                result = run(c, approved=True)
-            self.assertEqual(worker.call_count, 1)
-            self.assertEqual((result / "EXIT_CODE").read_text().strip(), "2")
-            self.assertFalse(json.loads((result / "RUN_INVALID.json").read_text())["result_is_comparable"])
-            self.assertIn("1/2 arms have final evidence", (result / "COMPARISON_REPORT.md").read_text())
 
     def test_scope_resolutions_are_shared_and_validated_before_run(self):
         with tempfile.TemporaryDirectory() as temp:

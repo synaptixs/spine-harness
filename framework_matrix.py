@@ -43,10 +43,6 @@ SECRET = re.compile(
 )
 
 
-class UnrecordedOperatorClarification(RuntimeError):
-    """A shared task input is missing, so no later arm may spend model tokens."""
-
-
 def stamp() -> str:
     return datetime.now(UTC).isoformat()
 
@@ -886,57 +882,6 @@ def openspec_active_changes(repo: Path) -> set[str]:
     return {p.name for p in root.iterdir() if p.is_dir() and p.name != "archive"} if root.is_dir() else set()
 
 
-def speckit_clarification_gate(c: dict, repo: Path, response_tail: str) -> dict:
-    """Fail closed when Spec Kit asks for an unrecorded operator decision."""
-    markers = re.findall(
-        r"(?im)^BENCHMARK_CLARIFICATION_STATUS:\s*(CLEAR|OPEN)\s*$", response_tail
-    )
-    marker = markers[-1].lower() if markers else "missing"
-    try:
-        feature = json.loads((repo / ".specify/feature.json").read_text())["feature_directory"]
-        spec_path = (repo / feature / "spec.md").resolve()
-        if not spec_path.is_relative_to(repo.resolve()):
-            raise ValueError("feature directory escapes the repository")
-        spec = spec_path.read_text()
-    except (OSError, KeyError, ValueError, TypeError, json.JSONDecodeError):
-        return {"passed": False, "marker": marker, "reason": "Current Spec Kit spec is unavailable"}
-    questions = re.findall(r"(?m)^\s*-\s*Q:\s*(.+?)\s*(?:→|->)\s*A:", spec)
-    recorded = {" ".join(question.split()).casefold() for question in c.get("question_answers", {})}
-    unrecorded = [question for question in questions if " ".join(question.split()).casefold() not in recorded]
-    return {
-        "passed": marker == "clear" and not unrecorded,
-        "marker": marker,
-        "unrecorded_questions": unrecorded,
-        "reason": "Unrecorded operator choice or missing clarification marker"
-        if marker != "clear" or unrecorded
-        else "No open operator choice",
-    }
-
-
-def speckit_analysis_gate(log: Path) -> dict:
-    """Read the full analysis report; a short stage tail can omit its findings."""
-    message = ""
-    for line in log.read_text().splitlines():
-        try:
-            event = json.loads(line)
-        except ValueError:
-            continue
-        if event.get("type") == "item.completed" and event.get("item", {}).get("type") == "agent_message":
-            message = event["item"].get("text", "")
-    has_report = "Specification Analysis Report" in message and re.search(r"\|\s*Severity\s*\|", message)
-    findings = [
-        line.strip()
-        for line in message.splitlines()
-        if line.lstrip().startswith("|") and re.search(r"\|\s*(?:HIGH|CRITICAL)\s*\|", line, re.IGNORECASE)
-    ]
-    return {
-        "passed": bool(has_report) and not findings,
-        "report_present": bool(has_report),
-        "high_or_critical_findings": findings,
-        "reason": "Analysis is clear" if has_report and not findings else "Resolve analysis findings before implementation",
-    }
-
-
 def run_codex_framework(c: dict, task: dict, name: str, repo: Path, out: Path) -> list[dict]:
     env = codex_environment(c, repo)
     if subprocess.run(["codex", "login", "status"], env=env, capture_output=True).returncode:
@@ -973,20 +918,9 @@ def run_codex_framework(c: dict, task: dict, name: str, repo: Path, out: Path) -
         ]
         prompts = [
             ("specify", "$speckit-specify " + task_prompt(task)),
-            (
-                "clarify",
-                "$speckit-clarify Use only answers recorded in the frozen task context. "
-                "Copy each recorded question and answer exactly into the spec clarification entry; do not paraphrase. "
-                "Do not choose a default for an unresolved operator decision. End your final "
-                "message with exactly BENCHMARK_CLARIFICATION_STATUS: CLEAR when no operator "
-                "decision remains, or BENCHMARK_CLARIFICATION_STATUS: OPEN when one remains.",
-            ),
             ("plan", "$speckit-plan"),
-            ("checklist", "$speckit-checklist code quality and requirements completeness"),
             ("tasks", "$speckit-tasks"),
-            ("analyze", "$speckit-analyze"),
             ("implement", "$speckit-implement"),
-            ("converge", "$speckit-converge"),
         ]
     setup_result = subprocess.run(setup, cwd=repo, env=env, capture_output=True, text=True, timeout=600)
     (out / "setup.log").write_text(setup_result.stdout[-12000:] + setup_result.stderr[-12000:])
@@ -1011,50 +945,6 @@ def run_codex_framework(c: dict, task: dict, name: str, repo: Path, out: Path) -
         row["checklist_approval_requested"] = checklist_requested
         stages.append(row)
         write(out / "STAGES.json", stages)
-        if name == "speckit" and label == "clarify":
-            gate = speckit_clarification_gate(c, repo, row["last_message_tail"])
-            write(out / "CLARIFICATION_GATE.json", gate)
-            if not gate["passed"]:
-                raise UnrecordedOperatorClarification(
-                    "Spec Kit has an unresolved operator clarification; no automatic answer supplied"
-                )
-        if name == "speckit" and label == "analyze":
-            gates = []
-            for attempt in range(3):
-                analysis_label = "analyze" if attempt == 0 else f"analyze-verify-{attempt}"
-                gate = speckit_analysis_gate(out / f"{analysis_label}.jsonl")
-                gates.append({"stage": analysis_label, **gate})
-                write(out / "ANALYSIS_GATE.json", gates)
-                if gate["passed"]:
-                    break
-                if not gate["report_present"]:
-                    raise RuntimeError("Spec Kit analysis report is missing; implementation was not started")
-                if attempt == 2:
-                    raise RuntimeError("Spec Kit still has HIGH or CRITICAL findings; implementation was not started")
-                thread, remediation = model_step(
-                    c,
-                    repo,
-                    out,
-                    f"analyze-remediate-{attempt + 1}",
-                    "Resolve every HIGH and CRITICAL finding in the latest $speckit-analyze report "
-                    "by revising the specification, plan, and tasks. Inspect the actual source for technical facts. "
-                    "Keep all frozen task requirements and recorded answers, and do not implement code or edit "
-                    "frozen benchmark checks. If an operator decision is genuinely missing, stop and end with "
-                    "BENCHMARK_REMEDIATION_STATUS: OPEN; otherwise end with BENCHMARK_REMEDIATION_STATUS: CLEAR.",
-                    thread,
-                )
-                stages.append(remediation)
-                write(out / "STAGES.json", stages)
-                if not re.search(r"(?im)^BENCHMARK_REMEDIATION_STATUS:\s*CLEAR\s*$", remediation["last_message_tail"]):
-                    raise UnrecordedOperatorClarification(
-                        "Spec Kit remediation needs an operator decision or lacked a clear marker"
-                    )
-                clarification = speckit_clarification_gate(c, repo, "BENCHMARK_CLARIFICATION_STATUS: CLEAR")
-                if not clarification["passed"]:
-                    raise UnrecordedOperatorClarification("Spec Kit remediation introduced an unrecorded operator choice")
-                thread, verification = model_step(c, repo, out, f"analyze-verify-{attempt + 1}", "$speckit-analyze", thread)
-                stages.append(verification)
-                write(out / "STAGES.json", stages)
         if checklist_requested:
             if not c["approve_checklist"]:
                 raise RuntimeError(
@@ -1326,10 +1216,6 @@ def run(c: dict, approved: bool) -> Path:
                     else:
                         stages = run_external(c, task, item, repo, out)
                     row["status"] = "completed_workflow"
-                except UnrecordedOperatorClarification as exc:
-                    row.update(status="workflow_failed", error=f"{type(exc).__name__}: {exc}")
-                    measurement_defect = f"pass {pass_no} {name}: shared task clarification is not recorded; {exc}"
-                    failures.append(measurement_defect)
                 except Exception as exc:
                     row.update(status="workflow_failed", error=f"{type(exc).__name__}: {exc}")
                     failures.append(f"pass {pass_no} {name}: {exc}")
