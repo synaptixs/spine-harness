@@ -19,6 +19,7 @@ from framework_matrix import (
     openspec_active_changes,
     package,
     prepare,
+    protected_hashes,
     report,
     run,
     run_codex_framework,
@@ -210,6 +211,17 @@ class MatrixTests(unittest.TestCase):
             result = grounding_preflight(config, repo, task)
             self.assertTrue(result["passed"])
             self.assertTrue(result["symbols_present"]["wizard.app.api_search"])
+
+    def test_protected_hashes_include_public_script_and_requirement_manifest(self):
+        with tempfile.TemporaryDirectory() as temp:
+            repo = Path(temp)
+            (repo / "checks").mkdir()
+            (repo / ".spine").mkdir()
+            (repo / "checks/ask_ui.js").write_text("console.log('check');\n")
+            (repo / ".spine/required-behavior.yaml").write_text("requirements: []\n")
+            hashes = protected_hashes(repo, [])
+            self.assertIn("checks/ask_ui.js", hashes)
+            self.assertIn(".spine/required-behavior.yaml", hashes)
 
     def test_sleep_gap_invalidates_time_comparison(self):
         start = "2026-10-10T12:43:33+00:00"

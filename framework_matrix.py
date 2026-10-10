@@ -534,6 +534,14 @@ def implementation_patch(raw: str) -> str:
 
 def protected_hashes(repo: Path, commands: list[list[str]]) -> dict[str, str]:
     paths = {p.relative_to(repo).as_posix() for p in repo.rglob("test_*.py") if ".git" not in p.parts}
+    checks_dir = repo / "checks"
+    if checks_dir.is_dir():
+        paths.update(
+            p.relative_to(repo).as_posix()
+            for p in checks_dir.rglob("*")
+            if p.is_file() and not p.is_symlink()
+        )
+    paths.add(".spine/required-behavior.yaml")
     for command in commands:
         for arg in command:
             candidate = repo / arg
