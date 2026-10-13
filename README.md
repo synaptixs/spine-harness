@@ -1,12 +1,21 @@
 # Four-workflow specification benchmark — Codex subscription harness
 
-The [default reference matrix](REFERENCE_MATRIX.md) schedules all **33 scenarios** through spec-kit, OpenSpec standalone, Spine + PKG + OpenSpec, and Spine + PKG without OpenSpec: **132 ticket-arm measurements per pass**. The [single-task framework matrix](FRAMEWORK_MATRIX.md) supports the same four arms plus external adapters on Jira or official SWE-bench tasks. Historical two-arm results remain separate.
+The [default reference matrix](docs/REFERENCE_MATRIX.md) schedules all **33 scenarios** through spec-kit, OpenSpec standalone, Spine + PKG + OpenSpec, and Spine + PKG without OpenSpec: **132 ticket-arm measurements per pass**. The [single-task framework matrix](docs/FRAMEWORK_MATRIX.md) supports the same four arms plus external adapters on Jira or official SWE-bench tasks. Historical two-arm results remain separate.
 
-Current source: published Spine 3.57.1 in portable release v19. Historical results retain their original versions. For an external team's repository, start with **[MATRIX_QUICKSTART.md](MATRIX_QUICKSTART.md)**; for the separate 33-scenario reference study, use [QUICKSTART.md](QUICKSTART.md). For a matched implementation step using four reviewed framework contexts, see [CONTEXT_MATRIX.md](CONTEXT_MATRIX.md).
+Current source: published Spine 3.57.1 in portable release v19. Historical results retain their original versions. For an external team's repository, start with **[MATRIX_QUICKSTART.md](docs/MATRIX_QUICKSTART.md)**; for the separate 33-scenario reference study, use [QUICKSTART.md](docs/QUICKSTART.md). For a matched implementation step using four reviewed framework contexts, see [CONTEXT_MATRIX.md](docs/CONTEXT_MATRIX.md).
 
 The default matrix runs all four workflows through the Codex CLI using the recipient's own
 ChatGPT sign-in. No OpenAI API key is needed in the default configuration. It can
 be launched from a terminal or from a local Codex app project.
+
+## Repository layout
+
+Runtime and command modules live in `src/spineharness/`, offline checks in `tests/`,
+and current guides in `docs/`. Historical plans and superseded instructions are
+preserved in `archive/`; generated releases remain in `dist/`. From this checkout,
+run `python3 -m pip install -e . --no-deps` or set `PYTHONPATH="$PWD/src"` before
+using `python3 -m spineharness.framework_matrix`. The extracted release guides
+use `PYTHONPATH` so the source archive works without installing the harness.
 
 The archive contains the harness, instructions, and a self-contained Git bundle of
 Spine 3.57.1. It does not contain model credentials, installed dependencies,
@@ -29,20 +38,20 @@ Codex account with the selected model and authorized access to their application
 ## Included
 
 - `setup.sh`, `env.example`: dependencies and isolated worktree setup.
-- `reference_matrix.py`, `framework_matrix.py`, `framework_spine_pkg.py`: four-arm reference and single-task runners.
+- `src/spineharness/reference_matrix.py`, `framework_matrix.py`, `framework_spine_pkg.py`: four-arm reference and single-task runners.
 - `run_comparison.py`, `speckit_codex.py`, `spine_pkg.py`, `spine_intake.py`: historical two-arm runners.
 - `codex_llm.py`, `codex_usage.py`, `codex_protocol.py`: completion adapter and accounting.
 - `summarize.py`: descriptive outcomes and legacy exploratory comparison tables.
 - `report_usage.py`: portable token/cost report from exported per-response ledgers.
 - `scenario_catalog.py`, `scenarios.py`, `examples/`: extensible scenarios and held-out tests.
 - `report_results.py`: matched scenario/repeat reporting.
-- `test_codex_backend.py`, `test_report_usage.py`, `test_scenarios.py`: checks that make no model calls.
-- `CODEX_RUN.md`, `METHODOLOGY.md`: implementation details and interpretation limits.
+- `tests/test_codex_backend.py`, `test_report_usage.py`, `test_scenarios.py`: checks that make no model calls.
+- `archive/legacy/CODEX_RUN.md`, `distribution/METHODOLOGY.md`: historical implementation details and interpretation limits.
 - `MANIFEST.json`, `SHA256SUMS`: package versions and file integrity checks.
 
 For a new team, the intended flow is one repository and one issue through the four-arm framework matrix, followed by further issues after checking the first report. The 33-scenario reference study is a separate, larger experiment. `JIRA_BENCHMARK.md` documents the two-arm Jira path; the four-arm issue path accepts a saved Jira JSON snapshot.
 
-The default selects the original three stock tickets plus 30 new tasks (15 edits, 15 creates). `catalog/INDEX.md` lists them; `profiles/pilot.env` selects the optional one-ticket smoke pilot. The ten built-ins plus 30 bundled additions provide 40 selectable IDs, and `SCENARIO_FILE` can add JSON-defined scenarios with separate held-out tests. See **[SCENARIOS.md](SCENARIOS.md)** and `examples/scenarios.json`. `scenarios.py` lists and validates catalogs; `matrix_study.py` produces the four-arm aggregate. The default remains the pinned Spine reference target. External Python repositories use the separate framework-matrix path.
+The default selects the original three stock tickets plus 30 new tasks (15 edits, 15 creates). `catalog/INDEX.md` lists them; `profiles/pilot.env` selects the optional one-ticket smoke pilot. The ten built-ins plus 30 bundled additions provide 40 selectable IDs, and `SCENARIO_FILE` can add JSON-defined scenarios with separate held-out tests. See **[SCENARIOS.md](docs/SCENARIOS.md)** and `examples/scenarios.json`. `scenarios.py` lists and validates catalogs; `matrix_study.py` produces the four-arm aggregate. The default remains the pinned Spine reference target. External Python repositories use the separate framework-matrix path.
 
 ## Status
 

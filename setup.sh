@@ -66,7 +66,7 @@ echo "== dependencies (uv sync; a few minutes the first time)"
 say "venvs" "ready"
 
 echo "== constitution"
-cp constitution.md "$RESULTS_DIR/constitution.md"
+cp src/spineharness/data/constitution.md "$RESULTS_DIR/constitution.md"
 say "constitution.md" "the one every measured spec-kit run used → $RESULTS_DIR/constitution.md"
 
 echo "== ready. Next: follow QUICKSTART.md for tests and a model-specific dry run"
