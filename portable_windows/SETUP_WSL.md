@@ -37,6 +37,20 @@ codex --version
 uv --version
 ```
 
+For the four-workflow matrix, install Node.js and npm **inside Ubuntu**. OpenSpec 1.14.1 declares Node.js `>=20.19.0`; verify that version before installing the pinned CLI:
+
+```bash
+node --version
+npm --version
+mkdir -p "$HOME/.npm-global"
+npm config set prefix "$HOME/.npm-global"
+export PATH="$HOME/.npm-global/bin:$PATH"
+npm install -g @fission-ai/openspec@1.14.1
+openspec --version
+```
+
+If Ubuntu's Node.js is older, install a compatible Linux release using your organization's approved package source. Windows Node.js and npm installations do not satisfy the WSL requirement.
+
 The harness bootstrap downloads Python 3.12 as needed and installs the pinned Spine dependencies. Tools live in the Linux filesystem under `~/.local/share/spineharness/`; sign-in stays in Linux `~/.codex-spineharness`. Neither is exported in results. Never copy Windows/macOS login files into this package.
 
 Use Linux paths in benchmark.json. For example, `C:\code\my-app` becomes `/mnt/c/code/my-app`; a Linux clone can use `/home/yourname/code/my-app` or `~/code/my-app`. `~` always means the Ubuntu user's home. Windows paths in configuration are rejected instead of silently treated as relative filenames. For performance, a Linux source clone is preferable. Tool and application virtual environments must be Linux environments, not Windows `.venv\Scripts\python.exe` installations.

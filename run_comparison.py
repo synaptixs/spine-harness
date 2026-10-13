@@ -125,6 +125,10 @@ def main() -> None:
                 'checklist_approval':a.approve_checklist,'cap':a.cap,'job_cap':a.job_cap,
                 'order':'fixed serial in subscription mode','intake':'separately measured; not fed into codegen'}
         if C.PROJECT:
+            from spine_version import PROJECT_EXECUTION_PATH
+            meta['spine_execution_path'] = PROJECT_EXECUTION_PATH
+            import hashlib
+            meta['execution_adapter_sha256'] = hashlib.sha256((C.HERE/'spine_feature.py').read_bytes()).hexdigest()
             meta['project'] = C.PROJECT.config
             meta['evaluation_mode'] = 'tokens-only'
             meta['intake'] = 'shared deterministic Jira normalization; zero model calls; no separate Spine intake'

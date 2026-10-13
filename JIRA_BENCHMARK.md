@@ -2,7 +2,7 @@
 
 This mode reads full Jira issue keys through an MCP server and compares **spec-kit and Spine + PKG** on disposable Python repository clones. It never calls Jira write tools or pushes Git changes. Models can edit disposable copies; the original repository is not used as their working directory. The importer explicitly requests `update_history=false`.
 
-This release has offline integration tests and a prepared Ontomesh target. It has **not** completed a live Jira/model benchmark. The current connected MCP server returned no accessible ONTM issues. An exact accessible issue key and the intended server connection are still needed to verify a real import.
+The ONTM-4 live comparison and measured continuation are preserved in the reference evidence. A new issue requires its own Jira snapshot, applicable baseline and checks. The current harness exercises Spine 3.57.1's production required-behavior loop; see [NEXT_BENCHMARK.md](NEXT_BENCHMARK.md).
 
 ## 1. Prepare the target without models
 
@@ -69,22 +69,22 @@ uv run --frozen --project "$SPINE_CODE_DIR" python scenarios.py validate
 python3 run_comparison.py --dry-run --models "$MODEL" --passes 1 --parallel 1
 ```
 
-Inspect `PROJECT.json`: set `python` to the dedicated application interpreter; add issue-appropriate `checks` as argument arrays, e.g. `["{python}", "-m", "pytest", "-q", "tests/test_selected_feature.py"]`. These are trusted operator commands run only in disposable copies. Project test/check execution currently requires macOS `sandbox-exec`, with writes restricted to the disposable copy and network access denied. Execution fails closed if that sandbox or pytest is unavailable; Linux/Windows project mode is not yet supported. They execute with a reduced environment without provider/Jira/GitHub secrets. Database/service-dependent tests need a separate disposable fixture; never point them at production services.
+Inspect `PROJECT.json`: set `python` to the dedicated application interpreter; add issue-appropriate `checks` as argument arrays, e.g. `["{python}", "-m", "pytest", "-q", "tests/test_selected_feature.py"]`. These are trusted operator commands run only in disposable copies. Project test/check execution currently requires macOS `sandbox-exec`, with writes restricted to the disposable copy and network access denied. Execution fails closed if that sandbox or pytest is unavailable; Linux/WSL2 uses the separate bubblewrap adapter; native Windows Python is unsupported. They execute with a reduced environment without provider/Jira/GitHub secrets. Database/service-dependent tests need a separate disposable fixture; never point them at production services.
 
-This is **token-only mode**: held-out tests and strict create/edit fit rules are not required. Generated tests and operator checks are reported, but independent correctness is explicitly **unverified**. No project check configured means no project-quality signal, not a full-suite pass. Baseline dependencies/checks must be reviewed before a meaningful experiment.
+The historical project catalog retains its `tokens-only` schema label. Current Jira execution uses the native production feature path, with public required-behavior results reported separately; hidden acceptance tests remain optional. Generated tests and operator checks are reported, but independent correctness is explicitly **unverified**. No project check configured means no project-quality signal, not a full-suite pass. Baseline dependencies/checks must be reviewed before a meaningful experiment.
 
 ### Required-behavior gates are a separate, independent signal
 
-`PROJECT.json`'s `checks` (above) is this harness's own config — commands *you* choose per target, substituted into Spine's preflight seam for this benchmark run only. Spine is gaining a second, independent mechanism, native to Spine itself (SSPN-116; not yet released as of this writing — check Spine's own CHANGELOG for the version that first carries it): if the **target application** (not this harness) commits its own `.spine/required-behavior.yaml`, Spine's real `orchestrator sdlc feature` pipeline will gate on it automatically — the same way for a benchmark run as for any direct production use. Nothing in `PROJECT.json` turns this on or off; it activates purely from what the target repository itself declares.
+`PROJECT.json`'s `checks` supplies reviewed regression commands. Jira/project mode now invokes Spine 3.57.1's production `orchestrator.sdlc.feature_runner.run_feature` with the frozen issue spec, native PKG/codegen, required-behavior loop and semantic review. The runtime is pinned to `a8952c1a14fc31601fb5721b77b61e36003287e3`. Workspace, test environment and subprocess execution are adapted for disposable, offline, no-publication operation; the native repair loop is not replaced. The original stock scenario path remains a separately labeled reference benchmark.
 
 This closes the gap ONTM-4 exposed: six generated tests passed against substituted parser/compiler implementations without the default-wiring path ever actually running. A `.spine/required-behavior.yaml` entry declares a check the model does not author and cannot edit away — e.g. "the default rule loader must invoke the configured compiler" — and Spine's native `implement → author_tests → refine` loop re-verifies it after every refinement, not just once.
 
-What to look for in the Jira worklog Spine posts for a live run against a target with this manifest (`required_behavior`/`Outcome` are not yet surfaced in this harness's own `RESULTS.md` — that would be a separate follow-up, not covered here):
+For reference, production Spine exposes the following signals (the benchmark must capture them as local results without posting Jira worklogs) (native outcome, required-check history and stage usage are now included in local reports):
 
 - A `required_behavior` row in the per-stage table with `0` tokens and a real, nonzero **Deterministic (s)** value — that is correct, not a bug: the check is a subprocess run, not a model call, so zero tokens does not mean it did not run.
 - An **Outcome** line reading either `initial generated candidate passed with no correction needed` or `first completed autonomous workflow after N refine(s)` — the roadmap's own "distinct outcomes" framing, for the two of the three outcomes a single run can speak to. (The third, a later human-assisted continuation addressing PR review comments, deliberately does not re-verify `required_behavior` — a documented design choice, not a gap: that loop only re-runs tests and preflight.)
 
-To exercise this in a benchmark, add `.spine/required-behavior.yaml` to the **target application's** baseline commit (not to this harness, and not to `PROJECT.json`) before preparation clones it. Example, in the target repository's own tree:
+Prepare `.spine/required-behavior.yaml` and its tests in the common disposable baseline supplied to both arms. Preserve the original source checkout and record the preparation patch and hashes. Example of the target manifest:
 
 ```yaml
 # <target-application>/.spine/required-behavior.yaml

@@ -15,7 +15,14 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-SPINE_COMMIT = '6c0454bac2dbb539665402d31e57e763db2d206a'
+if not (ROOT / 'spine_feature.py').is_file():
+    # In the source checkout the portable entry point lives one directory below
+    # its companion modules; the distributed archive keeps them side by side.
+    ROOT = ROOT.parent
+    sys.path.insert(0, str(ROOT))
+
+from spine_version import SPINE_COMMIT, SPINE_REF
+
 SPINE_URL = 'https://github.com/synaptixs/spine.git'
 
 def write(path, data):
@@ -38,7 +45,7 @@ def load_config(path):
     c['source_repo'] = absolute(c['source_repo'])
     c['work_dir'] = absolute(c.get('work_dir', str(Path(tempfile.gettempdir()) / ('spineharness-' + c['name']))))
     c['results_dir'] = absolute(c.get('results_dir', 'results/' + c['name']))
-    default_tools = '~/.local/share/spineharness/spine-tools-' + SPINE_COMMIT[:12] if sys.platform == 'linux' else '.local/spine-tools'
+    default_tools = '~/.local/share/spineharness/spine-tools-' + SPINE_COMMIT[:12] if sys.platform == 'linux' else '.local/spine-tools-' + SPINE_COMMIT[:12]
     c['tools_dir'] = absolute(c.get('tools_dir', default_tools))
     c['login_home'] = absolute(c.get('login_home', '~/.codex-spineharness'))
     if c.get('application_python'):
@@ -65,6 +72,14 @@ def load_config(path):
         raise ValueError('Use a disposable work_dir under /tmp, outside the home directory')
     if not c.get('checks') or any(not isinstance(cmd, list) or not cmd or any(not isinstance(x, str) for x in cmd) for cmd in c['checks']):
         raise ValueError('Provide at least one offline project check as an argv array')
+    c.setdefault('require_behavior', True)
+    c.setdefault('max_refine', 3)
+    c.setdefault('max_judge_revisions', 2)
+    c.setdefault('max_model_calls', 24)
+    for key in ('max_refine', 'max_judge_revisions', 'max_model_calls'):
+        if type(c[key]) is not int or c[key] < (1 if key == 'max_model_calls' else 0):
+            raise ValueError(key + ' must be a bounded nonnegative integer (calls positive)')
+    c['behavior_files'] = {k: absolute(v) for k,v in c.get('behavior_files', {}).items()}
     c.setdefault('model', 'gpt-6-sol')
     c.setdefault('passes', 1)
     c.setdefault('cap', 150)
@@ -129,7 +144,9 @@ def prepare(c):
     app_python = c.get('application_python', str(work / 'app-venv/bin/python'))
     profile = {k: c[k] for k in ('repository_url', 'jira_url', 'checks')}
     profile.update(jira_project=c['issues'][0].split('-')[0], baseline_commit=c.get('baseline', 'HEAD'),
-                   source_paths=c.get('source_paths', ['.', 'src']))
+                   source_paths=c.get('source_paths', ['.', 'src']),
+                   **{k: c[k] for k in ('require_behavior', 'max_refine', 'max_judge_revisions', 'max_model_calls')},
+                   behavior_files=c['behavior_files'], behavior_protected_files=c.get('behavior_protected_files', []))
     with tempfile.TemporaryDirectory(prefix='harness-profile-') as t:
         pp = Path(t) / 'profile.json'; write(pp, profile)
         prepare_project(pp, c['source_repo'], c['tools_dir'], work, results, app_python)
@@ -167,6 +184,10 @@ def prepare(c):
             target.parent.mkdir(parents=True, exist_ok=True); shutil.copy2(p, target)
             audit_files[key].append({'path': str(target.relative_to(results)), 'sha256': hashlib.sha256(target.read_bytes()).hexdigest()})
     adapter = ProjectAdapter.read(results / 'PROJECT.json')
+    proof = subprocess.run([tool_python(c), str(ROOT/'spine_feature.py'), '--preflight',
+                            '--project', str(results/'PROJECT.json'), '--spine-source', c['tools_dir']],
+                           cwd=ROOT, capture_output=True, text=True, check=True)
+    write(results / 'PUBLIC_CHECK_HASHES.json', json.loads(proof.stdout))
     adapter.verify_execution_sandbox()
     checks = adapter.checks(work / 'target')
     write(results / 'BASELINE_CHECKS.json', checks)
@@ -193,7 +214,7 @@ def make_env(c):
         env.pop(key, None)
     env.update(PROJECT_CONFIG=str(results / 'PROJECT.json'), SPINE_REPO=c['tools_dir'], SPINE_CODE_DIR=c['tools_dir'],
                WORK_DIR=str(work), RESULTS_DIR=str(results), TARGET_DIR=str(work / 'target'),
-               SPINE_REF='v3.52.0', CODEX_AUTH='app', SPINE_BACKEND='codex', CODEX_LOGIN_HOME=c['login_home'],
+               SPINE_REF=SPINE_REF, CODEX_AUTH='app', SPINE_BACKEND='codex', CODEX_LOGIN_HOME=c['login_home'],
                SCENARIO_FILE=str(results / 'jira/scenarios.json'), TICKETS=','.join(c['issues']), MODEL=c['model'],
                CODEX_REASONING_EFFORT=c['reasoning_effort'], CODEX_OUTPUT_MODE='envelope',
                CODEX_COMPLETION_TIMEOUT_S=str(c['completion_timeout_seconds']), BENCHMARK_EXECUTE='0',

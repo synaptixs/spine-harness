@@ -37,5 +37,11 @@
   "acceptance_tests": {},
   "cap": 150,
   "job_cap": 150,
-  "tools_dir": "~/.local/share/spineharness/spine-tools-6c0454bac2dbb"
+  "tools_dir": "~/.local/share/spineharness/spine-tools-a8952c1a14fc",
+  "require_behavior": true,
+  "behavior_files": {},
+  "behavior_protected_files": [],
+  "max_refine": 3,
+  "max_judge_revisions": 2,
+  "max_model_calls": 24
 }

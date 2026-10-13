@@ -110,6 +110,15 @@ class IsolationTests(unittest.TestCase):
         config={'source_repo':str(self.source),'target_dir':str(self.source),'baseline_commit':self.sha}
         with self.assertRaises(ValueError):ProjectAdapter(config).verify_target()
 
+    def test_disposable_clone_ignores_sandbox_scratch(self):
+        clone=self.root/'scratch-clone'
+        disposable_clone(self.source,clone,self.sha)
+        scratch=clone/'.benchmark-tmp'/'pytest-of-user'
+        scratch.mkdir(parents=True)
+        (scratch/'Ext.kt').write_text('temporary test fixture\n')
+        status=run_git(clone,'status','--porcelain','--untracked-files=all')
+        self.assertNotIn(b'.benchmark-tmp',status)
+
     def test_project_execution_is_disabled_before_model_calls(self):
         cfg=self.root/'project.json';cfg.write_text(json.dumps({'repository_url':'https://example.invalid/repo',
             'source_repo':str(self.source),'target_dir':str(self.root/'target'),'baseline_commit':self.sha,

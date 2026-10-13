@@ -1,33 +1,36 @@
-# Quickstart — 33 reference scenarios, then Jira issues in your own project
+# Quickstart — 33 reference scenarios across four workflows
 
-Run these commands in **Bash**, from the unpacked harness. The Codex app's terminal or a normal terminal works. Every recipient uses their own repository access and ChatGPT sign-in. This archive includes no credentials, results, or Spine source checkout.
+The default reference study now runs each of the 33 scenarios through **spec-kit, OpenSpec standalone, Spine + PKG + OpenSpec, and Spine + PKG**. For Jira, SWE-bench, or a user-supplied framework on a matched task, use [FRAMEWORK_MATRIX.md](FRAMEWORK_MATRIX.md). `run_comparison.py` remains the historical two-arm reproduction path.
+
+Run these commands in **Bash**, from the unpacked harness. The Codex app's terminal or a normal terminal works. Every recipient uses their own repository access and ChatGPT sign-in. This archive includes no credentials or results; it includes a Git bundle for the pinned four-arm Spine tools revision, but no installed environment or target application checkout.
 
 ## The two-stage evaluation
 
-1. **Default reference benchmark:** the original three scenarios plus 30 new scenarios, through both workflows on the pinned reference repository. The supplied `.env` selects all 33. No Jira connection or scenario authoring is needed. An optional one-ticket smoke pilot is available via `source profiles/pilot.env` after sourcing `.env`.
+1. **Default reference benchmark:** the original three scenarios plus 30 new scenarios, through all four workflows on the pinned reference repository. The supplied `env.example` selects all 33. No Jira connection or scenario authoring is needed. An optional one-ticket smoke pilot is available via `source profiles/pilot.env` after sourcing the environment.
 2. **Your project:** evaluate actual Jira issues against a pinned commit of **your team's repository**. Spine remains the workflow/tool being measured; your application is the code being changed. Keep these results separate from the reference pilot.
 
-**Release boundary:** stage 1 is the validated reference path. Stage 2 now has an experimental Python adapter and read-only MCP importer: follow **[JIRA_BENCHMARK.md](JIRA_BENCHMARK.md)**. It has offline checks, with real Jira import and live model validation still pending. Replacing SPINE_REPO alone remains unsupported.
+**Release boundary:** the historical two-arm reference path has completed runs. The four-arm reference matrix has an offline plan and configuration check; a full 132-measurement model run has not yet been made. For Jira issues in an external application, use [MATRIX_QUICKSTART.md](MATRIX_QUICKSTART.md) with a saved read-only issue snapshot. Replacing SPINE_REPO alone does not change the target application.
 
 The earlier 18-run study is a reference measurement, not an expected cost, quality score, or statistically established advantage on your project. A local pilot verifies operation; project-specific results need their own evaluation.
 
 ## 1. Prerequisites and unpacking
 
-Install Git, Bash, Python 3.12, [uv](https://docs.astral.sh/uv/getting-started/installation/), and the [Codex CLI](https://learn.chatgpt.com/docs/codex/cli). The measured environment used Codex CLI 0.157.0 and uv 0.8.0 on macOS. Linux/WSL is not live-tested; native PowerShell is unsupported.
+Install Git, Bash, Python 3.12, Node/npm, [uv](https://docs.astral.sh/uv/getting-started/installation/), the [Codex CLI](https://learn.chatgpt.com/docs/codex/cli), and the official OpenSpec CLI (`npm install -g @fission-ai/openspec@1.14.1`). The measured environment used Codex CLI 0.157.0 and uv 0.8.0 on macOS. Linux/WSL is not live-tested; native PowerShell is unsupported. For a **one-repository, one-issue four-arm pilot**, use [MATRIX_QUICKSTART.md](MATRIX_QUICKSTART.md) first.
 
 ```bash
-unzip spec-kit-vs-spine-codex-harness-2026-09-30-v6.zip
-cd spec-kit-vs-spine-codex-harness
+unzip spineharness-macos-2026-10-13-v19.zip
+cd spineharness-macos
 shasum -a 256 -c SHA256SUMS  # Linux alternative: sha256sum -c SHA256SUMS
 uv python install 3.12
 mkdir -p "$HOME/code"
-git clone https://github.com/synaptixs/spine.git "$HOME/code/spine"
+git clone -q -b v3.57.1 release_assets/spine-tools-v3.57.1.bundle "$HOME/code/spine"
+git -C "$HOME/code/spine" rev-parse HEAD
 cp env.example .env
 # Edit SPINE_REPO in .env if you already have an authorized clone elsewhere.
 source .env
 ```
 
-Recipients need access to this repository, target commit, and Spine tag. If cloning fails, obtain access from the repository owner. This release supports Python create/edit scenarios on the pinned Spine target, **not arbitrary target repositories**. Installation downloads dependencies and spec-kit; model execution requires network access.
+The printed Spine commit must equal `a8952c1a14fc31601fb5721b77b61e36003287e3`. The bundle contains the target commit and release tag; no separate Spine GitHub clone is required. This reference study supports Python create/edit scenarios on the pinned Spine target, **not arbitrary target repositories**. Installation downloads dependencies and spec-kit; model execution requires network access.
 
 Use absolute paths. Give every experiment a new WORK_DIR and RESULTS_DIR. Keep WORK_DIR outside your home directory and the harness. `/tmp` may be cleared on reboot. Credentials belong in their separate CODEX_LOGIN_HOME, never in results or the package.
 
@@ -53,27 +56,28 @@ uv run --frozen --project "$WORK_DIR/spine-code" python -m unittest -v \
   test_codex_backend test_report_usage test_scenarios
 uv run --frozen --project "$WORK_DIR/spine-code" python scenarios.py list
 uv run --frozen --project "$WORK_DIR/spine-code" python scenarios.py validate
-python3 run_comparison.py --dry-run --models "$MODEL" --passes 1 --parallel 1
+python3 reference_matrix.py dry-run --model "$MODEL" --passes 1
 ```
 
 Setup should end with `== ready`. It creates two pinned detached worktrees and installs locked dependencies. Validation checks selected IDs, required edit targets, held-out syntax, and agreement between the target and Spine catalogs. It does not prove that a custom judge is correct or that the account has model access. Review new judges before spending model capacity.
 
 ## 4. Default 33-scenario run (start explicitly)
 
-After sourcing the supplied `.env`, all **33 scenarios** are selected: the original severity summary, ledger Markdown, and drift Markdown tasks, plus [30 additional requirements](catalog/INDEX.md). The additions comprise **15 edits and 15 new modules**, with 111 held-out test cases. One pass schedules **66 ticket-arm runs plus 33 separate intake measurements**. Three passes schedule 198 ticket-arm runs plus 99 intakes. These run on the reference repository even if the later evaluation will use your application.
+After sourcing the supplied environment, all **33 scenarios** are selected: the original severity summary, ledger Markdown, and drift Markdown tasks, plus [30 additional requirements](catalog/INDEX.md). The additions comprise **15 edits and 15 new modules**, with 111 held-out test cases. One pass schedules **132 ticket-arm measurements** (33 × 4); three passes schedule 396. Native Spine intake is included in each relevant Spine arm's measured workflow, rather than counted as a separate arm. All four arms receive the same task and source baseline; held-out tests run only after each arm closes.
 
 Nothing starts automatically when you unpack or source configuration. Setup, validation, and `--dry-run` make no model calls. The following command starts the live benchmark; run it only when ready:
 
 ```bash
-python3 run_comparison.py --models "$MODEL" --passes 1 --parallel 1 \
-  --cap 600 --job-cap 20
+python3 reference_matrix.py prepare --model "$MODEL" --passes 1
+# Review reference-matrix/MATRIX_PLAN.json and the prepared baselines.
+python3 reference_matrix.py run --approved
 ```
 
-For an optional smaller pilot instead, use fresh work/results directories, `source profiles/pilot.env` after `.env`, validate again, and run the same command with `--cap 25`. Re-source `.env` to select all 33 again.
+For an optional smaller pilot instead, use fresh work/results directories, `source profiles/pilot.env` after the environment, validate again, and run the same prepare/run commands. Re-source `env.example` to select all 33 again. The matrix deliberately has no budget-cap estimate; monitor your account limits and run a pilot before the full study.
 
-The runner saves `EXPERIMENT.json` before model execution, including task/judge fingerprints, selected scenarios, versions, and policy. Both workflows run serially in subscription mode. Watch `$RESULTS_DIR/$MODEL/logs/`; a stage's log can remain unchanged while its model process runs.
+The runner freezes `MATRIX_PLAN.json`, per-scenario task/check inputs, source fingerprints, and framework versions before model execution. It runs one scenario/arm at a time and preserves each closed result under `$RESULTS_DIR/reference-matrix/runs/`. The aggregate report is `$RESULTS_DIR/reference-matrix/study/MATRIX_STUDY_REPORT.md`. Watch each arm's logs and `RESULT.json`; a log can remain unchanged while its model process runs. Use a Spine pin containing the OpenSpec intent-extraction fix described in [FRAMEWORK_MATRIX.md](FRAMEWORK_MATRIX.md); unpatched 3.56.0 can reject a valid draft at its clarity gate.
 
-**Checklist policy:** spec-kit can pause before implementation because reviewer checklist items are unchecked. Inspect its output. If your operator approves proceeding, either use `--approve-checklist` on a **fresh** batch, or recover a saved checklist pause after its original process exits:
+**Checklist policy:** the reference matrix config records approval for routine spec-kit checklist continuation. The historical two-arm path supports manual recovery of a saved checklist pause after its original process exits:
 
 ```bash
 uv run --frozen --project "$WORK_DIR/spine-code" python speckit_codex.py \
@@ -82,13 +86,13 @@ uv run --frozen --project "$WORK_DIR/spine-code" python speckit_codex.py \
 
 Recovery preserves earlier usage and does not mark reviewer boxes. Both live checklist recovery and a completed 18-run stock study have been exercised. Organizational/app approvals remain in force.
 
-`--cap` is a conservative pass-admission estimate; `--job-cap` checks spec-kit cost between stages. Neither is a hard spending limit. Costs in subscription mode are **API list-price equivalents, not charges**. The default fallback admission reserve is $16 per spec-kit ticket per model plus $1 per Spine pass; larger catalogs can require a larger cap even when observed cost is lower.
+Costs in subscription mode are **API list-price equivalents, not charges**. The matrix preserves unknown usage as unknown and reports stage consumption separately. It does not impose a spending cap.
 
-When the benchmark's child processes exit, run `python3 report_results.py --results "$RESULTS_DIR"` and review `summary.md`, usage completeness, and functional results. Resolve failures before moving to your own project. Keep the reference output unchanged; use fresh work/results directories for the next stage.
+When the benchmark closes, review `MATRIX_STUDY_REPORT.md`, individual `COMPARISON_REPORT.md` files, usage completeness, code patches, and functional results. `python3 reference_matrix.py report` rebuilds the study only if no study output exists. Keep the reference output unchanged; use fresh work/results directories for the next stage.
 
 ## 5. Actual Jira issues in your team's repository
 
-For example, a team owns `orders-service`, a Python application, and wants to evaluate Jira issue **ORD-142: reject invalid page sizes**. This is a fictional mapping example for that application, not a runnable stock Spine scenario. For automatic import by Jira key, use [JIRA_BENCHMARK.md](JIRA_BENCHMARK.md). The manual mapping below remains useful for reviewing the resulting requirements.
+For example, a team owns `orders-service`, a Python application, and wants to evaluate Jira issue **ORD-142: reject invalid page sizes**. This is a fictional mapping example for that application, not a runnable stock Spine scenario. For a saved Jira issue snapshot in the four-arm runner, use [MATRIX_QUICKSTART.md](MATRIX_QUICKSTART.md). The manual mapping below remains useful for reviewing the resulting requirements.
 
 ### Freeze the issue and baseline
 
@@ -186,7 +190,7 @@ The experimental project mode now separates clones/imports/checks as described i
 | Shared task and judge | Feed the identical frozen Jira spec and held-out judge to both arms and matching intake. Keep judges and reference solutions outside model-visible task text and the target graph. |
 | Project grading | Use the team's tests, lint/type checks, and CI gates. Replace the Spine-specific `scripts/state-numbers.py --check` gate. Review the inherited create/edit fit rules for legitimate multi-file, configuration, or migration changes. |
 | Evidence and reports | Record application identity, full baseline SHA, adapter revision, commands, task/judge hashes, failures, and complete per-response usage. Extend the generic report if grading fields change; preserve matching by issue/pass/model. |
-| Required-behavior gates (optional, target-declared) | Independent of this harness's own `checks` config — if the target application itself commits `.spine/required-behavior.yaml`, Spine's native pipeline gates on it automatically, no adapter change needed. See **[JIRA_BENCHMARK.md](JIRA_BENCHMARK.md)**, "Required-behavior gates are a separate, independent signal." |
+| Required-behavior gates (optional, target-declared) | Spine 3.57.1's production feature pipeline uses a target `.spine/required-behavior.yaml`. Jira/project mode now invokes that production loop. Supply real public checks in the prepared baseline; its failures drive bounded native refinement. See [FRAMEWORK_MATRIX.md](FRAMEWORK_MATRIX.md) for selected correctness and independent acceptance checks. |
 
 There is no supported `TARGET_REPO` switch in this release. Do not point `SPINE_REPO` at `orders-service`, copy Spine benchmark files into it, or treat a successful catalog syntax check as adapter validation. Non-Python projects also need language-specific discovery, execution, and grading.
 
@@ -220,17 +224,17 @@ source .env
 bash setup.sh
 uv run --frozen --project "$WORK_DIR/spine-code" python scenarios.py list
 uv run --frozen --project "$WORK_DIR/spine-code" python scenarios.py validate
-python3 run_comparison.py --dry-run --models "$MODEL" --passes 3 --parallel 1
+python3 reference_matrix.py dry-run --model "$MODEL" --passes 3
 ```
 
-After reviewing the catalog, budget, and checklist policy, run:
+After reviewing the catalog, checks, and model capacity, run:
 
 ```bash
-python3 run_comparison.py --models "$MODEL" --passes 3 --parallel 1 \
-  --cap 200 --job-cap 20 --approve-checklist
+python3 reference_matrix.py prepare --model "$MODEL" --passes 3
+python3 reference_matrix.py run --approved
 ```
 
-This two-scenario example schedules **12 ticket-arm runs**, plus six separate intake measurements. In general: scenarios × repeats × workflows × models. Do not edit scenario definitions or tests during a batch. Freeze the catalog with your experiment records; changing either changes its fingerprint.
+This two-scenario example schedules **24 ticket-arm measurements** (2 × 3 × 4). In general: scenarios × passes × frameworks. Do not edit scenario definitions or tests during a batch. The prepared matrix freezes their hashes and refuses changed acceptance inputs.
 
 The bundled catalog is loaded when SCENARIO_FILE is unset; it adds 30 tasks to the ten built-ins. `scenarios.py list` therefore lists **40 available IDs**, while the default selects **33**. An explicit custom SCENARIO_FILE replaces the bundled extension, so set TICKETS to IDs available in that custom catalog or the ten built-ins. The built-ins comprise: five create and five edit tasks. A six-scenario example is:
 
@@ -238,17 +242,17 @@ The bundled catalog is loaded when SCENARIO_FILE is unset; it adds 30 tasks to t
 export TICKETS=NEW-SEVSUMMARY-1,NEW-LEDGERMD-1,NEW-DRIFTMD-1,EDIT-STATS-1,EDIT-LEDGER-1,EDIT-BUDGET-1
 ```
 
-Use fresh directories and repeat setup/validation for that experiment. Three passes across two workflows produce **36 ticket-arm runs**; the fallback reserve is $97 per pass for one model, so choose a suitable admission cap rather than assuming the pilot cap works. For the default 33-task selection the fallback reserve is $529 per pass; `--cap 600` admits one pass, while `--cap 200` would not. These are admission reserves, not cost predictions or hard limits.
+Use fresh directories and repeat setup/validation for that experiment. Three passes over six scenarios and four frameworks produce **72 ticket-arm measurements**. The default 33-scenario selection produces **396** over three passes. This is a substantial model workload; start with one scenario and one pass to verify the environment.
 
 ## 7. Report and hand back results
 
-Only after all child processes have exited:
+The four-arm batch writes the aggregate study after all selected scenarios close. If every scenario is closed but the aggregate was never generated, run:
 
 ```bash
-python3 report_results.py --results "$RESULTS_DIR"
+python3 reference_matrix.py report
 ```
 
-Read `summary.md` and `recorded-usage.json`. The report begins with the models used for each workflow and separate intake, reasoning settings, saved measurement counts, and model IDs found in exported response records. Missing metadata is labeled unknown; configured values are identified as such. The report supports arbitrary catalog sizes, matches intake by ticket/pass, and compares scenario means rather than treating repeats as independent problems. It defers inference when planned paired measurements are incomplete. No quality-equivalence claim follows from equal pass counts. The old `summarize.py` is legacy exploratory analysis; use `report_results.py` for new experiments.
+Read `reference-matrix/study/MATRIX_STUDY_REPORT.md` and each task's `COMPARISON_REPORT.md`, `RESULTS.json`, stage usage, patches, and acceptance output. The study compares matched task/pass pairs and collapses repeats within each task for the sign test. It distinguishes workflow completion from acceptance and marks missing usage unknown. A full 33-scenario set is still one reference repository, not a random sample of projects; interpret statistical tests accordingly. For the historical two-arm runner, use `report_results.py` and keep its outputs separate.
 
 Return `EXPERIMENT.json`, your frozen scenario catalog and test hashes, `summary.md`, `recorded-usage.json`, per-run `summary.json` files, intake `pass*.json`, and any failure records. Review source code and task context before sharing raw transcripts or generated code. Never include `.env`, auth.json, CODEX_LOGIN_HOME, or the entire WORK_DIR. Missing exported usage means unknown usage, not zero.
 

@@ -91,6 +91,34 @@ class PortableTests(unittest.TestCase):
             root = Path(t); self.fixture(root); (root / 'RUNNING.json').write_text('{}')
             with self.assertRaises(ValueError): finalize(root)
 
+    def test_native_failure_is_not_reported_as_completed(self):
+        with tempfile.TemporaryDirectory() as t:
+            root = Path(t); self.fixture(root)
+            p = root/'gpt-6-sol/spine/pass1/TEAM-12/summary.json'
+            s = json.loads(p.read_text())
+            s.update(status='validation_failed', execution_path='orchestrator.sdlc.feature_runner.run_feature',
+                     outcome='validation_failed', refines=1, call_ids=['call'],
+                     required_behavior=[{'passed': False, 'items': [{'requirement_id': 'default'}]}],
+                     stages={'required_behavior': {'calls': 0, 'deterministic_seconds': .2}})
+            p.write_text(json.dumps(s))
+            out = finalize(root)
+            row = next(r for r in json.loads((out/'RESULTS.json').read_text())['runs'] if r['arm']=='spine')
+            self.assertEqual(row['status'], 'validation_failed')
+            self.assertEqual(row['known_tokens'], 120)
+            self.assertTrue(row['usage_complete'])  # A failed feature can have complete usage.
+            self.assertIn('Public behavior validation 1: failed', (out/'FINAL_REPORT.md').read_text())
+
+    def test_multiple_tickets_use_owned_call_ids(self):
+        with tempfile.TemporaryDirectory() as t:
+            root = Path(t); self.fixture(root)
+            p = root/'EXPERIMENT.json'; exp = json.loads(p.read_text()); exp['tickets'].append('TEAM-13'); p.write_text(json.dumps(exp))
+            p = root/'gpt-6-sol/spine/pass1/TEAM-12/summary.json'; s = json.loads(p.read_text()); s['call_ids']=['call']; p.write_text(json.dumps(s))
+            out = finalize(root)
+            rows = json.loads((out/'RESULTS.json').read_text())['runs']
+            row = next(r for r in rows if r['arm']=='spine' and r['ticket']=='TEAM-12')
+            self.assertEqual(row['known_tokens'], 120)
+            self.assertEqual(row['token_basis'], 'deduplicated exported responses')
+
     def test_secret_and_symlink_packaging(self):
         with tempfile.TemporaryDirectory() as t:
             root = Path(t); out = root / 'deliverables'; out.mkdir()

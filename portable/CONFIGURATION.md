@@ -41,3 +41,7 @@ Saved snapshots can contain Jira rich-text (ADF) descriptions. Add `acceptance_f
 The two workflows receive the same requirements and independent clones of the same baseline. A multi-issue run does not carry one issue's implementation into another. Benchmark related prerequisite issues together only with an explicitly prepared common baseline and disclosed scope.
 
 The primary path in this release is `benchmark.py`. Legacy modules and advanced reference-scenario utilities remain included for reproducibility; do not use the old reference-only `setup.sh` against your application repository.
+
+## Native Spine 3.57.1 execution
+
+See QUICKSTART.md for `require_behavior`, `behavior_files`, `behavior_protected_files`, `max_refine`, `max_judge_revisions`, and `max_model_calls`. Supplied public-check files are included in the configuration digest; their bytes are frozen in the prepared baseline and PUBLIC_CHECK_HASHES.json. The current runtime pin is `a8952c1a14fc31601fb5721b77b61e36003287e3`. Use a new tools directory rather than resetting an older installation. The source repository and prior results are preserved.

@@ -1,0 +1,10 @@
+{
+  "key": "TEAM-123",
+  "fields": {
+    "summary": "Add a searchable status filter",
+    "description": "As a user, I can filter the existing list by status. The filter must use the existing list endpoint and preserve pagination. Acceptance: active and archived statuses return only matching items, and an unknown status is rejected.",
+    "status": {"name": "To Do"},
+    "issuetype": {"name": "Story"},
+    "updated": "2026-10-07T00:00:00.000+0000"
+  }
+}

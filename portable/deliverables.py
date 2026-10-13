@@ -89,25 +89,30 @@ def collect_rows(root, exp, records, origins):
                 if s.get('scenario_fingerprint') != exp.get('scenario_fingerprint'):
                     raise ValueError('Summary/catalog fingerprint mismatch')
                 prefix = str(p.parent.relative_to(root)) + '/'
+                prefixes = [prefix]
                 if arm == 'spine':
-                    # Spine per-ticket summaries own response IDs only when a pass has one ticket.
-                    # Multi-ticket pass totals remain in overall USAGE.json; do not invent attribution.
-                    prefix = str(p.parent.parent.relative_to(root)) + '/codex-calls/' if len(exp['tickets']) == 1 else None
-                ids = {rid: records[rid] for rid, files in origins.items() if prefix and any(f.startswith(prefix) for f in files)}
+                    if 'call_ids' in s:
+                        prefixes = [str(p.parent.parent.relative_to(root)) + '/codex-calls/' + call + '/' for call in s['call_ids']]
+                    else:
+                        prefixes = [str(p.parent.parent.relative_to(root)) + '/codex-calls/'] if len(exp['tickets']) == 1 else []
+                ids = {rid: records[rid] for rid, files in origins.items() if any(f.startswith(pre) for pre in prefixes for f in files)}
                 u = usage_total(ids).get(model)
                 reported = s.get('total', {})
-                tokens = reported.get('tokens', s.get('prompt_tokens', 0) + s.get('completion_tokens', 0))
+                tokens = reported.get('tokens', (s.get('prompt_tokens') or 0) + (s.get('completion_tokens') or 0))
                 uncertain = s.get('usage_complete') is False or s.get('aborted')
                 status = ('infrastructure abort' if s.get('aborted') else 'checklist paused' if s.get('paused_for_checklist') else
-                          'budget stopped' if s.get('stopped_at_job_cap_before') else 'completed workflow')
+                          'budget stopped' if s.get('stopped_at_job_cap_before') else s.get('status', 'completed workflow'))
                 rows.append({'ticket': key[0], 'pass': key[1], 'arm': arm, 'model': model, 'status': status,
                     'known_tokens': u['tokens'] if u else tokens if tokens else None,
-                    'usage_complete': not uncertain and status == 'completed workflow' and bool(records) and
+                    'usage_complete': not uncertain and bool(records) and
                                       bool(u or (arm == 'spine' and s.get('usage_complete') and tokens)),
                     'token_basis': 'deduplicated exported responses' if u else 'saved per-ticket summary; overall ledger reconciled separately',
                     'api_list_price_equivalent_usd': u['api_list_price_equivalent_usd'] if u else reported.get('cost_usd', s.get('cost_usd')) if not uncertain else None,
                     'own_tests_pass': s.get('tests_pass', s.get('grading', {}).get('own_tests_pass')),
                     'project_checks_pass': bool(s.get('project_checks')) and all(c.get('exit') == 0 for c in s.get('project_checks', [])),
+                    'execution_path': s.get('execution_path', 'legacy benchmark'),
+                    'required_behavior': s.get('required_behavior', []), 'outcome': s.get('outcome'),
+                    'refines': s.get('refines'), 'stages': s.get('stages', {}),
                     'summary': str(p.relative_to(root)), 'wall_s': s.get('wall_s'),
                     'proposed_changes': str((p.parent / 'changes.patch').relative_to(root)) if (p.parent / 'changes.patch').exists() else None,
                     'acceptance': 'not evaluated'})
@@ -127,7 +132,7 @@ def run_acceptance(root, rows):
     outcomes = []
     for row in rows:
         tests = suites.get(row['ticket'], [])
-        if not tests or row['status'] != 'completed workflow': continue
+        if not tests or row['status'] not in ('completed workflow', 'verified_selected_behaviors', 'completed_unverified', 'validation_failed'): continue
         s = json.loads((root / row['summary']).read_text())
         repo = s.get('worktree')
         if not repo and row['arm'] == 'spine':
@@ -209,13 +214,24 @@ def finalize(root, run_audits=False):
         for a in audits:
             if all(row[k] == a[k] for k in ('model', 'arm', 'ticket', 'pass')):
                 row['acceptance'] = 'selected checks passed' if a.get('exit') == 0 else 'selected checks failed' if a.get('exit') is not None else 'unavailable'
+    public_hash_file = root / 'PUBLIC_CHECK_HASHES.json'
+    if public_hash_file.exists():
+        expected = json.loads(public_hash_file.read_text())
+        for row in rows:
+            if not row.get('summary'): continue
+            saved = json.loads((root/row['summary']).read_text())
+            repo = saved.get('worktree')
+            if repo:
+                row['public_checks_unchanged'] = all((Path(repo)/rel).is_file() and not (Path(repo)/rel).is_symlink() and hashlib.sha256((Path(repo)/rel).read_bytes()).hexdigest()==digest for rel,digest in expected.items())
+                if not row['public_checks_unchanged']:
+                    row['status'] = 'public check inputs changed'
     usage = {'price_basis': PRICE_BASIS, 'models': usage_total(records), 'unknown_calls': unknown,
              'complete': bool(records) and not unknown and all(r['usage_complete'] for r in rows),
              'missing_records_are_zero': False, 'supervision_excluded': True}
     dump(root / 'response-ledger.json', {'responses': list(records.values()), 'origins': origins, 'unknown_calls': unknown})
     out = root / 'deliverables'; out.mkdir(exist_ok=True)
     dump(out / 'USAGE.json', usage); dump(out / 'RESULTS.json', {'runs': rows, 'audits': audits})
-    fieldnames = ['ticket', 'pass', 'arm', 'model', 'status', 'known_tokens', 'api_list_price_equivalent_usd', 'usage_complete', 'own_tests_pass', 'project_checks_pass', 'acceptance']
+    fieldnames = ['ticket', 'pass', 'arm', 'model', 'status', 'known_tokens', 'api_list_price_equivalent_usd', 'usage_complete', 'own_tests_pass', 'project_checks_pass', 'acceptance', 'outcome', 'refines', 'execution_path', 'public_checks_unchanged']
     with (out / 'RESULTS.csv').open('w', newline='') as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction='ignore'); writer.writeheader(); writer.writerows(rows)
     lines = ['# Jira benchmark final report', '', f'Generated: {datetime.now(UTC).isoformat()}', '',
@@ -229,6 +245,20 @@ def finalize(root, run_audits=False):
         price = 'unknown' if r['api_list_price_equivalent_usd'] is None else f"${r['api_list_price_equivalent_usd']:.6f}"
         if not r['usage_complete'] and price != 'unknown': price += ' (known subtotal)'
         lines.append(f'| {r["ticket"]} | {r["pass"]} | {r["arm"]} | {r["status"]} | {token} | {price} | {r["own_tests_pass"]} | {r["project_checks_pass"]} | {r["acceptance"]} |')
+    lines += ['', '## Native Spine completion and stage usage', '',
+              'Public required checks can drive native refinement. Hidden acceptance checks run only after closure and are never repair feedback.', '']
+    for r in rows:
+        if not r.get('required_behavior') and not r.get('stages'): continue
+        lines += [f"### {r['ticket']} pass {r['pass']} — {r['arm']}", '',
+                  f"Execution: {r.get('execution_path')}. Outcome: {r.get('outcome')}. Automatic refine calls: {r.get('refines')}.", '',
+                  '| Stage | Calls | Input tokens | Output tokens | Deterministic seconds |',
+                  '|---|---:|---:|---:|---:|']
+        for name, stage in r.get('stages', {}).items():
+            lines.append(f"| {name} | {stage.get('calls', 0)} | {stage.get('prompt_tokens', stage.get('prompt', 0))} | {stage.get('completion_tokens', stage.get('completion', 0))} | {stage.get('deterministic_seconds', 0):.3f} |")
+        for index, gate in enumerate(r.get('required_behavior', []), 1):
+            items = gate.get('items', [])
+            lines.append(f"Public behavior validation {index}: {'passed' if gate['passed'] and items else 'unverified' if not items and gate['passed'] else 'failed'} ({len(items)} checks).")
+        lines += ['']
     lines += ['', '## Token usage and cost', '', 'Costs below are **API list-price equivalents, not subscription charges**. Rates are the packaged snapshot in codex_usage.py. Cached input is included in input; reasoning is included in output. Supervisor work is excluded.', '']
     for model, u in usage['models'].items():
         dollars = 'unpriced' if u['api_list_price_equivalent_usd'] is None else f'${u["api_list_price_equivalent_usd"]:.6f}'

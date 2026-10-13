@@ -23,7 +23,7 @@ Copy `benchmark.example.json` to `benchmark.json`. Paths may be absolute, start 
 | `model`, `reasoning_effort` | Default gpt-6-sol/high. A different model needs account access and verified rates in codex_usage.py. Do not silently substitute models. |
 | `completion_timeout_seconds` | Spine completion timeout, default 2700. Previous 300-second deadlines caused missing-usage failures. |
 | `cap`, `job_cap` | API-equivalent admission/stage budgets, not hard spending ceilings and not subscription charges. |
-| `tools_dir`, `login_home` | Default `~/.local/share/spineharness/spine-tools-6c0454bac2dbb` and `~/.codex-spineharness` inside Ubuntu. Login never goes inside work/results. |
+| `tools_dir`, `login_home` | Default `~/.local/share/spineharness/spine-tools-a8952c1a14fc` and `~/.codex-spineharness` inside Ubuntu. Login never goes inside work/results. |
 | `work_dir`, `results_dir` | Defaults to a temporary Linux work root outside the home directory and `results/<name>` alongside the config. Keep them separate from each other and the original checkout. |
 
 Example frozen acceptance configuration:
@@ -42,4 +42,8 @@ Saved snapshots can contain Jira rich-text (ADF) descriptions. Add `acceptance_f
 
 The two workflows receive the same requirements and independent clones of the same baseline. A multi-issue run does not carry one issue's implementation into another. Benchmark related prerequisite issues together only with an explicitly prepared common baseline and disclosed scope.
 
-The primary Windows entry point is `Run-Harness.ps1`, which calls `benchmark.py` in Ubuntu. Legacy modules and advanced reference-scenario utilities remain included for reproducibility; do not use the old reference-only `setup.sh` against your application repository.
+The four-workflow entry point is `framework_matrix.py` inside Ubuntu; configure it using `examples/framework-matrix.example.json` and MATRIX_QUICKSTART.md. `Run-Harness.ps1` calls the historical two-arm `benchmark.py` path in Ubuntu. The settings in this file and `benchmark.example.json` describe that older path.
+
+## Native Spine execution in the historical two-arm path
+
+See QUICKSTART.md for `require_behavior`, `behavior_files`, `behavior_protected_files`, `max_refine`, `max_judge_revisions`, and `max_model_calls`. Supplied public-check files are included in the configuration digest; their bytes are frozen in the prepared baseline and PUBLIC_CHECK_HASHES.json. The bundled runtime pin is Spine 3.57.1 at `a8952c1a14fc31601fb5721b77b61e36003287e3`. Use a new tools directory rather than resetting an older installation. The source repository and prior results are preserved.

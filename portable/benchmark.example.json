@@ -4,18 +4,43 @@
   "repository_url": "https://github.com/my-team/my-application",
   "baseline": "HEAD",
   "jira_url": "https://my-team.atlassian.net",
-  "issues": ["TEAM-123"],
-  "snapshots": ["inputs/TEAM-123.json"],
+  "issues": [
+    "TEAM-123"
+  ],
+  "snapshots": [
+    "inputs/TEAM-123.json"
+  ],
   "model": "gpt-6-sol",
   "reasoning_effort": "high",
   "passes": 1,
   "completion_timeout_seconds": 2700,
-  "requirements_files": ["requirements.txt"],
+  "requirements_files": [
+    "requirements.txt"
+  ],
   "extra_test_packages": [],
   "install_project": false,
-  "source_paths": [".", "src"],
-  "checks": [["{python}", "-m", "pytest", "-q", "-p", "no:cacheprovider", "tests"]],
+  "source_paths": [
+    ".",
+    "src"
+  ],
+  "checks": [
+    [
+      "{python}",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests"
+    ]
+  ],
   "acceptance_tests": {},
   "cap": 150,
-  "job_cap": 150
+  "job_cap": 150,
+  "require_behavior": true,
+  "behavior_files": {},
+  "behavior_protected_files": [],
+  "max_refine": 3,
+  "max_judge_revisions": 2,
+  "max_model_calls": 24
 }

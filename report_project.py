@@ -25,14 +25,18 @@ def report(root):
                 total=row.get('total',{})
                 tokens=total.get('tokens')
                 if tokens is None and 'prompt_tokens' in row and 'completion_tokens' in row:
-                    tokens=row['prompt_tokens']+row['completion_tokens']
+                    tokens=(row['prompt_tokens'] or 0)+(row['completion_tokens'] or 0) if row['prompt_tokens'] is not None else None
                 token_text=f'{tokens:,}' if tokens is not None else 'unknown'
                 cost=total.get('cost_usd',row.get('cost_usd'))
-                status='infrastructure abort' if row.get('aborted') else 'checklist paused' if row.get('paused_for_checklist') else 'budget stopped' if row.get('stopped_at_job_cap_before') else 'saved attempt; inspect checks'
+                status=row.get('status') or ('infrastructure abort' if row.get('aborted') else 'checklist paused' if row.get('paused_for_checklist') else 'budget stopped' if row.get('stopped_at_job_cap_before') else 'saved attempt; inspect checks')
                 sections += [f'## {row["ticket"]} — {label}, {model}, pass {row["pass"]}', '',
                     f'Status: **{status}**. Independent correctness: **unverified**.',
                     f'Recorded attempt tokens: **{token_text}**. API list-price equivalent: **{cost if cost is not None else "unknown"} USD**.', '',
                     'Project checks:', '```json',json.dumps(row.get('project_checks',[]),indent=2),'```','']
+                if row.get('execution_path'):
+                    sections += [f"Execution: {row['execution_path']}. Outcome: {row.get('outcome')}.",
+                                 'Public required behavior history:', '```json', json.dumps(row.get('required_behavior', []), indent=2), '```',
+                                 'Native stage usage:', '```json', json.dumps(row.get('stages', {}), indent=2), '```', '']
                 changes=path.parent/'CHANGES.md'
                 if changes.exists():sections += [changes.read_text(),'']
                 else:sections += ['No proposed-change artifact was captured; this is not evidence of a completed implementation.','']

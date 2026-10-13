@@ -1,5 +1,11 @@
 # Adding and validating scenarios
 
+The default four-arm reference path is [`reference_matrix.py`](REFERENCE_MATRIX.md):
+the selected 33 catalog tickets feed spec-kit, OpenSpec, Spine + PKG + OpenSpec,
+and Spine + PKG from the same baseline. This document also describes the
+historical `run_comparison.py` grader and its separate intake measurements;
+those legacy counts are not part of the new four-arm matrix.
+
 This release supports additional **Python create/edit tasks on the pinned Spine repository**. It does not turn a different SPINE_REPO into a supported target automatically. Setup, package discovery, static checks, and the documented-count gate are Spine-specific.
 
 For Jira issues in a different application repository, see **QUICKSTART.md, section 5** for the issue mapping, held-out example, and adapter requirements. The default benchmark remains a reference-repository run; custom JSON alone does not change the target.
@@ -75,4 +81,4 @@ For several repositories, use separate repository adapters and experiment direct
 
 ## Token-only Jira projects
 
-The separate Jira importer emits `evaluation_mode: "tokens-only"` catalogs. These may use `kind: "change"`, empty held-out tests, and empty acceptance criteria when missing in Jira. Execution requires PROJECT_CONFIG and explicit review/execution controls; independent correctness remains unverified. See [JIRA_BENCHMARK.md](JIRA_BENCHMARK.md). The graded schema above remains unchanged.
+The separate Jira importer emits `evaluation_mode: "tokens-only"` catalogs. These may use `kind: "change"`, empty held-out tests, and empty acceptance criteria when missing in Jira. Execution requires PROJECT_CONFIG and explicit review/execution controls; independent correctness remains unverified. See [CONFIGURATION.md](CONFIGURATION.md) for the two-arm Jira setup. The graded schema above remains unchanged.
