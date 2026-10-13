@@ -6,6 +6,10 @@ and its saved results remain unchanged. This path compares **spec-kit**,
 baseline, model, and set of checks. Each framework gets a separate disposable
 clone. The original repository and Jira are read-only.
 
+For a comparison that holds the implementation step fixed and varies only the
+reviewed framework context, use [CONTEXT_MATRIX.md](CONTEXT_MATRIX.md). Its
+context generation costs are recorded separately from implementation costs.
+
 For an external machine, begin with [MATRIX_QUICKSTART.md](MATRIX_QUICKSTART.md):
 one repository, one issue, and four built-in workflows. The handover includes a
 self-contained Git bundle for published Spine 3.57.1. The public pilot used an

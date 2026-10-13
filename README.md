@@ -2,6 +2,12 @@
 
 External handover, 2026-09-30-v6. Start with **[QUICKSTART.md](QUICKSTART.md)**.
 
+The current four-workflow paths are documented in
+[FRAMEWORK_MATRIX.md](FRAMEWORK_MATRIX.md) for full workflows and
+[CONTEXT_MATRIX.md](CONTEXT_MATRIX.md) for one matched implementation step with
+four reviewed framework contexts. The historical two-arm handover below retains
+its original version pins and results.
+
 This harness runs both workflows through the Codex CLI using the recipient's own
 ChatGPT sign-in. No OpenAI API key is needed in the default configuration. It can
 be launched from a terminal or from a local Codex app project.
