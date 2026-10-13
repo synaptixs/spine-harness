@@ -15,7 +15,7 @@ from pathlib import Path
 from .paths import PROJECT_ROOT
 
 ROOT = PROJECT_ROOT
-VERSION = '2026-10-13-v19'
+VERSION = '2026-10-13-v20'
 NAME = 'spineharness-macos'
 PACKAGE_FILES = ('.py', '.md', '.svg')
 STUDIES = ('ontm4-benchmark-20260930', 'ontm4-spine-recovery-20260930', 'ontm4-spine-resumed-20261004', 'ontm4-spine-continuation-20261004')
@@ -135,7 +135,7 @@ def build(output, platform='macos', include_reference=False, spine_source=None):
                     'native_windows_execution': False, 'application_check_sandbox': 'bubblewrap' if platform == 'windows' else 'sandbox-exec', 'application_language': 'Python',
                     'spine_commit': 'a8952c1a14fc31601fb5721b77b61e36003287e3',
                     'default_reference_spine_commit': 'a8952c1a14fc31601fb5721b77b61e36003287e3',
-                    'speckit_ref': 'v1.0.11',
+                    'speckit_ref': 'resolved-at-setup', 'openspec_version': 'resolved-at-setup',
                     'default_model': 'gpt-6-sol', 'reasoning': 'high', 'spine_timeout_seconds': 2700,
                     'source_snapshot_date': '2026-10-13', 'required_behavior_production_path_integrated': True,
                     'framework_matrix': ['speckit', 'openspec', 'spine-openspec', 'spine-pkg', 'external-command'],

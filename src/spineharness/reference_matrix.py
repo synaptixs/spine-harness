@@ -77,6 +77,8 @@ def config_for(scenario: dict, root: Path, work: Path, *, model: str, passes: in
         "tools_dir": str(C.SPINE_CODE_DIR.resolve()),
         "spine_commit": spine_commit,
         "spine_ref": C.SPINE_REF,
+        "speckit_ref": C.SPECKIT,
+        "openspec_version": C.OPENSPEC_VERSION,
         "application_python": str((C.TARGET_DIR / ".venv/bin/python").absolute()),
         "source_paths": [".", "src"],
         "checks": [["{python}", "scripts/state-numbers.py", "--check"]],

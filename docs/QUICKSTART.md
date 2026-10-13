@@ -1,6 +1,6 @@
 # Quickstart — 33 reference scenarios across four workflows
 
-The default reference study runs each of the 33 scenarios through **Spec Kit, standalone OpenSpec, Spine + integrated OpenSpec + PKG, and Spine + PKG**. The v19 pins are **Spec Kit `v1.0.11`**, **OpenSpec CLI `1.14.1`** for its standalone arm, and **Spine `v3.57.1`** for both PKG arms. PKG and Spine's OpenSpec integration ship with Spine rather than carrying separate pins. See the [four-arm tool table](MATRIX_QUICKSTART.md#tools-and-versions-in-v19).
+The default reference study runs each of the 33 scenarios through **Spec Kit, standalone OpenSpec, Spine + integrated OpenSpec + PKG, and Spine + PKG**. A fresh setup resolves the latest stable Spec Kit tag and latest standalone OpenSpec CLI, freezes their exact versions for the study, and uses bundled **Spine `v3.57.1`** for both PKG arms. PKG and Spine's OpenSpec integration ship with Spine rather than carrying separate pins. See the [four-arm tool table](MATRIX_QUICKSTART.md#tools-and-versions).
 
 Graphify and codebase memory are candidates for future adapters; neither is part of this release or its 33-scenario results. For Jira, SWE-bench, or a user-supplied framework on a matched task, use [FRAMEWORK_MATRIX.md](FRAMEWORK_MATRIX.md). `run_comparison.py` remains the historical two-arm reproduction path.
 
@@ -17,10 +17,10 @@ The earlier 18-run study is a reference measurement, not an expected cost, quali
 
 ## 1. Prerequisites and unpacking
 
-Install Git, Bash, Python 3.12, Node/npm, [uv](https://docs.astral.sh/uv/getting-started/installation/), the [Codex CLI](https://learn.chatgpt.com/docs/codex/cli), and the official OpenSpec CLI (`npm install -g @fission-ai/openspec@1.14.1`). The measured environment used Codex CLI 0.157.0 and uv 0.8.0 on macOS. Linux/WSL is not live-tested; native PowerShell is unsupported. For a **one-repository, one-issue four-arm pilot**, use [MATRIX_QUICKSTART.md](MATRIX_QUICKSTART.md) first.
+Install Git, Bash, Python 3.12, Node/npm, [uv](https://docs.astral.sh/uv/getting-started/installation/), and the [Codex CLI](https://learn.chatgpt.com/docs/codex/cli). `setup.sh` installs current Spec Kit and OpenSpec releases. The earlier measured environment used Codex CLI 0.157.0 and uv 0.8.0 on macOS. Linux/WSL is not live-tested; native PowerShell is unsupported. For a **one-repository, one-issue four-arm pilot**, use [MATRIX_QUICKSTART.md](MATRIX_QUICKSTART.md) first.
 
 ```bash
-unzip spineharness-macos-2026-10-13-v19.zip
+unzip spineharness-macos-2026-10-13-v20.zip
 cd spineharness-macos
 shasum -a 256 -c SHA256SUMS  # Linux alternative: sha256sum -c SHA256SUMS
 export PYTHONPATH="$PWD/src${PYTHONPATH:+:$PYTHONPATH}"
@@ -62,7 +62,7 @@ uv run --frozen --project "$WORK_DIR/spine-code" python -m spineharness.scenario
 python3 -m spineharness.reference_matrix dry-run --model "$MODEL" --passes 1
 ```
 
-Setup should end with `== ready`. It creates two pinned detached worktrees and installs locked dependencies. Validation checks selected IDs, required edit targets, held-out syntax, and agreement between the target and Spine catalogs. It does not prove that a custom judge is correct or that the account has model access. Review new judges before spending model capacity.
+Setup should end with `== ready`. On a fresh `WORK_DIR` it downloads current standalone framework tools, saves `framework-tools.json` with their exact versions, creates two pinned detached worktrees, and installs locked dependencies. Rerunning setup for the same `WORK_DIR` reuses the frozen tool manifest. Validation checks selected IDs, required edit targets, held-out syntax, and agreement between the target and Spine catalogs. It does not prove that a custom judge is correct or that the account has model access. Review new judges before spending model capacity.
 
 ## 4. Default 33-scenario run (start explicitly)
 
