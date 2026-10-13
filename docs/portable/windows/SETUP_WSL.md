@@ -12,7 +12,7 @@ Inside Ubuntu, install system dependencies:
 
 ```bash
 sudo apt-get update
-sudo apt-get install -y git python3 python3-venv python3-pip curl ca-certificates bubblewrap build-essential
+sudo apt-get install -y git python3 python3-venv python3-pip curl ca-certificates bubblewrap build-essential unzip
 ```
 
 Install uv in a dedicated Python environment and expose both commands without replacing system Python:

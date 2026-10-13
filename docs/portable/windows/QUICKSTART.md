@@ -6,27 +6,40 @@ For an external repository, run **one issue through all four workflows first**. 
 
 This archive runs the harness in **WSL2 Ubuntu**, controlled from the **Windows Codex app**. It supports Python applications. Native Windows Python and WSL1 are not supported by this harness.
 
-## 1. Unzip and open in Codex
+## Demo: build, install, and open in Codex
 
-Extract to a short local folder such as `C:\Codex\spineharness-windows-wsl2`. Open that folder as a project in the Codex app.
+On a packaging Mac with a Spine Harness source checkout, Python 3.12, and a local Spine checkout containing tag `v3.57.1`, build the Windows/WSL2 ZIP. If you received the ZIP, start with the Ubuntu extraction step. The [release build guide](../../BUILD_RELEASES.md) has both platform commands.
 
-If WSL2 is not installed, run this once in Administrator PowerShell, restart if requested, then open Ubuntu and finish creating your Linux username:
-
-```powershell
-wsl --install -d Ubuntu
+```bash
+cd /path/to/spine-harness
+export PYTHONPATH="$PWD/src"
+python3.12 -m spineharness.build_portable_release \
+  --platform windows --spine-source /absolute/path/to/spine --output dist
+(cd dist && shasum -a 256 -c spineharness-windows-wsl2-2026-10-13-v19.zip.sha256)
 ```
 
-Check `wsl --list --verbose` shows version **2** for Ubuntu. Existing WSL2 users can skip installation. [Microsoft's WSL installation guide](https://learn.microsoft.com/en-us/windows/wsl/install) explains these steps.
+The ZIP is the distribution; there is no separate installer. Copy it and its checksum file to the Windows machine's Downloads folder. If WSL2 Ubuntu is missing, run `wsl --install -d Ubuntu` in Administrator PowerShell and restart if requested. Install the Linux prerequisites in [SETUP_WSL.md](SETUP_WSL.md). In an **Ubuntu shell**, verify and extract the ZIP on the Linux filesystem (replace `<windows-user>` with your Windows username):
 
-## 2. Paste this into Codex
+```bash
+(cd "/mnt/c/Users/<windows-user>/Downloads" && sha256sum -c spineharness-windows-wsl2-2026-10-13-v19.zip.sha256)
+mkdir -p "$HOME/code/spineharness-demo"
+cd "$HOME/code/spineharness-demo"
+unzip "/mnt/c/Users/<windows-user>/Downloads/spineharness-windows-wsl2-2026-10-13-v19.zip"
+cd spineharness-windows-wsl2
+python3 verify_package.py
+```
+
+In the [Windows Codex app](https://learn.chatgpt.com/docs/windows/windows-app), set the agent environment to **Windows Subsystem for Linux** and restart the app. Add a local project for the extracted `spineharness-windows-wsl2` folder. You can reach it from the folder picker through `\\wsl$\Ubuntu\home\<ubuntu-user>\code\spineharness-demo\spineharness-windows-wsl2` (adjust the distribution and username). Start a new local chat and fill in the four-workflow prompt below with **Linux paths** for your repository and issue. Run harness commands inside Ubuntu with Python 3.12 and `PYTHONPATH` pointing to the extracted `src/` folder, as [the qualification guide](../../MATRIX_QUICKSTART.md) shows. The app and the Codex CLI inside Ubuntu use separate sign-ins; complete the CLI login when the setup guide asks. Building, extracting, and verifying the package make no model calls. A live four-arm run consumes model tokens and requires the selected task and authorization in the prompt. The WSL2 path still needs live validation on a recipient machine.
+
+## Run a four-workflow issue in Codex
 
 Replace the bracketed values:
 
-> Read AGENTS.md, docs/portable/windows/QUICKSTART.md, docs/portable/windows/SETUP_WSL.md, docs/MATRIX_QUICKSTART.md and docs/FRAMEWORK_MATRIX.md. Set up the four-workflow framework matrix **inside WSL2 Ubuntu** for my Python repository at **[Linux/WSL repository path]**, committed baseline **[commit/tag or HEAD]**, and one saved issue **[TEAM-123]** from **[Jira site or public issue URL]**. Use read-only issue access, an isolated Codex CLI sign-in with my own ChatGPT account, gpt-6-sol/high, and one pass per workflow. Install the pinned OpenSpec CLI and bundled Spine 3.57.1 tools. Configure actual Linux application dependencies, baseline regression commands, and an external issue-specific acceptance command that fails on the baseline. Freeze the issue and checks, run `framework_matrix.py doctor` and `prepare`, then run all four arms once with a fresh name and package the closed result. I authorize sending the selected issue and relevant disposable repository code to OpenAI/ChatGPT for this benchmark and routine spec-kit checklist continuation. Preserve the source checkout and issue tracker; do not repair measured outputs, silently rerun an arm, or launch a duplicate full attempt. Report workflow status separately from acceptance, protected-test changes, tokens, wall time and API list-price-equivalent cost.
+> Read AGENTS.md, docs/portable/windows/QUICKSTART.md, docs/portable/windows/SETUP_WSL.md, docs/MATRIX_QUICKSTART.md and docs/FRAMEWORK_MATRIX.md. Set up the four-workflow framework matrix **inside WSL2 Ubuntu** for my Python repository at **[Linux/WSL repository path]**, committed baseline **[commit/tag or HEAD]**, and one saved issue **[TEAM-123]** from **[Jira site or public issue URL]**. Use read-only issue access, an isolated Codex CLI sign-in with my own ChatGPT account, gpt-6-sol/high, and one pass per workflow. Install the pinned OpenSpec CLI and bundled Spine 3.57.1 tools. Configure actual Linux application dependencies, baseline regression commands, and an external issue-specific acceptance command that fails on the baseline. Freeze the issue and checks, run `python3 -m spineharness.framework_matrix doctor` and `prepare`, then run all four arms once with a fresh name and package the closed result. I authorize sending the selected issue and relevant disposable repository code to OpenAI/ChatGPT for this benchmark and routine spec-kit checklist continuation. Preserve the source checkout and issue tracker; do not repair measured outputs, silently rerun an arm, or launch a duplicate full attempt. Report workflow status separately from acceptance, protected-test changes, tokens, wall time and API list-price-equivalent cost.
 
 Codex handles setup and execution. You may need to complete the Linux administrator password prompt, sign in to ChatGPT, and allow commands through the app's normal permissions. Your own authorized access to the application repository and selected issue is required. Start with one issue; use a fresh run name for each additional issue.
 
-## 3. Open your results
+## Open your results
 
 For the four-workflow matrix, outputs are in `results/<name>/` under the extracted folder:
 
@@ -44,7 +57,7 @@ No prior Jira issues or application results are bundled. Your new results are wr
 
 ## Historical two-arm PowerShell commands
 
-Run in PowerShell from the extracted folder. These commands use Ubuntu; append `-Distro Ubuntu-24.04` if that is your installed distribution name. Python, Git, uv and Codex must be installed **inside that distribution**; see [SETUP_WSL.md](SETUP_WSL.md).
+For this older path, extract the ZIP to a short Windows folder such as `C:\Codex\spineharness-windows-wsl2` and open that folder in the Codex app. Run in PowerShell from the extracted folder. These commands use Ubuntu; append `-Distro Ubuntu-24.04` if that is your installed distribution name. Python, Git, uv and Codex must be installed **inside that distribution**; see [SETUP_WSL.md](SETUP_WSL.md).
 
 ```powershell
 .\Run-Harness.ps1 -Action verify

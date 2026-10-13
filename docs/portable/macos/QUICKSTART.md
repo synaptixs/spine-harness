@@ -4,6 +4,32 @@
 
 For the default **33 scenarios across spec-kit, OpenSpec, Spine + PKG + OpenSpec, and Spine + PKG**, use [REFERENCE_QUICKSTART.md](../../QUICKSTART.md) and `reference_matrix.py` (132 measurements per pass) after qualifying one issue. For one matched Jira or SWE-bench task, or a team-supplied framework, use [MATRIX_QUICKSTART.md](../../MATRIX_QUICKSTART.md) and [FRAMEWORK_MATRIX.md](../../FRAMEWORK_MATRIX.md). The two-arm Jira instructions below remain valid for the historical protocol.
 
+## Demo: build, install, and open in Codex
+
+Build the macOS distribution from a Spine Harness source checkout. You need Python 3.12 and a local Spine checkout containing tag `v3.57.1`. See [release builds](../../BUILD_RELEASES.md) for both platform commands and package verification.
+
+```bash
+cd /path/to/spine-harness
+export PYTHONPATH="$PWD/src"
+python3.12 -m spineharness.build_portable_release \
+  --platform macos --spine-source /absolute/path/to/spine --output dist
+```
+
+The ZIP is the distribution; there is no separate installer. From `dist/`, or from the folder where you received the ZIP and its checksum file, verify and extract it:
+
+```bash
+cd dist
+shasum -a 256 -c spineharness-macos-2026-10-13-v19.zip.sha256
+demo_dir="$HOME/SpineHarness-v19"
+mkdir "$demo_dir"
+unzip -q spineharness-macos-2026-10-13-v19.zip -d "$demo_dir"
+cd "$demo_dir/spineharness-macos"
+shasum -a 256 -c SHA256SUMS
+PYTHONPATH="$PWD/src" python3.12 -m spineharness.framework_matrix --help
+```
+
+In the [Codex desktop app](https://learn.chatgpt.com/docs/app), open the extracted `spineharness-macos` folder as a **local project** and start a new local chat. Have an authorized Python repository, its pre-fix commit, and a saved issue ready. Fill in the bracketed values in the four-workflow prompt below and send it. Codex then follows [the qualification guide](../../MATRIX_QUICKSTART.md) to install tools, check the baseline, and run the four arms. Set `PYTHONPATH` from the extracted folder for harness commands; the app's shell does not inherit the build shell's export. Building, extracting, and verifying the archive make no model calls; the prompt authorizes the selected issue run.
+
 For the **recommended one-issue four-arm pilot**, open this extracted folder in the Codex app and paste this prompt after filling the brackets:
 
 > Read AGENTS.md and docs/MATRIX_QUICKSTART.md. Qualify the four built-in workflows on one issue in my local Python repository **[absolute repo path]** at pre-fix commit **[full SHA]**. The saved issue is **[absolute issue JSON path, or Jira issue key and read-only connection]**. Use a fresh run name, independent baseline regression and acceptance checks, my dedicated Codex CLI ChatGPT sign-in, and the bundled pinned Spine tools revision. Assign any unresolved scope question to **[@actual owner]** and list every deferral in the report; do not invent an answer. I authorize the small model smoke call and sending this selected issue text and disposable repository code to the configured OpenAI model for the four-arm pilot. I also authorize routine spec-kit checklist continuation. Run doctor, prepare, review the frozen task, then run once through completion. Do not edit my original checkout or Jira, start a second issue, or overwrite results. Give me the report and archive, with failures and unknown usage labeled honestly.
