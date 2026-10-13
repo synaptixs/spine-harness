@@ -1,6 +1,6 @@
 # Quick start — Windows with WSL2
 
-> **v19:** The bundled tools pin Spine 3.57.1. The four-workflow matrix has been exercised on two public repositories on macOS, but not yet live-validated under WSL2.
+> **v19 toolchain:** Spec Kit `v1.0.11`, standalone OpenSpec CLI `1.14.1`, and Spine `v3.57.1` for both PKG arms (including Spine's integrated OpenSpec path). [The tool table](../../MATRIX_QUICKSTART.md#tools-and-versions-in-v19) explains each arm and future adapter options. The four-workflow matrix has been exercised on macOS, but not yet live-validated under WSL2.
 
 For an external repository, run **one issue through all four workflows first**. Install WSL2 as below, then follow [MATRIX_QUICKSTART.md](../../MATRIX_QUICKSTART.md) and [FRAMEWORK_MATRIX.md](../../FRAMEWORK_MATRIX.md) inside Ubuntu. In the matrix guide, use `sha256sum -c SHA256SUMS` in place of the macOS `shasum` command, and use Linux paths and Linux interpreters throughout. Install OpenSpec 1.14.1 with npm inside Ubuntu. For the separate default 33-scenario study, see [REFERENCE_QUICKSTART.md](../../QUICKSTART.md) and [REFERENCE_MATRIX.md](../../REFERENCE_MATRIX.md). The `Run-Harness.ps1` commands below describe the older two-arm Jira path, not the four-workflow matrix.
 
