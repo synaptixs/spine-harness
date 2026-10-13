@@ -800,6 +800,7 @@ def codex_environment(c: dict, repo: Path) -> dict:
         env.pop(key, None)
     env["CODEX_HOME"] = c["login_home"]
     env["PATH"] = str(Path(c.get("application_python", sys.executable)).parent) + os.pathsep + env.get("PATH", "")
+    env["PYTHONPATH"] = os.pathsep.join(str(repo / rel) for rel in c.get("source_paths", [".", "src"]))
     env["BENCHMARK_REPO"] = str(repo)
     return env
 

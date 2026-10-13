@@ -94,16 +94,17 @@ def clean_test_env(root, paths):
 
 
 def sandboxed_command(command, root):
-    """Fail closed: model-generated tests may not write outside their disposable copy."""
+    """Fail closed: tests write only to the disposable copy or isolated scratch."""
     root=Path(root).resolve()
     if sys.platform == 'linux':
         from wsl_support import linux_sandbox_command
         return linux_sandbox_command(command, root)
     if sys.platform!='darwin' or not shutil.which('sandbox-exec'):
         raise RuntimeError('Use macOS sandbox-exec or Linux/WSL2 bubblewrap; native Windows execution is unsupported')
-    temporary=root/'.benchmark-tmp';temporary.mkdir(exist_ok=True)
+    # Keep pytest fixtures outside the checkout so they cannot inherit its Git metadata.
+    temporary=Path(tempfile.mkdtemp(prefix='spineharness-tests-',dir='/private/tmp'))
     policy='(version 1)(allow default)(deny file-write*)(deny network*)' + \
-        '(allow file-write* (subpath '+json.dumps(str(root))+') (literal "/dev/null"))'
+        '(allow file-write* (subpath '+json.dumps(str(root))+') (subpath '+json.dumps(str(temporary))+') (literal "/dev/null"))'
     return ['sandbox-exec','-p',policy,*command], temporary
 
 
