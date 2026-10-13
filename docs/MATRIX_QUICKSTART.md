@@ -2,7 +2,18 @@
 
 This is the recommended **qualification pilot** for the framework matrix. It runs one issue once through spec-kit, OpenSpec, Spine + PKG + OpenSpec, and Spine + PKG in separate disposable clones. It does **not** start the 33-scenario reference study. The original repository and issue tracker are read-only; generated code stays in the disposable work directory and result patches.
 
-The October 8 public Spine #456 pilot exercised all four arms and produced a complete four-row report. Three arms passed its independent feature check; Spine + PKG + OpenSpec stopped at an unresolved scope question before implementation. The updated adapter records a frozen operator answer or named deferral through Spine's native clarity API. A subsequent isolated #456 run reached implementation and passed its selected feature check and 63 regression tests. Spine's native judge still rejected that generated implementation because it did not prove preservation of all genuine imported-library members. The integration path runs; this particular generated patch did **not** pass native validation. A model, dependency, or acceptance failure is a recorded result, not permission to silently repair or rerun.
+## Tools and versions in v19
+
+| Arm | Tool pin | What it uses |
+| --- | --- | --- |
+| Spec Kit | `v1.0.11` | Standalone Spec Kit through `uvx`. |
+| OpenSpec | CLI `1.14.1` | Standalone OpenSpec through Node/npm. |
+| Spine + integrated OpenSpec + PKG | Spine `v3.57.1` | Spine's built-in OpenSpec intake and Product Knowledge Graph. |
+| Spine + PKG | Spine `v3.57.1` | Spine's Product Knowledge Graph without the OpenSpec intake. |
+
+PKG and Spine's OpenSpec integration ship with Spine; they do not have separate version pins in this release. The standalone OpenSpec CLI version applies to its own arm. The same configured Codex model and reasoning effort are used for all four arms, and preparation records the resolved tool versions.
+
+The framework matrix also accepts external command adapters. Graphify and codebase memory are possible future integrations; neither is included or benchmarked in v19. Add a tool only with a recorded version, matched task/baseline/model settings, and independent checks. See [the framework reference](FRAMEWORK_MATRIX.md) for the adapter contract.
 
 ## 1. Unpack and verify on macOS
 
@@ -82,3 +93,7 @@ Open `results/<name>/COMPARISON_REPORT.html` or `.md`, then `RESULTS.md`, `EVIDE
 The report separates workflow completion, native Spine validation, independent acceptance, changed protected checks, recorded tokens, wall time, and **API list-price equivalent** cost (not a subscription charge). Passing selected checks does not prove complete correctness. Missing or interrupted response usage is unknown, never zero. One issue and one attempt per arm are diagnostic, not statistically significant. The runner prevents idle sleep on macOS and records both active and UTC elapsed time. A material gap stops later arms, preserves partial evidence, and writes `RUN_INVALID.json`; that attempt cannot be ranked or packaged. A fresh model-spending attempt needs authorization.
 
 If an arm stops, inspect its log and failure marker. The Spine + OpenSpec adapter now applies frozen answers and named deferrals before the clarity gate; a remaining `questions_resolved` stop means the policy is `stop` or another question was not handled. Record an authorized scope answer and prepare a **new** matched experiment for all arms; do not edit the closed result or continue only one arm and call it equivalent. Interrupted runs have `INTERRUPTED.json` and cannot be packaged as completed comparisons. Preserve their partial evidence. For more tasks or the separate 33-scenario study, use [FRAMEWORK_MATRIX.md](FRAMEWORK_MATRIX.md) and [REFERENCE_MATRIX.md](REFERENCE_MATRIX.md) after this one-issue pilot is understood.
+
+## Previous pilot evidence
+
+The October 8 public Spine #456 pilot exercised all four arms and produced a complete four-row report. Three arms passed its independent feature check; Spine + PKG + OpenSpec stopped at an unresolved scope question before implementation. The updated adapter records a frozen operator answer or named deferral through Spine's native clarity API. A subsequent isolated #456 run reached implementation and passed its selected feature check and 63 regression tests. Spine's native judge still rejected that generated implementation because it did not prove preservation of all genuine imported-library members. The integration path runs; this particular generated patch did **not** pass native validation. A model, dependency, or acceptance failure is a recorded result, not permission to silently repair or rerun.

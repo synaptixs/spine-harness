@@ -6,14 +6,16 @@
 
 ## The four workflows
 
-| Workflow | Context used for implementation |
-| --- | --- |
-| **Spine + PKG** | Spine's Product Knowledge Graph grounds the native feature workflow. |
-| **Spine + integrated OpenSpec + PKG** | Spine's feature workflow also uses its integrated OpenSpec path. |
-| **OpenSpec** | Standalone OpenSpec workflow. |
-| **Spec Kit** | Standalone spec-kit workflow. |
+| Workflow | Context used for implementation | v19 tool pin |
+| --- | --- | --- |
+| **Spine + PKG** | Spine's Product Knowledge Graph grounds the native feature workflow. | Spine `v3.57.1`; PKG is included. |
+| **Spine + integrated OpenSpec + PKG** | Spine's feature workflow also uses its integrated OpenSpec path. | Spine `v3.57.1`; the integration and PKG are included. |
+| **OpenSpec** | Standalone OpenSpec workflow. | OpenSpec CLI `1.14.1`. |
+| **Spec Kit** | Standalone spec-kit workflow. | Spec Kit `v1.0.11`. |
 
 Each arm works in a separate disposable copy of the target repository. The four-arm runner takes one saved issue per configuration; use fresh configurations and result directories for additional issues, then [combine compatible runs](docs/FRAMEWORK_MATRIX.md#compare-multiple-tasks). The 33-scenario reference matrix schedules many tasks automatically, and the historical two-arm Jira runner accepts an issue list in one configuration.
+
+Graphify and codebase memory are candidates for future tool integrations, not included arms in v19. The harness supports [external command adapters](docs/FRAMEWORK_MATRIX.md); each new integration needs its own version pin, preflight, and comparable evidence before joining a study.
 
 Reports keep workflow completion, Spine's native validation, regression checks, independent acceptance, changed protected checks, tokens, time, and API list-price equivalent cost distinct. A passing check covers the selected behavior; it does not certify the whole issue.
 

@@ -1,6 +1,8 @@
 # Quickstart — 33 reference scenarios across four workflows
 
-The default reference study now runs each of the 33 scenarios through **spec-kit, OpenSpec standalone, Spine + PKG + OpenSpec, and Spine + PKG**. For Jira, SWE-bench, or a user-supplied framework on a matched task, use [FRAMEWORK_MATRIX.md](FRAMEWORK_MATRIX.md). `run_comparison.py` remains the historical two-arm reproduction path.
+The default reference study runs each of the 33 scenarios through **Spec Kit, standalone OpenSpec, Spine + integrated OpenSpec + PKG, and Spine + PKG**. The v19 pins are **Spec Kit `v1.0.11`**, **OpenSpec CLI `1.14.1`** for its standalone arm, and **Spine `v3.57.1`** for both PKG arms. PKG and Spine's OpenSpec integration ship with Spine rather than carrying separate pins. See the [four-arm tool table](MATRIX_QUICKSTART.md#tools-and-versions-in-v19).
+
+Graphify and codebase memory are candidates for future adapters; neither is part of this release or its 33-scenario results. For Jira, SWE-bench, or a user-supplied framework on a matched task, use [FRAMEWORK_MATRIX.md](FRAMEWORK_MATRIX.md). `run_comparison.py` remains the historical two-arm reproduction path.
 
 Run these commands in **Bash**, from the unpacked harness. The Codex app's terminal or a normal terminal works. Every recipient uses their own repository access and ChatGPT sign-in. This archive includes no credentials or results; it includes a Git bundle for the pinned four-arm Spine tools revision, but no installed environment or target application checkout.
 
