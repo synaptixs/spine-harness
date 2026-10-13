@@ -11,7 +11,7 @@ from scenario_catalog import configure, fingerprint
 
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
-    ap.add_argument('action',choices=('list','validate','snapshot'))
+    ap.add_argument('action',choices=('list','validate','snapshot','export'))
     ap.add_argument('--tree',choices=('target','spine'),default='target')
     a=ap.parse_args()
     C.use_tree(C.TARGET_DIR if a.tree=='target' else C.SPINE_CODE_DIR)
@@ -27,6 +27,13 @@ def main():
             print(f'{t.key}\t{t.kind}\t{t.spec["title"]}')
         return
     custom=configure(cb,C.TICKETS,C.SCENARIO_FILE,C.TARGET_DIR)
+    if a.action=='export':
+        print(json.dumps({'tickets':C.TICKETS,'scenario_fingerprint':fingerprint(cb.TICKETS),
+                          'stock_held_out_suite':suite,'custom_catalog':custom,
+                          'scenarios':[{'key':t.key,'kind':t.kind,'spec':t.spec,
+                                        'must_edit':t.must_edit,'held_out_tests':t.held_out_tests}
+                                       for t in cb.TICKETS]},indent=2))
+        return
     result={'tickets':C.TICKETS,'scenario_fingerprint':fingerprint(cb.TICKETS),
             'python_version':sys.version.split()[0],
             'stock_held_out_suite':suite,'custom_catalog':custom,

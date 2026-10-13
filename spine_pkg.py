@@ -4,7 +4,7 @@ Usage: python spine_pkg.py <model> <pass_no> [--dry-run]
 Needs: the provider key for <model> (ANTHROPIC_API_KEY or OPENAI_API_KEY) and ./setup.sh done.
 
 The benchmark (scripts/codegen_benchmark.py) runs unchanged from the Spine version under test
-(SPINE_CODE_DIR, default v3.52.0), pointed at the same target commit spec-kit changes
+(SPINE_CODE_DIR, default v3.56.0), pointed at the same target commit spec-kit changes
 (BENCH_REPO = TARGET_DIR): builds the PKG, designs deterministically, implements, writes tests,
 refines, and grades. This wrapper adds, from outside and without editing the repo script:
   * each worktree's generated files are copied out before the benchmark drops it;
@@ -36,7 +36,7 @@ os.environ.update(BENCH_REPO=str(C.TARGET_DIR), BENCH_TICKETS=",".join(C.TICKETS
                   BENCH_DESIGN="deterministic", SDLC_CODEGEN_MODEL=A.model)
 if A.dry_run:
     print(f"[dry-run] Spine code {C.SPINE_CODE_DIR} ({C.SPINE_REF}); target {C.TARGET_DIR} @ {C.TARGET_SHA}")
-    print(f"[dry-run] model {A.model}; tickets {C.TICKETS}; design deterministic; results {KEEP}")
+    print(f"[dry-run] model {A.model}; tickets {C.TICKETS}; execution {'production run_feature' if C.PROJECT else 'reference benchmark'}; results {KEEP}")
     print(f"[dry-run] backend: {C.SPINE_BACKEND}; gpt6 API shim: {C.SPINE_BACKEND == 'api' and A.model.startswith('gpt-6')}")
     sys.exit(0)
 
@@ -79,11 +79,35 @@ import heldout_fix
 
 HELD_OUT_SUITE = heldout_fix.apply(cb)  # the corrected NEW-DRIFTMD-1 judge; see heldout_fix.py
 CUSTOM_CATALOG = C.configure_tickets(cb)
-if C.PROJECT:
-    C.PROJECT.install(cb)
 from scenario_catalog import fingerprint
 
 SCENARIO_FINGERPRINT = fingerprint(cb.TICKETS)
+
+if C.PROJECT:
+    if C.SPINE_BACKEND != 'codex':
+        raise SystemExit('Production project benchmarking requires SPINE_BACKEND=codex for closed-response accounting')
+    from spine_feature import run_project_ticket, verify_spine
+    from spine_version import SPINE_COMMIT, SPINE_REF
+    if C.SPINE_REF not in (SPINE_REF, SPINE_COMMIT):
+        raise SystemExit('Set SPINE_REF=' + SPINE_REF + ' for the production project runner')
+    verify_spine(C.SPINE_CODE_DIR)
+
+    async def run_project():
+        for ticket in cb.TICKETS:
+            result = await run_project_ticket(C.PROJECT, ticket, A.model, KEEP / ticket.key, KEEP / "codex-calls",
+                metadata={"pass": A.pass_no, "scenario_fingerprint": SCENARIO_FINGERPRINT, "arm": "spine-pkg"})
+            result.update(arm='spine-pkg', backend=C.SPINE_BACKEND, codex_auth=C.CODEX_AUTH,
+                          **{'pass': A.pass_no}, target=C.TARGET_SHA, scenario_fingerprint=SCENARIO_FINGERPRINT,
+                          custom_catalog=CUSTOM_CATALOG, evaluation_mode='production-feature',
+                          accepted=result['passed'], independent_accepted=None, held_out_ran=False, held_out_pass=None)
+            (KEEP / ticket.key / 'summary.json').write_text(json.dumps(result, indent=2)+'\n')
+            if result['model_calls_started'] and not result['usage_complete']:
+                raise RuntimeError(f'Incomplete model usage for {ticket.key}; stop and preserve evidence')
+            print(f"[spine {ticket.key}] {result['status']}; required checks={len(result['required_behavior'])}", flush=True)
+        _execution.update(status='completed', finished_unix=time.time())
+        _execution_record.write_text(json.dumps(_execution, indent=2)+'\n')
+    asyncio.run(run_project())
+    sys.exit(0)
 
 _drop, _run_ticket = cb.drop_worktree, cb.run_ticket
 _gate: dict[str, dict[str, Any]] = {}

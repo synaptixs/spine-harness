@@ -13,6 +13,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from spine_version import SPINE_REF as DEFAULT_SPINE_REF
+
 
 def _env(name: str, default: str | None = None) -> str:
     v = os.environ.get(name, default)
@@ -35,7 +37,7 @@ WORK_DIR = Path(_env("WORK_DIR", "/tmp/speckit-bench")).expanduser()    # throwa
 RESULTS_DIR = Path(_env("RESULTS_DIR", str(HERE / "results"))).expanduser()
 TARGET_SHA = _env("TARGET_SHA", "bd16dbb7")                            # the commit both tools change
 TARGET_DIR = Path(_env("TARGET_DIR", str(WORK_DIR / "target"))).expanduser()
-SPINE_REF = _env("SPINE_REF", "v3.52.0")                               # the Spine version measured
+SPINE_REF = _env("SPINE_REF", DEFAULT_SPINE_REF)                               # the Spine version measured
 SPINE_CODE_DIR = Path(_env("SPINE_CODE_DIR", str(WORK_DIR / "spine-code"))).expanduser()
 PROJECT_CONFIG = Path(os.environ['PROJECT_CONFIG']).expanduser().resolve() if os.environ.get('PROJECT_CONFIG') else None
 PROJECT = None

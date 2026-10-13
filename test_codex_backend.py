@@ -20,6 +20,8 @@ class BackendTests(unittest.TestCase):
     def test_checklist_confirmation_wording(self):
         self.assertTrue(needs_checklist_approval('Checklist unchecked. Proceed? (yes/no)'))
         self.assertTrue(needs_checklist_approval('Implementation is paused at the checklist gate. Do you want me to proceed anyway? Reply **yes** to continue or **no** to wait.'))
+        self.assertTrue(needs_checklist_approval('checklists/code-quality-requirements.md | 0 | 30 |\nDo you want me to proceed with implementation anyway? No implementation files or checklist markers have been changed.'))
+        self.assertTrue(needs_checklist_approval('Implementation is waiting at the speckit-implement checklist gate. The custom reviewer checklist has 24 unchecked items. The skill requires your explicit decision before I can proceed. Please answer the pending proceed-or-wait question.'))
         self.assertFalse(needs_checklist_approval('Implementation complete; all tests pass.'))
 
     def test_deduplicate_and_ignore_inherited_totals(self):
