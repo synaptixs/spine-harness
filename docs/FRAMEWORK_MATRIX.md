@@ -168,9 +168,13 @@ gate. A deferral clears the question gate but supplies no answer. The report
 lists every recorded answer or deferral. Do not auto-answer the question for
 one arm or resume only that arm and present it as a matched first attempt.
 
-Install the official OpenSpec CLI with Node/npm (pin a chosen release with
-`npm install -g @fission-ai/openspec@<version>`), the Codex CLI, `uv`/`uvx`,
-and a Python application environment before `prepare`. The matrix records the
+Install Node/npm, the Codex CLI, and `uv`/`uvx`. After copying and editing the
+issue config, run `python3 -m spineharness.framework_tools --config framework-matrix.json`
+to install the latest standalone OpenSpec CLI and fetch the latest stable Spec Kit
+tag. The command freezes their exact versions in the config before `doctor` or
+`prepare`. To reproduce a historical run, use its saved pins and install that
+OpenSpec version with `npm install -g @fission-ai/openspec@<version>`. Prepare
+a Python application environment before `prepare`. The matrix records the
 actual CLI versions. For either native Spine arm, `tools_dir` must be a separate Spine
 checkout with its frozen `uv` environment. Set `spine_commit` to its full commit
 SHA and `spine_ref` to a human-readable version or branch; `prepare` verifies

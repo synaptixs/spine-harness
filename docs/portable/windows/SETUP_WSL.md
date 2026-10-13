@@ -37,7 +37,7 @@ codex --version
 uv --version
 ```
 
-For the four-workflow matrix, install Node.js and npm **inside Ubuntu**. OpenSpec 1.14.1 declares Node.js `>=20.19.0`; verify that version before installing the pinned CLI:
+For the four-workflow matrix, install Node.js and npm **inside Ubuntu**. OpenSpec requires Node.js `>=20.19.0`; verify that version before resolving current tools:
 
 ```bash
 node --version
@@ -45,9 +45,9 @@ npm --version
 mkdir -p "$HOME/.npm-global"
 npm config set prefix "$HOME/.npm-global"
 export PATH="$HOME/.npm-global/bin:$PATH"
-npm install -g @fission-ai/openspec@1.14.1
-openspec --version
 ```
+
+After editing the four-arm configuration, run `python3 -m spineharness.framework_tools --config framework-matrix.json` inside Ubuntu. It installs the current OpenSpec CLI globally, fetches current Spec Kit with `uvx`, and records both exact versions for the attempt.
 
 If Ubuntu's Node.js is older, install a compatible Linux release using your organization's approved package source. Windows Node.js and npm installations do not satisfy the WSL requirement.
 

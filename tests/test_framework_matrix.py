@@ -35,6 +35,22 @@ from spineharness.project_adapter import capture_changes
 
 
 class MatrixTests(unittest.TestCase):
+    def test_standalone_arms_require_versions_resolved_during_setup(self):
+        with tempfile.TemporaryDirectory() as temp:
+            config, _, _ = self.fixture(Path(temp))
+            payload = json.loads(config.read_text())
+            payload["frameworks"] = ["speckit", "openspec"]
+            config.write_text(json.dumps(payload))
+            with self.assertRaisesRegex(ValueError, "resolved openspec_version"):
+                load(config)
+            payload["openspec_version"] = "1.15.0"
+            config.write_text(json.dumps(payload))
+            with self.assertRaisesRegex(ValueError, "resolved speckit_ref"):
+                load(config)
+            payload["speckit_ref"] = "git+https://github.com/github/spec-kit.git@" + "b" * 40
+            config.write_text(json.dumps(payload))
+            self.assertEqual(load(config)["openspec_version"], "1.15.0")
+
     def test_spine_matrix_pin_is_explicit_and_immutable(self):
         with tempfile.TemporaryDirectory() as temp:
             config, _, _ = self.fixture(Path(temp))

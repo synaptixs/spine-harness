@@ -48,7 +48,14 @@ if PROJECT_CONFIG:
     TARGET_DIR = Path(PROJECT.config['target_dir']).resolve()
     TARGET_SHA = PROJECT.config['baseline_commit']
 
-SPECKIT = "git+https://github.com/github/spec-kit.git@" + _env("SPECKIT_REF", "v1.0.11")
+FRAMEWORK_TOOLS_FILE = WORK_DIR / "framework-tools.json"
+FRAMEWORK_TOOLS = json.loads(FRAMEWORK_TOOLS_FILE.read_text()) if FRAMEWORK_TOOLS_FILE.is_file() else {}
+SPECKIT = os.environ.get("SPECKIT_REF") or FRAMEWORK_TOOLS.get(
+    "speckit_ref", "git+https://github.com/github/spec-kit.git@v1.0.11"
+)
+if not SPECKIT.startswith("git+https://"):
+    SPECKIT = "git+https://github.com/github/spec-kit.git@" + SPECKIT
+OPENSPEC_VERSION = FRAMEWORK_TOOLS.get("openspec_version", "1.14.1")
 UV_CACHE = os.environ.get("UV_CACHE_DIR") or _uv_dir("cache")
 UV_PYTHON = os.environ.get("UV_PYTHON_INSTALL_DIR") or _uv_dir("python")
 BUNDLED_CATALOG = HERE / "catalog" / "expanded.json"

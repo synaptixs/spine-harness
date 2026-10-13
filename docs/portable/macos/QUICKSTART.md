@@ -1,6 +1,6 @@
 # Quick start in Codex — macOS
 
-> **v19 toolchain:** Spec Kit `v1.0.11`, standalone OpenSpec CLI `1.14.1`, and Spine `v3.57.1` for both PKG arms (including Spine's integrated OpenSpec path). [The tool table](../../MATRIX_QUICKSTART.md#tools-and-versions-in-v19) explains each arm and future adapter options. Start with one repository, one issue, and four workflows. The separate two-arm Jira path below needs issue-specific required-behavior checks.
+> **Toolchain:** Setup resolves current stable Spec Kit and standalone OpenSpec releases and freezes their versions per attempt. Spine `v3.57.1` supplies both PKG arms, including its integrated OpenSpec path. [The tool table](../../MATRIX_QUICKSTART.md#tools-and-versions) explains each arm and future adapter options. Start with one repository, one issue, and four workflows. The separate two-arm Jira path below needs issue-specific required-behavior checks.
 
 For the default **33 scenarios across spec-kit, OpenSpec, Spine + PKG + OpenSpec, and Spine + PKG**, use [REFERENCE_QUICKSTART.md](../../QUICKSTART.md) and `reference_matrix.py` (132 measurements per pass) after qualifying one issue. For one matched Jira or SWE-bench task, or a team-supplied framework, use [MATRIX_QUICKSTART.md](../../MATRIX_QUICKSTART.md) and [FRAMEWORK_MATRIX.md](../../FRAMEWORK_MATRIX.md). The two-arm Jira instructions below remain valid for the historical protocol.
 
@@ -19,10 +19,10 @@ The ZIP is the distribution; there is no separate installer. From `dist/`, or fr
 
 ```bash
 cd dist
-shasum -a 256 -c spineharness-macos-2026-10-13-v19.zip.sha256
-demo_dir="$HOME/SpineHarness-v19"
+shasum -a 256 -c spineharness-macos-2026-10-13-v20.zip.sha256
+demo_dir="$HOME/SpineHarness-v20"
 mkdir "$demo_dir"
-unzip -q spineharness-macos-2026-10-13-v19.zip -d "$demo_dir"
+unzip -q spineharness-macos-2026-10-13-v20.zip -d "$demo_dir"
 cd "$demo_dir/spineharness-macos"
 shasum -a 256 -c SHA256SUMS
 PYTHONPATH="$PWD/src" python3.12 -m spineharness.framework_matrix --help

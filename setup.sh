@@ -17,7 +17,7 @@ ok=1
 say() { printf '%-28s %s\n' "$1" "$2"; }
 
 echo "== prerequisites"
-for c in git uv python3; do
+for c in git uv uvx python3 node npm; do
   if command -v "$c" >/dev/null; then say "$c" "$("$c" --version 2>&1 | head -1)"; else say "$c" "MISSING (required)"; ok=0; fi
 done
 if command -v claude >/dev/null; then say "claude (Claude Code)" "$(claude --version 2>&1 | head -1)"; else say "claude (Claude Code)" "not found — needed only for Claude runs"; fi
@@ -49,6 +49,9 @@ git -C "$SPINE_REPO" fetch -q --tags origin || true
 git -C "$SPINE_REPO" rev-parse --verify "${TARGET_SHA}^{commit}" >/dev/null
 git -C "$SPINE_REPO" rev-parse --verify "${SPINE_REF}^{commit}" >/dev/null
 mkdir -p "$WORK_DIR" "$RESULTS_DIR"
+echo "== standalone framework tools (latest release on a fresh setup)"
+PYTHONPATH="$PWD/src${PYTHONPATH:+:$PYTHONPATH}" python3 -m spineharness.framework_tools \
+  --manifest "$WORK_DIR/framework-tools.json"
 if [ ! -d "$TARGET_DIR" ]; then git -C "$SPINE_REPO" worktree add -q --detach "$TARGET_DIR" "$TARGET_SHA"; fi
 if [ "$(git -C "$TARGET_DIR" rev-parse HEAD)" != "$(git -C "$SPINE_REPO" rev-parse "${TARGET_SHA}^{commit}")" ]; then
   echo "Target tree has the wrong commit. Choose fresh WORK_DIR and RESULTS_DIR."; exit 1

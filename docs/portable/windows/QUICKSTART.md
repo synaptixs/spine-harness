@@ -1,8 +1,8 @@
 # Quick start — Windows with WSL2
 
-> **v19 toolchain:** Spec Kit `v1.0.11`, standalone OpenSpec CLI `1.14.1`, and Spine `v3.57.1` for both PKG arms (including Spine's integrated OpenSpec path). [The tool table](../../MATRIX_QUICKSTART.md#tools-and-versions-in-v19) explains each arm and future adapter options. The four-workflow matrix has been exercised on macOS, but not yet live-validated under WSL2.
+> **Toolchain:** Setup resolves current stable Spec Kit and standalone OpenSpec releases and freezes their versions per attempt. Spine `v3.57.1` supplies both PKG arms, including its integrated OpenSpec path. [The tool table](../../MATRIX_QUICKSTART.md#tools-and-versions) explains each arm and future adapter options. The four-workflow matrix has been exercised on macOS, but not yet live-validated under WSL2.
 
-For an external repository, run **one issue through all four workflows first**. Install WSL2 as below, then follow [MATRIX_QUICKSTART.md](../../MATRIX_QUICKSTART.md) and [FRAMEWORK_MATRIX.md](../../FRAMEWORK_MATRIX.md) inside Ubuntu. In the matrix guide, use `sha256sum -c SHA256SUMS` in place of the macOS `shasum` command, and use Linux paths and Linux interpreters throughout. Install OpenSpec 1.14.1 with npm inside Ubuntu. For the separate default 33-scenario study, see [REFERENCE_QUICKSTART.md](../../QUICKSTART.md) and [REFERENCE_MATRIX.md](../../REFERENCE_MATRIX.md). The `Run-Harness.ps1` commands below describe the older two-arm Jira path, not the four-workflow matrix.
+For an external repository, run **one issue through all four workflows first**. Install WSL2 as below, then follow [MATRIX_QUICKSTART.md](../../MATRIX_QUICKSTART.md) and [FRAMEWORK_MATRIX.md](../../FRAMEWORK_MATRIX.md) inside Ubuntu. In the matrix guide, use `sha256sum -c SHA256SUMS` in place of the macOS `shasum` command, and use Linux paths and Linux interpreters throughout. Resolve OpenSpec and Spec Kit inside Ubuntu with the framework setup command. For the separate default 33-scenario study, see [REFERENCE_QUICKSTART.md](../../QUICKSTART.md) and [REFERENCE_MATRIX.md](../../REFERENCE_MATRIX.md). The `Run-Harness.ps1` commands below describe the older two-arm Jira path, not the four-workflow matrix.
 
 This archive runs the harness in **WSL2 Ubuntu**, controlled from the **Windows Codex app**. It supports Python applications. Native Windows Python and WSL1 are not supported by this harness.
 
@@ -15,16 +15,16 @@ cd /path/to/spine-harness
 export PYTHONPATH="$PWD/src"
 python3.12 -m spineharness.build_portable_release \
   --platform windows --spine-source /absolute/path/to/spine --output dist
-(cd dist && shasum -a 256 -c spineharness-windows-wsl2-2026-10-13-v19.zip.sha256)
+(cd dist && shasum -a 256 -c spineharness-windows-wsl2-2026-10-13-v20.zip.sha256)
 ```
 
 The ZIP is the distribution; there is no separate installer. Copy it and its checksum file to the Windows machine's Downloads folder. If WSL2 Ubuntu is missing, run `wsl --install -d Ubuntu` in Administrator PowerShell and restart if requested. Install the Linux prerequisites in [SETUP_WSL.md](SETUP_WSL.md). In an **Ubuntu shell**, verify and extract the ZIP on the Linux filesystem (replace `<windows-user>` with your Windows username):
 
 ```bash
-(cd "/mnt/c/Users/<windows-user>/Downloads" && sha256sum -c spineharness-windows-wsl2-2026-10-13-v19.zip.sha256)
+(cd "/mnt/c/Users/<windows-user>/Downloads" && sha256sum -c spineharness-windows-wsl2-2026-10-13-v20.zip.sha256)
 mkdir -p "$HOME/code/spineharness-demo"
 cd "$HOME/code/spineharness-demo"
-unzip "/mnt/c/Users/<windows-user>/Downloads/spineharness-windows-wsl2-2026-10-13-v19.zip"
+unzip "/mnt/c/Users/<windows-user>/Downloads/spineharness-windows-wsl2-2026-10-13-v20.zip"
 cd spineharness-windows-wsl2
 python3 verify_package.py
 ```

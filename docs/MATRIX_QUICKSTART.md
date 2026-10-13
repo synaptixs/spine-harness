@@ -2,31 +2,31 @@
 
 This is the recommended **qualification pilot** for the framework matrix. It runs one issue once through spec-kit, OpenSpec, Spine + PKG + OpenSpec, and Spine + PKG in separate disposable clones. It does **not** start the 33-scenario reference study. The original repository and issue tracker are read-only; generated code stays in the disposable work directory and result patches.
 
-## Tools and versions in v19
+## Tools and versions
 
-| Arm | Tool pin | What it uses |
+| Arm | Setup resolution | What it uses |
 | --- | --- | --- |
-| Spec Kit | `v1.0.11` | Standalone Spec Kit through `uvx`. |
-| OpenSpec | CLI `1.14.1` | Standalone OpenSpec through Node/npm. |
+| Spec Kit | Latest stable Git tag, frozen to its full commit. | Standalone Spec Kit through `uvx`. |
+| OpenSpec | Latest npm `@latest` release, frozen to the installed CLI version. | Standalone OpenSpec through Node/npm. |
 | Spine + integrated OpenSpec + PKG | Spine `v3.57.1` | Spine's built-in OpenSpec intake and Product Knowledge Graph. |
 | Spine + PKG | Spine `v3.57.1` | Spine's Product Knowledge Graph without the OpenSpec intake. |
 
-PKG and Spine's OpenSpec integration ship with Spine; they do not have separate version pins in this release. The standalone OpenSpec CLI version applies to its own arm. The same configured Codex model and reasoning effort are used for all four arms, and preparation records the resolved tool versions.
+PKG and Spine's OpenSpec integration ship with Spine; they do not have separate version pins. The standalone OpenSpec CLI applies only to its own arm. Setup makes network calls to resolve and install the two standalone tools, then saves their exact pins in the issue configuration. `doctor` and `prepare` use those pins; a newer release later cannot silently change a prepared run. The same configured Codex model and reasoning effort are used for all four arms.
 
-The framework matrix also accepts external command adapters. Graphify and codebase memory are possible future integrations; neither is included or benchmarked in v19. Add a tool only with a recorded version, matched task/baseline/model settings, and independent checks. See [the framework reference](FRAMEWORK_MATRIX.md) for the adapter contract.
+The framework matrix also accepts external command adapters. Graphify and codebase memory are possible future integrations; neither is included or benchmarked in this release. Add a tool only with a recorded version, matched task/baseline/model settings, and independent checks. See [the framework reference](FRAMEWORK_MATRIX.md) for the adapter contract.
 
 ## 1. Unpack and verify on macOS
 
-Install Git, Python 3.12, [uv](https://docs.astral.sh/uv/getting-started/installation/), Node/npm, and the Codex CLI. Use a ChatGPT login with access to the configured model. The pilot used OpenSpec **1.14.1**. From the extracted archive:
+Install Git, Python 3.12, [uv](https://docs.astral.sh/uv/getting-started/installation/), Node/npm, and the Codex CLI. Use a ChatGPT login with access to the configured model. The earlier v19 pilot used Spec Kit `v1.0.11` and OpenSpec **1.14.1**; a fresh setup now resolves current releases. From the extracted archive:
 
 ```bash
 cd spineharness-macos
 shasum -a 256 -c SHA256SUMS
 export PYTHONPATH="$PWD/src${PYTHONPATH:+:$PYTHONPATH}"
-npm install -g @fission-ai/openspec@1.14.1
 codex --version
-openspec --version
 uvx --version
+node --version
+npm --version
 ```
 
 The release includes `release_assets/spine-tools-v3.57.1.bundle`, a Git bundle containing the published Spine `v3.57.1` tools revision `a8952c1a14fc31601fb5721b77b61e36003287e3`. It makes the exact tools revision available without separate GitHub access. It is a **tools** checkout; `source_repo` below is the separate application being tested. The public #456 pilot above used a pre-release ancestor and remains historical evidence, not a 3.57.1 measurement.
@@ -45,7 +45,13 @@ The `rev-parse` result must equal the full SHA above. Prepare a Python interpret
 
 ## 2. Freeze one issue and its baseline
 
-Copy `examples/framework-matrix.example.json` to `framework-matrix.json`. Set `source_repo` to an authorized **local** checkout, `baseline` to a committed pre-fix SHA, `task_file` to one saved issue JSON, `application_python` to the target's interpreter, and `checks` to real regression commands that pass on that baseline. Set `acceptance_checks` to independent commands that fail for the target behavior on the baseline and are kept outside the model worktree. Keep `frameworks` as the four built-ins and `passes` as `1`. Change `name` for every new attempt; work and result paths must be fresh and separate.
+Copy `examples/framework-matrix.example.json` to `framework-matrix.json`. Set `source_repo` to an authorized **local** checkout, `baseline` to a committed pre-fix SHA, `task_file` to one saved issue JSON, `application_python` to the target's interpreter, and `checks` to real regression commands that pass on that baseline. Set `acceptance_checks` to independent commands that fail for the target behavior on the baseline and are kept outside the model worktree. Keep `frameworks` as the four built-ins and `passes` as `1`. Change `name` for every new attempt; work and result paths must be fresh and separate. Before `doctor`, run the setup command once for this new configuration:
+
+```bash
+python3 -m spineharness.framework_tools --config framework-matrix.json
+```
+
+It installs `@fission-ai/openspec@latest` globally, fetches the highest stable Spec Kit Git tag through `uvx`, and writes `speckit_ref` (full commit), `speckit_tag`, and `openspec_version` into that configuration. Review these fields. Setup uses no model calls. Repeat it only for a fresh attempt, since tool updates change the comparison protocol.
 
 Use a read-only Jira or GitHub integration to save the issue once. Supported inputs include a Jira REST-shaped issue (see `examples/jira_issue.example.json`), an official SWE-bench row, or a local JSON object with `id`, `title`, and `description`. A repository URL in the config is for report identity; the runner does not push, open a PR, or edit Jira. Keep credentials outside the archive, configuration, and results.
 

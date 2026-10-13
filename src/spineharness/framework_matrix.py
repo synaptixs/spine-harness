@@ -150,7 +150,7 @@ def sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def load(path: Path) -> dict:
+def load(path: Path, *, require_tool_pins: bool = True) -> dict:
     path = path.resolve()
     c = json.loads(path.read_text(encoding="utf-8-sig"))
     for key in ("name", "source_repo", "task_file", "frameworks", "model", "login_home"):
@@ -178,7 +178,8 @@ def load(path: Path) -> dict:
     c.setdefault("passes", 1)
     c.setdefault("approve_checklist", False)
     c.setdefault("task_context", {})
-    c.setdefault("openspec_version", "1.14.1")
+    c.setdefault("openspec_version", None)
+    c.setdefault("speckit_ref", None)
     c.setdefault("question_answers", {})
     c.setdefault("unresolved_question_policy", {"mode": "stop"})
     c.setdefault("spine_commit", SPINE_COMMIT)
@@ -244,6 +245,17 @@ def load(path: Path) -> dict:
         names.append(item["name"])
     if len(set(names)) != len(names):
         raise ValueError("Framework names must be unique")
+    if require_tool_pins:
+        if "openspec" in names and (
+            not isinstance(c["openspec_version"], str)
+            or not re.fullmatch(r"\d+\.\d+\.\d+", c["openspec_version"])
+        ):
+            raise ValueError("OpenSpec requires a resolved openspec_version; run framework_tools setup first")
+        if "speckit" in names and (not isinstance(c["speckit_ref"], str) or not re.fullmatch(
+            r"git\+https://github\.com/github/spec-kit\.git@(?:[0-9a-f]{40}|v\d+\.\d+\.\d+)",
+            c["speckit_ref"],
+        )):
+            raise ValueError("Spec Kit requires a resolved speckit_ref; run framework_tools setup first")
     c["frameworks"] = [{"name": x} if isinstance(x, str) else x for x in c["frameworks"]]
     for field in ("checks", "acceptance_checks"):
         if any(not isinstance(cmd, list) or not cmd or not all(isinstance(x, str) for x in cmd) for cmd in c[field]):
