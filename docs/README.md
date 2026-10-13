@@ -1,5 +1,7 @@
 # Harness guides
 
+For a shareable introduction and possible integration roadmap, see the [external team briefing](EXTERNAL_TEAM_BRIEF.md).
+
 Use the [qualification guide](MATRIX_QUICKSTART.md) for the first four-arm task.
 The [framework matrix reference](FRAMEWORK_MATRIX.md) covers configuration,
 preflight, execution, reporting, and [combining multiple issues](FRAMEWORK_MATRIX.md#compare-multiple-tasks).
