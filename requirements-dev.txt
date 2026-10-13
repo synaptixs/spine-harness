@@ -1,5 +1,4 @@
-# Dev/CI dependencies. spineharness has no package manifest of its own (it's a flat collection
-# of scripts run against a real Spine install) — this pins what CI and local lint/test runs need.
+# Dev/CI dependencies for the editable src package and offline checks.
 synaptixs-spine==3.57.1
 jsonschema
 ruff==0.16.10

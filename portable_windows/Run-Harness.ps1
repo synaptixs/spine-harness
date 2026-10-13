@@ -17,9 +17,9 @@ if (-not (Get-Command wsl.exe -ErrorAction SilentlyContinue)) {
 $LinuxRoot = & wsl.exe --distribution $Distro --exec wslpath -a -u $PSScriptRoot
 if ($LASTEXITCODE -ne 0) { throw 'Cannot access package in WSL. Initialize Ubuntu and use a local Windows folder.' }
 $LinuxRoot = ($LinuxRoot | Out-String).Trim()
-$Command = @('benchmark.py', $Action)
+$Command = @('-m', 'spineharness.portable_benchmark', $Action)
 if ($Action -eq 'verify') { $Command = @('verify_package.py') }
-elseif ($Action -eq 'selftest') { $Command = @('-m', 'unittest', '-v', 'test_portable', 'test_jira_benchmark', 'test_report_usage', 'test_wsl_support') }
+elseif ($Action -eq 'selftest') { $Command = @('-m', 'unittest', '-v', 'tests.test_portable', 'tests.test_jira_benchmark', 'tests.test_report_usage', 'tests.test_wsl_support') }
 elseif ($Action -ne 'doctor') {
     $ConfigPath = if ([System.IO.Path]::IsPathRooted($Config)) { $Config } else { Join-Path $PSScriptRoot $Config }
     $LinuxConfig = & wsl.exe --distribution $Distro --exec wslpath -a -u $ConfigPath
