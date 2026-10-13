@@ -15,16 +15,16 @@ cd /path/to/spine-harness
 export PYTHONPATH="$PWD/src"
 python3.12 -m spineharness.build_portable_release \
   --platform windows --spine-source /absolute/path/to/spine --output dist
-(cd dist && shasum -a 256 -c spineharness-windows-wsl2-2026-10-13-v20.zip.sha256)
+(cd dist && shasum -a 256 -c spineharness-windows-wsl2-2026-10-13-v21.zip.sha256)
 ```
 
 The ZIP is the distribution; there is no separate installer. Copy it and its checksum file to the Windows machine's Downloads folder. If WSL2 Ubuntu is missing, run `wsl --install -d Ubuntu` in Administrator PowerShell and restart if requested. Install the Linux prerequisites in [SETUP_WSL.md](SETUP_WSL.md). In an **Ubuntu shell**, verify and extract the ZIP on the Linux filesystem (replace `<windows-user>` with your Windows username):
 
 ```bash
-(cd "/mnt/c/Users/<windows-user>/Downloads" && sha256sum -c spineharness-windows-wsl2-2026-10-13-v20.zip.sha256)
+(cd "/mnt/c/Users/<windows-user>/Downloads" && sha256sum -c spineharness-windows-wsl2-2026-10-13-v21.zip.sha256)
 mkdir -p "$HOME/code/spineharness-demo"
 cd "$HOME/code/spineharness-demo"
-unzip "/mnt/c/Users/<windows-user>/Downloads/spineharness-windows-wsl2-2026-10-13-v20.zip"
+unzip "/mnt/c/Users/<windows-user>/Downloads/spineharness-windows-wsl2-2026-10-13-v21.zip"
 cd spineharness-windows-wsl2
 python3 verify_package.py
 ```

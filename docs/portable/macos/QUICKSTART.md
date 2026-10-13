@@ -1,150 +1,69 @@
-# Quick start in Codex — macOS
+# Quick start — macOS
 
-> **Toolchain:** Setup resolves current stable Spec Kit and standalone OpenSpec releases and freezes their versions per attempt. Spine `v3.57.1` supplies both PKG arms, including its integrated OpenSpec path. [The tool table](../../MATRIX_QUICKSTART.md#tools-and-versions) explains each arm and future adapter options. Start with one repository, one issue, and four workflows. The separate two-arm Jira path below needs issue-specific required-behavior checks.
+Run **one issue through four workflows**, in this order: Spine + PKG, Spine + integrated OpenSpec + PKG, standalone OpenSpec, and Spec Kit. The included example configuration uses this order. Each arm gets the same frozen issue, application commit, model settings, and independent checks in its own disposable clone. Start with a Python application; the native Spine adapters currently run Python application checks.
 
-For the default **33 scenarios across spec-kit, OpenSpec, Spine + PKG + OpenSpec, and Spine + PKG**, use [REFERENCE_QUICKSTART.md](../../QUICKSTART.md) and `reference_matrix.py` (132 measurements per pass) after qualifying one issue. For one matched Jira or SWE-bench task, or a team-supplied framework, use [MATRIX_QUICKSTART.md](../../MATRIX_QUICKSTART.md) and [FRAMEWORK_MATRIX.md](../../FRAMEWORK_MATRIX.md). The two-arm Jira instructions below remain valid for the historical protocol.
+This guide starts from a portable ZIP and ends at a reviewable report. The [four-arm qualification guide](../../MATRIX_QUICKSTART.md) gives the full preflight and configuration details. The [33-scenario reference study](../../QUICKSTART.md) and [historical two-arm Jira guide](TWO_ARM_JIRA.md) are separate paths.
 
-## Demo: build, install, and open in Codex
+## 1. Build or open the macOS package
 
-Build the macOS distribution from a Spine Harness source checkout. You need Python 3.12 and a local Spine checkout containing tag `v3.57.1`. See [release builds](../../BUILD_RELEASES.md) for both platform commands and package verification.
+If you already have the v21 ZIP and its `.sha256` file, verify and extract them in a fresh directory:
+
+```bash
+cd /path/to/archive-directory
+shasum -a 256 -c spineharness-macos-2026-10-13-v21.zip.sha256
+demo_dir="$HOME/SpineHarness-v21"
+mkdir -p "$demo_dir"
+unzip -q spineharness-macos-2026-10-13-v21.zip -d "$demo_dir"
+cd "$demo_dir/spineharness-macos"
+shasum -a 256 -c SHA256SUMS
+export PYTHONPATH="$PWD/src${PYTHONPATH:+:$PYTHONPATH}"
+```
+
+To build the ZIP from a Spine Harness source checkout first, use Python 3.12 and a local Spine checkout containing tag `v3.57.1`:
 
 ```bash
 cd /path/to/spine-harness
-export PYTHONPATH="$PWD/src"
-python3.12 -m spineharness.build_portable_release \
+PYTHONPATH="$PWD/src" python3.12 -m spineharness.build_portable_release \
   --platform macos --spine-source /absolute/path/to/spine --output dist
 ```
 
-The ZIP is the distribution; there is no separate installer. From `dist/`, or from the folder where you received the ZIP and its checksum file, verify and extract it:
+The package includes the pinned Spine tools as a Git bundle. It does **not** include an application repository, credentials, installed dependencies, or benchmark results. Building and extracting the ZIP make no model calls. See [release builds](../../BUILD_RELEASES.md) for checksums and the Windows/WSL2 package.
 
-```bash
-cd dist
-shasum -a 256 -c spineharness-macos-2026-10-13-v20.zip.sha256
-demo_dir="$HOME/SpineHarness-v20"
-mkdir "$demo_dir"
-unzip -q spineharness-macos-2026-10-13-v20.zip -d "$demo_dir"
-cd "$demo_dir/spineharness-macos"
-shasum -a 256 -c SHA256SUMS
-PYTHONPATH="$PWD/src" python3.12 -m spineharness.framework_matrix --help
-```
+## 2. Gather one issue and its checks
 
-In the [Codex desktop app](https://learn.chatgpt.com/docs/app), open the extracted `spineharness-macos` folder as a **local project** and start a new local chat. Have an authorized Python repository, its pre-fix commit, and a saved issue ready. Fill in the bracketed values in the four-workflow prompt below and send it. Codex then follows [the qualification guide](../../MATRIX_QUICKSTART.md) to install tools, check the baseline, and run the four arms. Set `PYTHONPATH` from the extracted folder for harness commands; the app's shell does not inherit the build shell's export. Building, extracting, and verifying the archive make no model calls; the prompt authorizes the selected issue run.
+Have these ready before running a model:
 
-For the **recommended one-issue four-arm pilot**, open this extracted folder in the Codex app and paste this prompt after filling the brackets:
+- The absolute path to an authorized local Python repository and its full **pre-fix commit SHA**.
+- One saved issue JSON file, or a Jira/GitHub issue accessible through a read-only connection.
+- Regression commands that pass on that commit and independent acceptance checks that fail for the missing behavior. Keep acceptance checks outside model worktrees.
+- A Python interpreter with the application's locked dependencies, and a dedicated Codex CLI sign-in. The Codex app and CLI have separate sign-ins.
 
-> Read AGENTS.md and docs/MATRIX_QUICKSTART.md. Qualify the four built-in workflows on one issue in my local Python repository **[absolute repo path]** at pre-fix commit **[full SHA]**. The saved issue is **[absolute issue JSON path, or Jira issue key and read-only connection]**. Use a fresh run name, independent baseline regression and acceptance checks, my dedicated Codex CLI ChatGPT sign-in, and the bundled pinned Spine tools revision. Assign any unresolved scope question to **[@actual owner]** and list every deferral in the report; do not invent an answer. I authorize the small model smoke call and sending this selected issue text and disposable repository code to the configured OpenAI model for the four-arm pilot. I also authorize routine spec-kit checklist continuation. Run doctor, prepare, review the frozen task, then run once through completion. Do not edit my original checkout or Jira, start a second issue, or overwrite results. Give me the report and archive, with failures and unknown usage labeled honestly.
+Use a fresh run name and directories for every attempt. Setup resolves current standalone Spec Kit and OpenSpec releases, then records exact versions before preparation. Spine's integrated OpenSpec path comes from the bundled Spine `v3.57.1`; it does not use the standalone OpenSpec CLI.
 
-The Codex app coordinates this work locally. The harness invokes **Codex CLI** for model calls, so complete its dedicated ChatGPT sign-in even if the app itself is already signed in. The doctor smoke sends no private repository or issue content and is excluded from workflow measurements.
+## 3. Run from the Codex app
 
-The remaining sections document the **historical two-arm Jira runner**. Use them only when that older protocol is intended.
+Open the extracted `spineharness-macos` folder as a **local project** in the [Codex desktop app](https://learn.chatgpt.com/docs/app). Start a new local chat and replace the brackets in this prompt:
 
-## 1. Open the package
+> Read AGENTS.md and docs/MATRIX_QUICKSTART.md. Run one four-arm pilot for my Python repository **[absolute path]** at pre-fix commit **[full SHA]** using issue **[absolute JSON path or issue key and read-only connection]**. Use a fresh name, the same task and model settings for all arms, and independently authored regression and acceptance checks. Install the latest standalone Spec Kit and OpenSpec tools through the documented setup command, freeze their versions, and use the bundled Spine tools for both PKG arms. Use my dedicated Codex CLI sign-in. Resolve consequential scope questions with my recorded answer or stop; do not invent one. I authorize sending this selected issue and relevant disposable repository code to the configured model for **one** four-arm run after preflight passes, including routine Spec Kit checklist continuation. Run doctor and prepare, review the frozen inputs, then run once and package the result. Preserve my source checkout and issue tracker. Report each arm's completion, native validation, independent acceptance, tokens, time, and API list-price equivalent cost, including failures and unknown usage.
 
-Unzip the archive and open the extracted **spineharness-macos** folder as a local project in the Codex app. Use a normal local chat in this folder.
+Codex can perform the local setup and offline checks. The `run --approved` step spends model tokens; the prompt above authorizes that one attempt. If a setup defect makes the comparison invalid, stop before model calls and fix the preflight for a new attempt.
 
-You need your own ChatGPT account, access to the Spine repository, a local checkout of your Python application, and read access to the selected Jira issues. Git, Python 3.12, `uv`, and the Codex CLI must be available. Ask Codex to help install missing prerequisites; no benchmark is started by installation.
+## 4. Or use the terminal
 
-## 2. Historical two-arm prompt
-
-Replace the four bracketed values:
-
-> Read AGENTS.md and docs/portable/macos/QUICKSTART.md. Prepare and run this harness on macOS using my repository at **[absolute repository path]**, baseline **[commit/tag, or HEAD]**, Jira site **[https://team.atlassian.net]**, and issues **[TEAM-123]**. Use the connected Jira read tool to save the selected requirements as JSON snapshots. Configure the application's dependencies and meaningful offline regression checks from its existing setup, plus a frozen issue-specific required-behavior check that fails on the baseline and can pass after implementation. Use my own ChatGPT sign-in, gpt-6-sol/high, one pass per workflow and a fresh run name. I authorize sending those selected Jira requirements and relevant disposable repository code to OpenAI/ChatGPT for this benchmark, and proceeding through routine spec-kit checklist gates while recording unchecked items. Prepare the same required baseline for both arms, then run through completion, report failures honestly, and generate the final report, results and evidence archive. Do not change my source checkout or Jira. Do not start another full attempt or repair failed acceptance checks automatically. Keep me updated at least every 15 minutes.
-
-Codex will create `benchmark.json`, obtain the issue snapshots, prepare dependencies and check the baseline. If Jira is not connected, connect your own Jira integration or provide saved issue JSON responses shaped like `examples/jira_issue.example.json`. Use the full issue key, title and description; configure a separate acceptance field if your Jira uses one. No Jira token needs to be pasted into this chat or stored in the package.
-
-If an issue depends on another change, Codex must resolve that prerequisite equally for both arms before measurement, or explain that the chosen baseline is unsuitable. It must not quietly use one arm's output as the other's starting point. Start with one issue; use a fresh run name for each additional issue unless all selected issues share the same frozen behavior checks.
-
-## 3. Complete sign-in, then let it run
-
-The harness's `login` command opens the normal sign-in flow. Sign in with **your** ChatGPT account when prompted. The dedicated login directory defaults to `~/.codex-spineharness`, outside the archive and results. Nothing copies the author's credentials.
-
-Codex may request permission for dependency downloads, model networking, or macOS `sandbox-exec` checks outside its outer command sandbox. The model's project checks still run offline with writes limited to disposable copies. Keep the Mac awake during the run.
-
-When it finishes, open:
-
-- `results/<run-name>/deliverables/FINAL_REPORT.html` — readable report.
-- `FINAL_REPORT.md`, `RESULTS.csv`, `RESULTS.json`, `USAGE.json` — report and data.
-- `ARTIFACTS.md` — planning documents, code patches and test evidence.
-- `results-and-artifacts.zip` and `.sha256` — portable output bundle.
-
-The archive contains no prior Jira issues or application results. All output from your selected issues is written under your fresh `results/<run-name>/` directory.
-
-## Commands Codex will use
-
-Run from the extracted directory; the app can run these for you. First copy `benchmark.example.json` to `benchmark.json` and fill in real values.
+From the extracted package, follow [the qualification guide](../../MATRIX_QUICKSTART.md#1-unpack-and-verify-on-macos) to unpack the bundled Spine tools and prepare the application's Python environment. Copy and edit `examples/framework-matrix.example.json` for your one issue, then run:
 
 ```bash
 export PYTHONPATH="$PWD/src${PYTHONPATH:+:$PYTHONPATH}"
-python3 -m spineharness.portable_benchmark doctor
-python3 -m spineharness.portable_benchmark bootstrap --config benchmark.json
-python3 -m spineharness.portable_benchmark login --config benchmark.json
-python3 -m spineharness.portable_benchmark prepare --config benchmark.json
-python3 -m spineharness.portable_benchmark run --config benchmark.json --approved --approve-checklist
+python3 -m spineharness.framework_tools --config framework-matrix.json
+mkdir -p "$HOME/.codex-spineharness"
+CODEX_HOME="$HOME/.codex-spineharness" codex login
+python3 -m spineharness.framework_matrix doctor --config framework-matrix.json
+python3 -m spineharness.framework_matrix prepare --config framework-matrix.json
+# Review results/<name>/PREPARED.json and TASK.json before the model run.
+python3 -m spineharness.framework_matrix run --config framework-matrix.json --approved
+python3 -m spineharness.framework_matrix package --config framework-matrix.json
 ```
 
-`bootstrap` installs the pinned Spine tool environment. `prepare` makes a separate target clone, freezes requirements and runs baseline checks without model calls. `run` is the spending step; `--approved` records baseline review and consent for the chosen data transfer. Use `--approve-checklist` only when the user has authorized routine checklist continuation, as in the prompt above. Omitting it preserves spec-kit's native pause.
+`doctor` and `prepare` make no model calls in this sequence. An optional `doctor --smoke-model --approved` makes one small, separately counted model call. The run command requires the chosen issue's data-transfer and model-use authorization. Do not reuse an existing work or results directory.
 
-To use a local authorized Spine checkout instead of cloning its default URL:
-
-```bash
-python3 -m spineharness.portable_benchmark bootstrap --config benchmark.json --spine-source /path/to/spine
-```
-
-To regenerate reports after a closed run, without new model calls or repeating audits:
-
-```bash
-python3 -m spineharness.portable_benchmark report --config benchmark.json
-```
-
-To verify package integrity before setup:
-
-```bash
-shasum -a 256 -c SHA256SUMS
-```
-
-## If a run fails
-
-Inspect `results/<name>/batch.log`, workflow logs, `JOB_FAILED`, and `QUOTA_STOP`. Reports preserve known usage and mark missing usage unknown. A timeout, quota failure, missing model, missing dependency or checklist pause is not a passing result. Do not delete markers and rerun over existing evidence. Diagnose first and choose a new name/paths for an explicitly requested new attempt. This package does not promise generic checkpoint resume.
-
-See [CONFIGURATION.md](CONFIGURATION.md) for dependency settings, optional acceptance checks and terminal MCP import. No stock-scenario run is required before your Jira issues.
-
-Official guidance checked for this handover: [Codex CLI](https://learn.chatgpt.com/docs/codex/cli) and [authentication, dedicated credential storage and device login](https://learn.chatgpt.com/docs/auth). The tested benchmark CLI was 0.157.0; record the actual installed version. A changed CLI may change overhead or reject flags, so retain that difference in the experiment metadata.
-
-## Required behavior setup for Spine 3.57.1
-
-The default `require_behavior: true` requires a nonempty `.spine/required-behavior.yaml` containing at least one required check. The manifest and executable checks must already exist in the selected baseline, or be supplied through `behavior_files`. `prepare` adds supplied files only to a common disposable baseline and records its patch; the original repository stays unchanged. Both workflows receive that baseline.
-
-Example configuration fragment (provide these files with real issue-specific assertions):
-
-```json
-{
-  "require_behavior": true,
-  "behavior_files": {
-    ".spine/required-behavior.yaml": "inputs/required-behavior.yaml",
-    "checks/check_required_behavior.py": "inputs/check_required_behavior.py"
-  },
-  "behavior_protected_files": [],
-  "max_refine": 3,
-  "max_judge_revisions": 2,
-  "max_model_calls": 24
-}
-```
-
-Manifest example:
-
-```yaml
-requirements:
-  - id: issue-default-behavior
-    description: State the Jira requirement and expected observable output
-    command: [python3, checks/check_required_behavior.py]
-    timeout: 60
-    required: true
-```
-
-Write assertions that fail on the unsolved baseline and pass only when the requested behavior works. Keep regression `checks` passing on the prepared baseline; do not put the intentionally failing new behavior check in that list. List fixture/support files in `behavior_protected_files` when they are not directly named by a command. Existing `test_*.py` files, the manifest and directly named check scripts are protected automatically.
-
-Public behavior failures feed native refinement. Hidden `acceptance_tests` remain outside model access and run after closure with no feedback. If two issues require different public checks, use separate run configurations and fresh names, one per issue. Internal native refinements are part of the measured workflow; post-audit repairs remain separate.
-
-`max_refine` is a per-category native allowance, not a total call count. `max_model_calls` bounds all native calls, including semantic review and model retries. Project dependencies are prepared once; automatic dependency installation during measurement is disabled. A missing optional type-checker is reported by Spine as skipped. Install required tooling before preparation and include mandatory quality checks in `checks`.
-
-For explicitly chosen legacy token-only experiments, `require_behavior: false` permits an absent manifest and reports behavior as unverified. It does not certify completion. Stock scenarios use a separate path; `benchmark.py` is the Jira/repository entry point.
+Open `results/<name>/COMPARISON_REPORT.html` and `RESULTS.md`, then inspect each arm's `RESULT.json`, checks, and patch. The shareable `comparison-results.zip` contains issue text and generated source, so review it before sharing. A failed arm under a valid protocol is a result; an invalid setup stops the comparison. For multiple issues or repositories, repeat with fresh configs and [combine compatible closed runs](../../FRAMEWORK_MATRIX.md#multiple-application-repositories).

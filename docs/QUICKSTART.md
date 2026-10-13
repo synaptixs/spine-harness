@@ -20,7 +20,7 @@ The earlier 18-run study is a reference measurement, not an expected cost, quali
 Install Git, Bash, Python 3.12, Node/npm, [uv](https://docs.astral.sh/uv/getting-started/installation/), and the [Codex CLI](https://learn.chatgpt.com/docs/codex/cli). `setup.sh` installs current Spec Kit and OpenSpec releases. The earlier measured environment used Codex CLI 0.157.0 and uv 0.8.0 on macOS. Linux/WSL is not live-tested; native PowerShell is unsupported. For a **one-repository, one-issue four-arm pilot**, use [MATRIX_QUICKSTART.md](MATRIX_QUICKSTART.md) first.
 
 ```bash
-unzip spineharness-macos-2026-10-13-v20.zip
+unzip spineharness-macos-2026-10-13-v21.zip
 cd spineharness-macos
 shasum -a 256 -c SHA256SUMS  # Linux alternative: sha256sum -c SHA256SUMS
 export PYTHONPATH="$PWD/src${PYTHONPATH:+:$PYTHONPATH}"

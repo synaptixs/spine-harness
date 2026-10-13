@@ -44,4 +44,4 @@ The primary path in this release is `benchmark.py`. Legacy modules and advanced 
 
 ## Native Spine 3.57.1 execution
 
-See QUICKSTART.md for `require_behavior`, `behavior_files`, `behavior_protected_files`, `max_refine`, `max_judge_revisions`, and `max_model_calls`. Supplied public-check files are included in the configuration digest; their bytes are frozen in the prepared baseline and PUBLIC_CHECK_HASHES.json. The current runtime pin is `a8952c1a14fc31601fb5721b77b61e36003287e3`. Use a new tools directory rather than resetting an older installation. The source repository and prior results are preserved.
+See [the historical two-arm guide](TWO_ARM_JIRA.md#required-behavior-setup-for-spine-3571) for `require_behavior`, `behavior_files`, `behavior_protected_files`, `max_refine`, `max_judge_revisions`, and `max_model_calls`. Supplied public-check files are included in the configuration digest; their bytes are frozen in the prepared baseline and PUBLIC_CHECK_HASHES.json. The current runtime pin is `a8952c1a14fc31601fb5721b77b61e36003287e3`. Use a new tools directory rather than resetting an older installation. The source repository and prior results are preserved.
