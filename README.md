@@ -33,6 +33,8 @@ python3 -m spineharness.matrix_study --results results/issue-a results/issue-b \
 
 The [documentation index](docs/README.md) covers the packaged archives and all other commands. The original application checkout and issue tracker are read-only during measurement.
 
+To create macOS and Windows/WSL2 release archives, follow the [release build guide](docs/BUILD_RELEASES.md). Generated archives go in the ignored `dist/` directory.
+
 ## Other study modes
 
 - [33-scenario reference matrix](docs/QUICKSTART.md): a larger four-arm study after the one-issue pilot.

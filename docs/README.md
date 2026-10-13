@@ -10,6 +10,7 @@ preflight, execution, reporting, and [combining multiple issues](FRAMEWORK_MATRI
 - [Historical two-arm Jira workflow](JIRA_BENCHMARK.md)
 - [macOS portable handover](portable/macos/QUICKSTART.md)
 - [Windows with WSL2 handover](portable/windows/QUICKSTART.md)
+- [Build macOS and Windows/WSL2 archives](BUILD_RELEASES.md)
 - [Release validation](releases/RELEASE_VALIDATION_V19.md)
 
 Run module commands from the repository or extracted archive root after setting
