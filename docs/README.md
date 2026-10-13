@@ -1,8 +1,8 @@
 # Harness guides
 
-Start with [one issue across four workflows](MATRIX_QUICKSTART.md). The
-[framework matrix reference](FRAMEWORK_MATRIX.md) describes its configuration,
-preflight, execution, and reports.
+Use the [qualification guide](MATRIX_QUICKSTART.md) for the first four-arm task.
+The [framework matrix reference](FRAMEWORK_MATRIX.md) covers configuration,
+preflight, execution, reporting, and [combining multiple issues](FRAMEWORK_MATRIX.md#compare-multiple-tasks).
 
 - [Matched context comparison](CONTEXT_MATRIX.md)
 - [33-scenario reference study](QUICKSTART.md) and [matrix reference](REFERENCE_MATRIX.md)

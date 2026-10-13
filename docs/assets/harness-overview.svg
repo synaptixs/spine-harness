@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1120" height="490" viewBox="0 0 1120 490" role="img" aria-labelledby="title desc">
   <title id="title">Spine Harness four-workflow comparison</title>
-  <desc id="desc">One frozen repository, issue, model, and set of checks feeds four isolated workflows: Spine with PKG, Spine with integrated OpenSpec and PKG, standalone OpenSpec, and Spec Kit. Independent checks and one comparison report follow.</desc>
+  <desc id="desc">For each issue, one frozen repository baseline, model, and set of checks feeds four isolated workflows: Spine with PKG, Spine with integrated OpenSpec and PKG, standalone OpenSpec, and Spec Kit. Repeat for more issues and aggregate compatible results.</desc>
   <defs>
     <linearGradient id="background" x2="1" y2="1">
       <stop stop-color="#101b31"/>
@@ -11,13 +11,13 @@
     </marker>
   </defs>
   <rect width="1120" height="490" rx="24" fill="url(#background)"/>
-  <text x="42" y="53" fill="#f3f7fc" font-family="system-ui, sans-serif" font-size="27" font-weight="700">One issue. Four isolated workflows. One comparable report.</text>
-  <text x="42" y="83" fill="#b8c9dc" font-family="system-ui, sans-serif" font-size="16">The same baseline and checks go to every arm; each implementation stays in its own copy.</text>
+  <text x="42" y="53" fill="#f3f7fc" font-family="system-ui, sans-serif" font-size="27" font-weight="700">Multiple issues. Four matched workflows for each.</text>
+  <text x="42" y="83" fill="#b8c9dc" font-family="system-ui, sans-serif" font-size="16">Freeze the inputs for each issue, compare isolated implementations, then aggregate results.</text>
 
   <rect x="42" y="113" width="1036" height="77" rx="15" fill="#243950" stroke="#47627d"/>
   <rect x="60" y="130" width="116" height="42" rx="10" fill="#3f6481"/>
-  <text x="118" y="157" text-anchor="middle" fill="#ffffff" font-family="system-ui, sans-serif" font-size="14" font-weight="700">FROZEN INPUT</text>
-  <text x="199" y="145" fill="#eff6ff" font-family="system-ui, sans-serif" font-size="18" font-weight="600">Repository at commit · one issue · shared model settings</text>
+  <text x="118" y="157" text-anchor="middle" fill="#ffffff" font-family="system-ui, sans-serif" font-size="14" font-weight="700">EACH ISSUE</text>
+  <text x="199" y="145" fill="#eff6ff" font-family="system-ui, sans-serif" font-size="18" font-weight="600">Repository at commit · saved issue · shared model settings</text>
   <text x="199" y="170" fill="#c6d6e7" font-family="system-ui, sans-serif" font-size="15">Baseline regression and independent acceptance checks</text>
 
   <g fill="none" stroke="#8da5bf" stroke-width="2" marker-end="url(#arrow)">
@@ -54,6 +54,6 @@
     <path d="M171 341 V366"/><path d="M430 341 V366"/><path d="M690 341 V366"/><path d="M949 341 V366"/>
   </g>
   <rect x="42" y="375" width="1036" height="73" rx="15" fill="#253951" stroke="#526f8e"/>
-  <text x="62" y="403" fill="#ffffff" font-family="system-ui, sans-serif" font-size="18" font-weight="700">Independent evaluation → comparison report</text>
+  <text x="62" y="403" fill="#ffffff" font-family="system-ui, sans-serif" font-size="18" font-weight="700">Independent evaluation → per-issue result → multi-issue study</text>
   <text x="62" y="428" fill="#c6d6e7" font-family="system-ui, sans-serif" font-size="15">Acceptance · native status · protected checks · tokens · time · API-equivalent cost</text>
 </svg>
