@@ -14,15 +14,15 @@ python3.12 -m spineharness.build_portable_release \
   --output dist
 ```
 
-The current builder produces `dist/spineharness-macos-2026-10-13-v20.zip` and `dist/spineharness-windows-wsl2-2026-10-13-v20.zip`, with a checksum file beside each archive. The Windows archive runs Python and Codex inside WSL2 Ubuntu; native Windows Python is not supported. The Windows/WSL2 workflow still needs live validation on a Windows machine. See the [release validation record](releases/RELEASE_VALIDATION_V20.md) for the checks already performed.
+The current builder produces `dist/spineharness-macos-2026-10-13-v21.zip` and `dist/spineharness-windows-wsl2-2026-10-13-v21.zip`, with a checksum file beside each archive. The Windows archive runs Python and Codex inside WSL2 Ubuntu; native Windows Python is not supported. The Windows/WSL2 workflow still needs live validation on a Windows machine. See the [release validation record](releases/RELEASE_VALIDATION_V21.md) for the checks already performed.
 
 Verify the outer ZIPs and checksums from the source checkout:
 
 ```bash
-(cd dist && shasum -a 256 -c spineharness-macos-2026-10-13-v20.zip.sha256)
-(cd dist && shasum -a 256 -c spineharness-windows-wsl2-2026-10-13-v20.zip.sha256)
-unzip -t dist/spineharness-macos-2026-10-13-v20.zip
-unzip -t dist/spineharness-windows-wsl2-2026-10-13-v20.zip
+(cd dist && shasum -a 256 -c spineharness-macos-2026-10-13-v21.zip.sha256)
+(cd dist && shasum -a 256 -c spineharness-windows-wsl2-2026-10-13-v21.zip.sha256)
+unzip -t dist/spineharness-macos-2026-10-13-v21.zip
+unzip -t dist/spineharness-windows-wsl2-2026-10-13-v21.zip
 ```
 
 Each extracted package also contains `SHA256SUMS` for its files. Run `shasum -a 256 -c SHA256SUMS` from the extracted macOS package, or `sha256sum -c SHA256SUMS` inside WSL2 Ubuntu for the Windows package. The Windows package includes `verify_package.py` for an additional local verification step.

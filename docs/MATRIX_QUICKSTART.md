@@ -1,6 +1,6 @@
 # Start here: one repository, one issue, four workflows
 
-This is the recommended **qualification pilot** for the framework matrix. It runs one issue once through spec-kit, OpenSpec, Spine + PKG + OpenSpec, and Spine + PKG in separate disposable clones. It does **not** start the 33-scenario reference study. The original repository and issue tracker are read-only; generated code stays in the disposable work directory and result patches.
+This is the recommended **qualification pilot** for the framework matrix. The example configuration runs one issue once through Spine + PKG, Spine + integrated OpenSpec + PKG, standalone OpenSpec, and Spec Kit in that order, using separate disposable clones. It does **not** start the 33-scenario reference study. The original repository and issue tracker are read-only; generated code stays in the disposable work directory and result patches.
 
 ## Tools and versions
 

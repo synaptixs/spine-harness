@@ -44,4 +44,4 @@ To create macOS and Windows/WSL2 release archives, follow the [release build gui
 - [Scenario catalog](docs/SCENARIOS.md): add or validate reference tasks and held-out checks.
 - [Historical two-arm Jira workflow](docs/JIRA_BENCHMARK.md): reproduce the earlier protocol without pooling its results with the four-arm matrix.
 
-Current runtime and release validation details are in the [release notes](docs/releases/RELEASE_VALIDATION_V20.md). Harness modules live in `src/spineharness/`, offline tests in `tests/`, and current guides in `docs/`.
+Current runtime and release validation details are in the [release notes](docs/releases/RELEASE_VALIDATION_V21.md). Harness modules live in `src/spineharness/`, offline tests in `tests/`, and current guides in `docs/`.

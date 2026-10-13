@@ -15,7 +15,7 @@ from pathlib import Path
 from .paths import PROJECT_ROOT
 
 ROOT = PROJECT_ROOT
-VERSION = '2026-10-13-v20'
+VERSION = '2026-10-13-v21'
 NAME = 'spineharness-macos'
 PACKAGE_FILES = ('.py', '.md', '.svg')
 STUDIES = ('ontm4-benchmark-20260930', 'ontm4-spine-recovery-20260930', 'ontm4-spine-resumed-20261004', 'ontm4-spine-continuation-20261004')
@@ -110,6 +110,8 @@ def build(output, platform='macos', include_reference=False, spine_source=None):
         platform_dir = ROOT / ('portable_windows' if platform == 'windows' else 'portable')
         for name in ('AGENTS.md', 'benchmark.example.json'):
             safe_copy(platform_dir / name, stage / name)
+        if platform == 'macos':
+            safe_copy(platform_dir / 'QUICKSTART.md', stage / 'QUICKSTART.md')
         safe_copy(ROOT / 'profiles/pilot.env', stage / 'profiles/pilot.env')
         if platform == 'windows':
             for name in ('Run-Harness.ps1', 'verify_package.py', 'wsl_entry.py'):

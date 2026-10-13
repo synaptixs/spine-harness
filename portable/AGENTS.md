@@ -1,6 +1,14 @@
 # Codex operator instructions for this portable harness
 
-Read docs/portable/macos/QUICKSTART.md. This package is a runnable macOS harness, not the application under test.
+Read QUICKSTART.md, then docs/portable/macos/QUICKSTART.md. This package is a runnable macOS harness, not the application under test.
+
+## Current four-arm pilot
+
+For the default one-issue comparison, read docs/MATRIX_QUICKSTART.md and docs/FRAMEWORK_MATRIX.md and use `python3 -m spineharness.framework_matrix` with a fresh configuration. Compare Spec Kit, standalone OpenSpec, Spine + integrated OpenSpec + PKG, and Spine + PKG on the same frozen task, baseline, model settings, and independent checks. Start with one issue, not the full 33-scenario matrix. The original application checkout and issue tracker remain read-only. Keep hidden test patches and acceptance commands out of model prompts. Run `doctor --smoke-model --approved` only after the user authorizes its small model call; it sends no repository or issue data. Record exact owner-approved answers or a named deferral for unresolved scope questions, supply the same policy to all arms, and list deferrals in the report. The native Spine clarity gate stays enabled. Do not call a Jira check an official SWE-bench result: only the official SWE-bench evaluator can establish its resolved status.
+
+## Historical two-arm Jira protocol
+
+The numbered instructions below apply to `python3 -m spineharness.portable_benchmark`. Use them only to reproduce the earlier Spec Kit versus Spine + PKG protocol; its results are separate from the four-arm matrix. Read docs/portable/macos/TWO_ARM_JIRA.md before this path.
 
 1. Obtain the repository path, frozen baseline, Jira site and full issue keys from the user. Inspect the application's documented test setup. Ask only for missing information; do authorized setup yourself.
 2. Use connected read-only Jira tools to retrieve the requested issue requirements (summary, description, status, type, updated timestamp, optional criteria). Save supported JSON snapshots under `inputs/`. Never load or print API/Jira secrets. Never write Jira, push, open PRs or alter the original application checkout.
@@ -14,7 +22,5 @@ Read docs/portable/macos/QUICKSTART.md. This package is a runnable macOS harness
 10. Do not manually fix measured application output. Post-audit repair needs a separately measured continuation through native Spine refine with exact feedback, call bound and preserved original output. Label validation after feedback honestly; do not overwrite a first-run failure with its repaired result.
 
 This handover intentionally omits previous Jira issues, results and application patches, as well as credentials, raw conversations and installed tool environments. It includes a Git bundle for the pinned Spine tools revision used by the four-arm pilot; it does not include the target application repository. Use the root portable entry points.
-
-For a multi-framework experiment, read docs/MATRIX_QUICKSTART.md and docs/FRAMEWORK_MATRIX.md and use `python3 -m spineharness.framework_matrix` with a fresh configuration. Start with one issue, not the full 33-scenario matrix. Run `doctor --smoke-model --approved` only after the user authorizes its small model call; it sends no repository or issue data. Record exact owner-approved answers or a named deferral for unresolved scope questions, supply the same policy to all arms, and list deferrals in the report. The native Spine clarity gate stays enabled. Preserve the existing two-arm Jira protocol/results. Do not call a Jira check an official SWE-bench result: only the official SWE-bench evaluator can establish its resolved status. Give every arm the same frozen task and baseline, and keep hidden test patches and acceptance commands out of model prompts.
 
 For Jira runs, use the pinned Spine 3.57.1 production feature path. Configure real required public behavior checks before preparation; the native pipeline may refine against these checks within its recorded bounds. This is distinct from hidden post-run acceptance feedback. Never replace the native loop with a supervisor-authored repair. Report native outcome, required-check history, every model call and deterministic check time. Original checkout/Jira stay unchanged. New public check files belong in the common disposable baseline via behavior_files.

@@ -2,7 +2,7 @@
 
 For an external repository, start with the [one-issue, four-workflow pilot](QUICKSTART.md) using spec-kit, OpenSpec, Spine + PKG + OpenSpec, and Spine + PKG. The [33-scenario reference matrix](../../REFERENCE_MATRIX.md) is a separate, larger run. The [framework matrix](../../FRAMEWORK_MATRIX.md) also supports external command adapters and SWE-bench tasks. All four-workflow commands run inside WSL2 Ubuntu. The PowerShell launcher still covers the older two-arm Jira path.
 
-> **v20:** The bundled tools pin Spine 3.57.1 at `a8952c1a14fc31601fb5721b77b61e36003287e3`. Setup resolves current Spec Kit and OpenSpec releases and freezes their versions. The multi-repository matrix was exercised on macOS; the Windows/WSL2 path still requires live validation on a recipient machine.
+> **v21:** The bundled tools pin Spine 3.57.1 at `a8952c1a14fc31601fb5721b77b61e36003287e3`. Setup resolves current Spec Kit and OpenSpec releases and freezes their versions. The multi-repository matrix was exercised on macOS; the Windows/WSL2 path still requires live validation on a recipient machine.
 
 Start with **[QUICKSTART.md](QUICKSTART.md)**. Extract the ZIP, open the folder in the Windows Codex app, and paste the supplied prompt with your repository and Jira keys.
 

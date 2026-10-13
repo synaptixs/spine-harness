@@ -20,9 +20,9 @@
   "checks": [["{python}", "-m", "pytest", "-q", "tests"]],
   "acceptance_checks": [],
   "frameworks": [
-    "openspec",
+    "spine-pkg",
     "spine-openspec",
-    "speckit",
-    "spine-pkg"
+    "openspec",
+    "speckit"
   ]
 }
