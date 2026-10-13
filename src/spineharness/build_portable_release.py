@@ -17,7 +17,7 @@ from .paths import PROJECT_ROOT
 ROOT = PROJECT_ROOT
 VERSION = '2026-10-13-v19'
 NAME = 'spineharness-macos'
-PACKAGE_FILES = ('.py', '.md')
+PACKAGE_FILES = ('.py', '.md', '.svg')
 STUDIES = ('ontm4-benchmark-20260930', 'ontm4-spine-recovery-20260930', 'ontm4-spine-resumed-20261004', 'ontm4-spine-continuation-20261004')
 REF_ROOT = {'COMPARISON_REPORT.md','CONTINUATION_REPORT.md','CONTINUATION_VALIDATION.md','CONTINUATION_VERIFICATION.json',
     'ARTIFACT_COMPARISON.md','RESULTS.md','FINALIZATION.json','READING_THE_RESULTS.md','INDEPENDENT_REVIEW.md',
